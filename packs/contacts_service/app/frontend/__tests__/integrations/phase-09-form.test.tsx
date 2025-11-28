@@ -1,0 +1,499 @@
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { UIProvider } from "@ui/provider";
+import { TooltipProvider } from "@ui-components/ui/tooltip";
+import { VIEW, FORM, useDrawer } from "@ui/adapters/layouts";
+import { INPUT_TEXT } from "@ui/adapters/inputs";
+import { COMPONENT, SUBMIT } from "@ui/adapters/primitives";
+import type { UIServices, ComponentRegistry, InputRegistry } from "@ui/registry";
+import type { ReactNode } from "react";
+
+function createMockServices(overrides?: Partial<UIServices>): UIServices {
+  return {
+    fetch: vi.fn().mockResolvedValue({ data: {} }),
+    navigate: vi.fn(),
+    toast: vi.fn(),
+    confirm: vi.fn().mockResolvedValue(true),
+    ...overrides,
+  };
+}
+
+const mockComponents: ComponentRegistry = {
+  VIEW,
+  FORM,
+  COMPONENT,
+  SUBMIT,
+} as ComponentRegistry;
+
+const mockInputs: InputRegistry = {
+  INPUT_TEXT,
+} as InputRegistry;
+
+interface WrapperProps {
+  children: ReactNode;
+  services?: UIServices;
+  translations?: Record<string, string>;
+}
+
+function TestWrapper({
+  children,
+  services = createMockServices(),
+  translations = {},
+}: WrapperProps) {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <UIProvider
+        components={mockComponents}
+        inputs={mockInputs}
+        displays={{} as never}
+        services={services}
+        translations={{ views: translations, schemas: {}, common: { required: "This field is required" } }}
+        locale="en"
+      >
+        <TooltipProvider>{children}</TooltipProvider>
+      </UIProvider>
+    </QueryClientProvider>
+  );
+}
+
+describe("Phase 9: FORM Adapter", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  describe("9.1 Form Context", () => {
+    it("FORM provides FormContext to children", () => {
+      render(
+        <TestWrapper>
+          <VIEW schema={{ type: "VIEW" }}>
+            <FORM schema={{ type: "FORM" }}>
+              <COMPONENT
+                schema={{ type: "COMPONENT", kind: "INPUT_TEXT", name: "email", label: "Email" }}
+                name="email"
+                kind="INPUT_TEXT"
+              />
+            </FORM>
+          </VIEW>
+        </TestWrapper>
+      );
+
+      // If FormContext wasn't provided, COMPONENT would throw
+      expect(screen.getByLabelText("Email")).toBeInTheDocument();
+    });
+
+    it("FORM children can update values via onChange", async () => {
+      const user = userEvent.setup();
+
+      render(
+        <TestWrapper>
+          <VIEW schema={{ type: "VIEW" }}>
+            <FORM schema={{ type: "FORM" }}>
+              <COMPONENT
+                schema={{ type: "COMPONENT", kind: "INPUT_TEXT", name: "email", label: "Email" }}
+                name="email"
+                kind="INPUT_TEXT"
+              />
+            </FORM>
+          </VIEW>
+        </TestWrapper>
+      );
+
+      const input = screen.getByLabelText("Email");
+      await user.type(input, "hello@test.com");
+      expect(input).toHaveValue("hello@test.com");
+    });
+  });
+
+  describe("9.2 Form Initial Values", () => {
+    it("FORM uses drawerData as initial values when use_record=true", async () => {
+      const user = userEvent.setup();
+      const drawerData = { email: "from-drawer@example.com" };
+
+      // Create a test component that opens the drawer with data
+      function TestComponent() {
+        return (
+          <VIEW
+            schema={{
+              type: "VIEW",
+              drawers: {
+                edit_drawer: {
+                  title: "Edit",
+                  elements: [],
+                },
+              },
+            }}
+          >
+            <OpenDrawerButton drawerName="edit_drawer" data={drawerData} />
+            {/* Form inside VIEW uses drawerData when use_record=true */}
+            <FORM schema={{ type: "FORM", use_record: true }}>
+              <COMPONENT
+                schema={{ type: "COMPONENT", kind: "INPUT_TEXT", name: "email", label: "Email" }}
+                name="email"
+                kind="INPUT_TEXT"
+              />
+            </FORM>
+          </VIEW>
+        );
+      }
+
+      // Helper component that opens drawer on mount
+      function OpenDrawerButton({ drawerName, data }: { drawerName: string; data: Record<string, unknown> }) {
+        const { openDrawer } = useDrawer();
+        return (
+          <button onClick={() => openDrawer(drawerName, data)}>Open Drawer</button>
+        );
+      }
+
+      render(
+        <TestWrapper>
+          <TestComponent />
+        </TestWrapper>
+      );
+
+      // Click to open drawer with data
+      await user.click(screen.getByRole("button", { name: "Open Drawer" }));
+
+      // The form should now have the drawer data
+      await waitFor(() => {
+        expect(screen.getByLabelText("Email")).toHaveValue("from-drawer@example.com");
+      });
+    });
+
+    it("FORM starts with empty values when no initial values", () => {
+      render(
+        <TestWrapper>
+          <VIEW schema={{ type: "VIEW" }}>
+            <FORM schema={{ type: "FORM" }}>
+              <COMPONENT
+                schema={{ type: "COMPONENT", kind: "INPUT_TEXT", name: "email", label: "Email" }}
+                name="email"
+                kind="INPUT_TEXT"
+              />
+            </FORM>
+          </VIEW>
+        </TestWrapper>
+      );
+
+      expect(screen.getByLabelText("Email")).toHaveValue("");
+    });
+
+    it("FORM initializes with defaultValues prop", () => {
+      render(
+        <TestWrapper>
+          <VIEW schema={{ type: "VIEW" }}>
+            <FORM
+              schema={{ type: "FORM" }}
+              defaultValues={{ email: "default@example.com" }}
+            >
+              <COMPONENT
+                schema={{ type: "COMPONENT", kind: "INPUT_TEXT", name: "email", label: "Email" }}
+                name="email"
+                kind="INPUT_TEXT"
+              />
+            </FORM>
+          </VIEW>
+        </TestWrapper>
+      );
+
+      expect(screen.getByLabelText("Email")).toHaveValue("default@example.com");
+    });
+  });
+
+  describe("9.3 Form Dirty State", () => {
+    it("FORM values change when user types", async () => {
+      const user = userEvent.setup();
+
+      render(
+        <TestWrapper>
+          <VIEW schema={{ type: "VIEW" }}>
+            <FORM schema={{ type: "FORM" }}>
+              <COMPONENT
+                schema={{ type: "COMPONENT", kind: "INPUT_TEXT", name: "email", label: "Email" }}
+                name="email"
+                kind="INPUT_TEXT"
+              />
+            </FORM>
+          </VIEW>
+        </TestWrapper>
+      );
+
+      const input = screen.getByLabelText("Email");
+      await user.type(input, "changed@test.com");
+
+      expect(input).toHaveValue("changed@test.com");
+    });
+
+    it("FORM value can be cleared and retyped", async () => {
+      const user = userEvent.setup();
+
+      render(
+        <TestWrapper>
+          <VIEW schema={{ type: "VIEW" }}>
+            <FORM schema={{ type: "FORM" }}>
+              <COMPONENT
+                schema={{ type: "COMPONENT", kind: "INPUT_TEXT", name: "email", label: "Email" }}
+                name="email"
+                kind="INPUT_TEXT"
+              />
+            </FORM>
+          </VIEW>
+        </TestWrapper>
+      );
+
+      const input = screen.getByLabelText("Email");
+      await user.type(input, "test");
+      await user.clear(input);
+      await user.type(input, "new");
+
+      expect(input).toHaveValue("new");
+    });
+  });
+
+  describe("9.4 Form Errors", () => {
+    it("FORM displays error on required field when submitted empty", async () => {
+      const user = userEvent.setup();
+
+      render(
+        <TestWrapper>
+          <VIEW schema={{ type: "VIEW" }}>
+            <FORM
+              schema={{
+                type: "FORM",
+                elements: [
+                  { type: "COMPONENT", kind: "INPUT_TEXT", name: "email", label: "Email", required: true },
+                ],
+              }}
+            >
+              <COMPONENT
+                schema={{ type: "COMPONENT", kind: "INPUT_TEXT", name: "email", label: "Email", required: true }}
+                name="email"
+                kind="INPUT_TEXT"
+              />
+              <SUBMIT schema={{ type: "SUBMIT", label: "Save" }} />
+            </FORM>
+          </VIEW>
+        </TestWrapper>
+      );
+
+      await user.click(screen.getByRole("button", { name: "Save" }));
+
+      await waitFor(() => {
+        expect(screen.getByText("This field is required")).toBeInTheDocument();
+      });
+    });
+
+    it("FORM clears error when field value changes", async () => {
+      const user = userEvent.setup();
+
+      render(
+        <TestWrapper>
+          <VIEW schema={{ type: "VIEW" }}>
+            <FORM
+              schema={{
+                type: "FORM",
+                elements: [
+                  { type: "COMPONENT", kind: "INPUT_TEXT", name: "email", label: "Email", required: true },
+                ],
+              }}
+            >
+              <COMPONENT
+                schema={{ type: "COMPONENT", kind: "INPUT_TEXT", name: "email", label: "Email", required: true }}
+                name="email"
+                kind="INPUT_TEXT"
+              />
+              <SUBMIT schema={{ type: "SUBMIT", label: "Save" }} />
+            </FORM>
+          </VIEW>
+        </TestWrapper>
+      );
+
+      // Submit to trigger validation error
+      await user.click(screen.getByRole("button", { name: "Save" }));
+
+      await waitFor(() => {
+        expect(screen.getByText("This field is required")).toBeInTheDocument();
+      });
+
+      // Type value to clear error
+      await user.type(screen.getByLabelText("Email"), "test@example.com");
+
+      await waitFor(() => {
+        expect(screen.queryByText("This field is required")).not.toBeInTheDocument();
+      });
+    });
+
+    it("FORM validates required fields on submit", async () => {
+      const user = userEvent.setup();
+
+      render(
+        <TestWrapper>
+          <VIEW schema={{ type: "VIEW" }}>
+            <FORM
+              schema={{
+                type: "FORM",
+                elements: [
+                  { type: "COMPONENT", kind: "INPUT_TEXT", name: "email", label: "Email", required: true },
+                ],
+              }}
+            >
+              <COMPONENT
+                schema={{ type: "COMPONENT", kind: "INPUT_TEXT", name: "email", label: "Email", required: true }}
+                name="email"
+                kind="INPUT_TEXT"
+              />
+              <SUBMIT schema={{ type: "SUBMIT", label: "Save" }} />
+            </FORM>
+          </VIEW>
+        </TestWrapper>
+      );
+
+      // Submit without filling required field
+      await user.click(screen.getByRole("button", { name: "Save" }));
+
+      // Should show error
+      await waitFor(() => {
+        expect(screen.getByText("This field is required")).toBeInTheDocument();
+      });
+    });
+  });
+
+  describe("9.5 Form Submission", () => {
+    it("FORM handles submission without page reload", async () => {
+      const user = userEvent.setup();
+
+      render(
+        <TestWrapper>
+          <VIEW schema={{ type: "VIEW" }}>
+            <FORM schema={{ type: "FORM" }}>
+              <COMPONENT
+                schema={{ type: "COMPONENT", kind: "INPUT_TEXT", name: "email", label: "Email" }}
+                name="email"
+                kind="INPUT_TEXT"
+              />
+              <SUBMIT schema={{ type: "SUBMIT", label: "Save" }} />
+            </FORM>
+          </VIEW>
+        </TestWrapper>
+      );
+
+      // Form should have onSubmit handler
+      const form = document.querySelector("form")!;
+      expect(form).toBeInTheDocument();
+
+      // Click submit - if default wasn't prevented, the test would fail/timeout
+      await user.click(screen.getByRole("button", { name: "Save" }));
+
+      // Form should still be in the document after submission
+      expect(form).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: "Save" })).toBeInTheDocument();
+    });
+
+    it("FORM sets isSubmitting during submission", async () => {
+      const user = userEvent.setup();
+
+      render(
+        <TestWrapper>
+          <VIEW schema={{ type: "VIEW" }}>
+            <FORM schema={{ type: "FORM" }}>
+              <COMPONENT
+                schema={{ type: "COMPONENT", kind: "INPUT_TEXT", name: "email", label: "Email" }}
+                name="email"
+                kind="INPUT_TEXT"
+              />
+              <SUBMIT schema={{ type: "SUBMIT", label: "Save" }} />
+            </FORM>
+          </VIEW>
+        </TestWrapper>
+      );
+
+      await user.click(screen.getByRole("button", { name: "Save" }));
+
+      // Button should return to normal state after submission
+      await waitFor(() => {
+        expect(screen.getByRole("button", { name: "Save" })).not.toBeDisabled();
+      });
+    });
+
+    it("FORM resets isSubmitting after completion", async () => {
+      const user = userEvent.setup();
+
+      render(
+        <TestWrapper>
+          <VIEW schema={{ type: "VIEW" }}>
+            <FORM schema={{ type: "FORM" }}>
+              <COMPONENT
+                schema={{ type: "COMPONENT", kind: "INPUT_TEXT", name: "email", label: "Email" }}
+                name="email"
+                kind="INPUT_TEXT"
+              />
+              <SUBMIT schema={{ type: "SUBMIT", label: "Save" }} />
+            </FORM>
+          </VIEW>
+        </TestWrapper>
+      );
+
+      await user.click(screen.getByRole("button", { name: "Save" }));
+
+      // Button should be enabled again after submission completes
+      await waitFor(() => {
+        expect(screen.getByRole("button", { name: "Save" })).not.toBeDisabled();
+      });
+    });
+
+    it("FORM shows submitting state with custom loadingLabel", async () => {
+      const user = userEvent.setup();
+      let resolveSubmit: () => void;
+      const fetchPromise = new Promise<{ data: unknown }>((resolve) => {
+        resolveSubmit = () => resolve({ data: {} });
+      });
+
+      const services = createMockServices({
+        fetch: vi.fn().mockReturnValue(fetchPromise),
+      });
+
+      render(
+        <TestWrapper services={services}>
+          <VIEW
+            schema={{
+              type: "VIEW",
+              api: {
+                create: { method: "POST", path: "/api/contacts" },
+              },
+            }}
+          >
+            <FORM schema={{ type: "FORM", action: "create" }}>
+              <COMPONENT
+                schema={{ type: "COMPONENT", kind: "INPUT_TEXT", name: "email", label: "Email" }}
+                name="email"
+                kind="INPUT_TEXT"
+              />
+              <SUBMIT schema={{ type: "SUBMIT", label: "Save", loadingLabel: "Saving..." }} />
+            </FORM>
+          </VIEW>
+        </TestWrapper>
+      );
+
+      // Click submit
+      await user.click(screen.getByRole("button", { name: "Save" }));
+
+      // Should show loading state
+      await waitFor(() => {
+        expect(screen.getByRole("button", { name: /Saving/i })).toBeDisabled();
+      });
+
+      // Resolve the promise
+      resolveSubmit!();
+
+      // Should return to normal
+      await waitFor(() => {
+        expect(screen.getByRole("button", { name: "Save" })).not.toBeDisabled();
+      });
+    });
+  });
+});

@@ -1,0 +1,171 @@
+{
+  "type": "VIEW",
+  "translations": {
+    "en": {
+      "basic_info": "Basic Information",
+      "professional_info": "Professional Information",
+      "personal_info": "Personal Information",
+      "first_name_placeholder": "Enter first name",
+      "last_name_placeholder": "Enter last name",
+      "company_placeholder": "Enter company",
+      "job_title_placeholder": "Enter job title",
+      "save": "Save",
+      "saving": "Saving..."
+    },
+    "fr": {
+      "basic_info": "Informations de Base",
+      "professional_info": "Informations Professionnelles",
+      "personal_info": "Informations Personnelles",
+      "first_name_placeholder": "Entrez le prenom",
+      "last_name_placeholder": "Entrez le nom",
+      "company_placeholder": "Entrez l'entreprise",
+      "job_title_placeholder": "Entrez le poste",
+      "save": "Sauvegarder",
+      "saving": "Sauvegarde..."
+    }
+  },
+  "elements": [
+    {
+      "type": "FORM",
+      "elements": [
+        {
+          "type": "GROUP",
+          "elements": [
+            {
+              "type": "GROUP",
+              "label": "basic_info",
+              "elements": [
+                {
+                  "type": "COMPONENT",
+                  "name": "first_name",
+                  "kind": "INPUT_TEXT",
+                  "label": "first_name",
+                  "placeholder": "first_name_placeholder"
+                },
+                {
+                  "type": "COMPONENT",
+                  "name": "last_name",
+                  "kind": "INPUT_TEXT",
+                  "label": "last_name",
+                  "placeholder": "last_name_placeholder"
+                },
+                {
+                  "type": "COMPONENT",
+                  "name": "email",
+                  "kind": "INPUT_TEXT",
+                  "label": "email"
+                },
+                {
+                  "type": "COMPONENT",
+                  "name": "phone",
+                  "kind": "INPUT_TEXT",
+                  "label": "phone"
+                }
+              ]
+            },
+            {
+              "type": "GROUP",
+              "label": "professional_info",
+              "elements": [
+                {
+                  "type": "COMPONENT",
+                  "name": "company",
+                  "kind": "INPUT_TEXT",
+                  "label": "company",
+                  "placeholder": "company_placeholder"
+                },
+                {
+                  "type": "COMPONENT",
+                  "name": "job_title",
+                  "kind": "INPUT_TEXT",
+                  "label": "job_title",
+                  "placeholder": "job_title_placeholder"
+                }
+              ]
+            },
+            {
+              "type": "GROUP",
+              "label": "personal_info",
+              "elements": [
+                {
+                  "type": "COMPONENT",
+                  "name": "gender",
+                  "kind": "INPUT_SELECT",
+                  "label": "gender",
+                  "options": [
+                    {
+                      "label": "male",
+                      "value": "male"
+                    },
+                    {
+                      "label": "female",
+                      "value": "female"
+                    },
+                    {
+                      "label": "other",
+                      "value": "other"
+                    },
+                    {
+                      "label": "prefer_not_to_say",
+                      "value": "prefer_not_to_say"
+                    }
+                  ]
+                },
+                {
+                  "type": "COMPONENT",
+                  "name": "date_of_birth",
+                  "kind": "INPUT_DATE",
+                  "label": "date_of_birth"
+                }
+              ]
+            },
+            {
+              "type": "RELATIONSHIP_PICKER",
+              "name": "children_attributes",
+              "cardinality": "many",
+              "relationSchema": "contact",
+              "columns": [
+                {
+                  "name": "first_name",
+                  "kind": "DISPLAY_TEXT"
+                },
+                {
+                  "name": "last_name",
+                  "kind": "DISPLAY_TEXT"
+                }
+              ],
+              "template": [
+                {
+                  "type": "COMPONENT",
+                  "name": "first_name",
+                  "kind": "INPUT_TEXT",
+                  "label": "first_name"
+                },
+                {
+                  "type": "COMPONENT",
+                  "name": "last_name",
+                  "kind": "INPUT_TEXT",
+                  "label": "last_name"
+                }
+              ]
+            }
+          ],
+          "classname": "flex flex-col flex-shrink min-h-0 overflow-y-scroll p-6 space-y-12"
+        },
+        {
+          "type": "GROUP",
+          "elements": [
+            {
+              "type": "SUBMIT",
+              "label": "save",
+              "loadingLabel": "saving",
+              "classname": "w-full justify-center"
+            }
+          ],
+          "classname": "flex-shrink-0 py-3 px-6 border-t bg-white"
+        }
+      ],
+      "classname": "flex flex-col h-full min-h-0"
+    }
+  ]
+}

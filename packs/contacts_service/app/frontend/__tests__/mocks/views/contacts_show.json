@@ -1,0 +1,172 @@
+{
+  "type": "VIEW",
+  "translations": {
+    "en": {
+      "basic_info": "Basic Information",
+      "professional_info": "Professional Information",
+      "personal_info": "Personal Information",
+      "tags_section": "Tags",
+      "addresses_section": "Addresses",
+      "male": "Male",
+      "female": "Female",
+      "other": "Other",
+      "prefer_not_to_say": "Prefer not to say"
+    },
+    "fr": {
+      "basic_info": "Informations de Base",
+      "professional_info": "Informations Professionnelles",
+      "personal_info": "Informations Personnelles",
+      "tags_section": "Tags",
+      "addresses_section": "Adresses",
+      "male": "Homme",
+      "female": "Femme",
+      "other": "Autre",
+      "prefer_not_to_say": "Prefere ne pas dire"
+    }
+  },
+  "elements": [
+    {
+      "type": "SHOW",
+      "elements": [
+        {
+          "type": "GROUP",
+          "label": "basic_info",
+          "elements": [
+            {
+              "type": "COMPONENT",
+              "name": "first_name",
+              "kind": "DISPLAY_TEXT",
+              "label": "first_name"
+            },
+            {
+              "type": "COMPONENT",
+              "name": "middle_name",
+              "kind": "DISPLAY_TEXT",
+              "label": "middle_name"
+            },
+            {
+              "type": "COMPONENT",
+              "name": "last_name",
+              "kind": "DISPLAY_TEXT",
+              "label": "last_name"
+            }
+          ],
+          "className": "space-y-4"
+        },
+        {
+          "type": "GROUP",
+          "label": "professional_info",
+          "elements": [
+            {
+              "type": "COMPONENT",
+              "name": "company",
+              "kind": "DISPLAY_TEXT",
+              "label": "company"
+            },
+            {
+              "type": "COMPONENT",
+              "name": "job_title",
+              "kind": "DISPLAY_TEXT",
+              "label": "job_title"
+            }
+          ],
+          "className": "space-y-4"
+        },
+        {
+          "type": "GROUP",
+          "label": "personal_info",
+          "elements": [
+            {
+              "type": "COMPONENT",
+              "name": "gender",
+              "kind": "DISPLAY_SELECT",
+              "label": "gender",
+              "options": [
+                {
+                  "label": "male",
+                  "value": "male"
+                },
+                {
+                  "label": "female",
+                  "value": "female"
+                },
+                {
+                  "label": "other",
+                  "value": "other"
+                },
+                {
+                  "label": "prefer_not_to_say",
+                  "value": "prefer_not_to_say"
+                }
+              ]
+            },
+            {
+              "type": "COMPONENT",
+              "name": "date_of_birth",
+              "kind": "DISPLAY_DATE",
+              "label": "date_of_birth"
+            },
+            {
+              "type": "COMPONENT",
+              "name": "place_of_birth",
+              "kind": "DISPLAY_TEXT",
+              "label": "place_of_birth"
+            },
+            {
+              "type": "COMPONENT",
+              "name": "nationality",
+              "kind": "DISPLAY_TEXT",
+              "label": "nationality"
+            }
+          ],
+          "className": "space-y-4"
+        },
+        {
+          "type": "GROUP",
+          "label": "tags_section",
+          "elements": [
+            {
+              "type": "COMPONENT",
+              "name": "tags",
+              "kind": "DISPLAY_TAGS",
+              "label": "tags"
+            }
+          ],
+          "className": "space-y-4"
+        },
+        {
+          "type": "DISPLAY_ARRAY",
+          "name": "addresses",
+          "template": [
+            {
+              "type": "COMPONENT",
+              "name": "address_line_1",
+              "kind": "DISPLAY_TEXT",
+              "label": "address_line_1"
+            },
+            {
+              "type": "COMPONENT",
+              "name": "city",
+              "kind": "DISPLAY_TEXT",
+              "label": "city"
+            },
+            {
+              "type": "COMPONENT",
+              "name": "postal_code",
+              "kind": "DISPLAY_TEXT",
+              "label": "postal_code"
+            },
+            {
+              "type": "COMPONENT",
+              "name": "country",
+              "kind": "DISPLAY_TEXT",
+              "label": "country"
+            }
+          ],
+          "label": "addresses_section"
+        }
+      ],
+      "className": "flex flex-col p-6 space-y-8"
+    }
+  ]
+}
