@@ -1,17 +1,14 @@
-import { defineConfig } from "vitest/config";
+import { defineConfig } from "vite";
+import RubyPlugin from "vite-plugin-ruby";
 import react from "@vitejs/plugin-react";
-import { resolve } from "path";
+import tailwindcss from "@tailwindcss/vite";
+import path from "node:path";
 
 export default defineConfig({
-  plugins: [react()],
-  test: {
-    environment: "jsdom",
-    setupFiles: ["./vitest.setup.ts"],
-    globals: true,
-  },
+  plugins: [react(), tailwindcss(), RubyPlugin()],
   resolve: {
     alias: {
-      "@": resolve(__dirname, "./app/frontend"),
+      "@/": `${path.resolve(__dirname, "./app/frontend/")}/`,
     },
   },
 });
