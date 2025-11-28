@@ -13,7 +13,8 @@ Rails.application.routes.draw do
   # API routes
   namespace :api do
     namespace :v1 do
-      resource :me, only: [:show], controller: "me"
+      resource :account, only: [:show], controller: "account"
+      get "views/:namespace/:feature/:view_name", to: "views#show"
     end
   end
 

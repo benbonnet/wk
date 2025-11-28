@@ -4,7 +4,7 @@ import type User from "@/types/api/User";
 type UserData = User["user"];
 
 export async function getCurrentUser(): Promise<UserData> {
-  const response = await axios.get<User>("/api/v1/me");
+  const response = await axios.get<User>("/api/v1/account");
   return response.data.user;
 }
 

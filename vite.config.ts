@@ -9,6 +9,9 @@ export default defineConfig({
   resolve: {
     alias: {
       "@/": `${path.resolve(__dirname, "./app/frontend/")}/`,
+      "@ui": path.resolve(__dirname, "./packs/ui/app/frontend/lib/index.ts"),
+      "@ui/": `${path.resolve(__dirname, "./packs/ui/app/frontend/lib/")}/`,
+      "@ui-components/": `${path.resolve(__dirname, "./packs/ui/app/frontend/components/")}/`,
     },
   },
 });
