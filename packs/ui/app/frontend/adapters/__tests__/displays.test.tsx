@@ -1,16 +1,17 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { screen } from "@testing-library/react";
 import {
-  DISPLAY_TEXT,
-  DISPLAY_LONGTEXT,
-  DISPLAY_NUMBER,
-  DISPLAY_BADGE,
-  DISPLAY_TAGS,
-  DISPLAY_BOOLEAN,
-  DISPLAY_SELECT,
-} from "../displays";
-import { SHOW, ShowContext } from "../layouts/show";
-import { VIEW } from "../layouts/view";
+  TextDisplay,
+  LongtextDisplay,
+  NumberDisplay,
+  BadgeDisplay,
+  TagsDisplay,
+  BooleanDisplay,
+  SelectDisplay,
+  Show,
+  ShowContext,
+  View,
+} from "..";
 import { renderWithProviders, resetMocks } from "./test-utils";
 
 describe("Display Adapters", () => {
@@ -18,10 +19,14 @@ describe("Display Adapters", () => {
     resetMocks();
   });
 
-  describe("DISPLAY_TEXT", () => {
+  describe("TextDisplay", () => {
     it("displays value with label", () => {
       renderWithProviders(
-        <DISPLAY_TEXT name="email" label="Email" value="test@example.com" />,
+        <TextDisplay
+          name="email"
+          label="Email"
+          data={{ email: "test@example.com" }}
+        />,
       );
 
       expect(screen.getByText("Email")).toBeInTheDocument();
@@ -30,9 +35,9 @@ describe("Display Adapters", () => {
 
     it("displays em-dash for null value", () => {
       renderWithProviders(
-        <VIEW schema={{ type: "VIEW" }}>
-          <DISPLAY_TEXT name="email" label="Email" value={null} />
-        </VIEW>,
+        <View>
+          <TextDisplay name="email" label="Email" data={{ email: null }} />
+        </View>,
       );
 
       expect(screen.getByText("—")).toBeInTheDocument();
@@ -40,25 +45,28 @@ describe("Display Adapters", () => {
 
     it("gets value from ShowContext", () => {
       renderWithProviders(
-        <VIEW schema={{ type: "VIEW" }}>
+        <View>
           <ShowContext.Provider
             value={{ data: { email: "context@example.com" } }}
           >
-            <DISPLAY_TEXT name="email" label="Email" />
+            <TextDisplay name="email" label="Email" />
           </ShowContext.Provider>
-        </VIEW>,
+        </View>,
       );
 
       expect(screen.getByText("context@example.com")).toBeInTheDocument();
     });
   });
 
-  describe("DISPLAY_LONGTEXT", () => {
+  describe("LongtextDisplay", () => {
     it("preserves whitespace", () => {
       const multilineText = "Line 1\nLine 2\nLine 3";
 
       renderWithProviders(
-        <DISPLAY_LONGTEXT name="description" value={multilineText} />,
+        <LongtextDisplay
+          name="description"
+          data={{ description: multilineText }}
+        />,
       );
 
       const textElement = screen.getByText((content, element) => {
@@ -68,9 +76,11 @@ describe("Display Adapters", () => {
     });
   });
 
-  describe("DISPLAY_NUMBER", () => {
+  describe("NumberDisplay", () => {
     it("formats number with locale", () => {
-      renderWithProviders(<DISPLAY_NUMBER name="amount" value={1234567.89} />);
+      renderWithProviders(
+        <NumberDisplay name="amount" data={{ amount: 1234567.89 }} />,
+      );
 
       // Check for formatted number (locale-dependent)
       expect(screen.getByText(/1,234,567/)).toBeInTheDocument();
@@ -78,18 +88,20 @@ describe("Display Adapters", () => {
 
     it("displays em-dash for null", () => {
       renderWithProviders(
-        <VIEW schema={{ type: "VIEW" }}>
-          <DISPLAY_NUMBER name="amount" value={null} />
-        </VIEW>,
+        <View>
+          <NumberDisplay name="amount" data={{ amount: null }} />
+        </View>,
       );
 
       expect(screen.getByText("—")).toBeInTheDocument();
     });
   });
 
-  describe("DISPLAY_BADGE", () => {
+  describe("BadgeDisplay", () => {
     it("displays value as badge", () => {
-      renderWithProviders(<DISPLAY_BADGE name="status" value="active" />);
+      renderWithProviders(
+        <BadgeDisplay name="status" data={{ status: "active" }} />,
+      );
 
       expect(screen.getByText("active")).toBeInTheDocument();
     });
@@ -101,7 +113,11 @@ describe("Display Adapters", () => {
       ];
 
       renderWithProviders(
-        <DISPLAY_BADGE name="status" value="active" options={options} />,
+        <BadgeDisplay
+          name="status"
+          options={options}
+          data={{ status: "active" }}
+        />,
       );
 
       expect(screen.getByText("Active User")).toBeInTheDocument();
@@ -109,9 +125,9 @@ describe("Display Adapters", () => {
 
     it("applies status color classes", () => {
       renderWithProviders(
-        <VIEW schema={{ type: "VIEW" }}>
-          <DISPLAY_BADGE name="status" value="active" />
-        </VIEW>,
+        <View>
+          <BadgeDisplay name="status" data={{ status: "active" }} />
+        </View>,
       );
 
       const badge = screen.getByText("active");
@@ -119,10 +135,13 @@ describe("Display Adapters", () => {
     });
   });
 
-  describe("DISPLAY_TAGS", () => {
+  describe("TagsDisplay", () => {
     it("displays array of tags", () => {
       renderWithProviders(
-        <DISPLAY_TAGS name="tags" value={["react", "typescript", "node"]} />,
+        <TagsDisplay
+          name="tags"
+          data={{ tags: ["react", "typescript", "node"] }}
+        />,
       );
 
       expect(screen.getByText("react")).toBeInTheDocument();
@@ -132,36 +151,42 @@ describe("Display Adapters", () => {
 
     it("displays em-dash for empty array", () => {
       renderWithProviders(
-        <VIEW schema={{ type: "VIEW" }}>
-          <DISPLAY_TAGS name="tags" value={[]} />
-        </VIEW>,
+        <View>
+          <TagsDisplay name="tags" data={{ tags: [] }} />
+        </View>,
       );
 
       expect(screen.getByText("—")).toBeInTheDocument();
     });
   });
 
-  describe("DISPLAY_BOOLEAN", () => {
+  describe("BooleanDisplay", () => {
     it("displays Yes for true value", () => {
-      renderWithProviders(<DISPLAY_BOOLEAN name="verified" value={true} />);
+      renderWithProviders(
+        <BooleanDisplay name="verified" data={{ verified: true }} />,
+      );
 
       expect(screen.getByText("Yes")).toBeInTheDocument();
     });
 
     it("displays No for false value", () => {
-      renderWithProviders(<DISPLAY_BOOLEAN name="verified" value={false} />);
+      renderWithProviders(
+        <BooleanDisplay name="verified" data={{ verified: false }} />,
+      );
 
       expect(screen.getByText("No")).toBeInTheDocument();
     });
 
     it("treats truthy values as true", () => {
-      renderWithProviders(<DISPLAY_BOOLEAN name="verified" value="yes" />);
+      renderWithProviders(
+        <BooleanDisplay name="verified" data={{ verified: "yes" }} />,
+      );
 
       expect(screen.getByText("Yes")).toBeInTheDocument();
     });
   });
 
-  describe("DISPLAY_SELECT", () => {
+  describe("SelectDisplay", () => {
     const options = [
       { value: "us", label: "United States" },
       { value: "uk", label: "United Kingdom" },
@@ -169,7 +194,11 @@ describe("Display Adapters", () => {
 
     it("displays option label for value", () => {
       renderWithProviders(
-        <DISPLAY_SELECT name="country" value="us" options={options} />,
+        <SelectDisplay
+          name="country"
+          options={options}
+          data={{ country: "us" }}
+        />,
       );
 
       expect(screen.getByText("United States")).toBeInTheDocument();
@@ -177,7 +206,11 @@ describe("Display Adapters", () => {
 
     it("displays raw value if option not found", () => {
       renderWithProviders(
-        <DISPLAY_SELECT name="country" value="ca" options={options} />,
+        <SelectDisplay
+          name="country"
+          options={options}
+          data={{ country: "ca" }}
+        />,
       );
 
       expect(screen.getByText("ca")).toBeInTheDocument();
@@ -185,16 +218,20 @@ describe("Display Adapters", () => {
 
     it("displays em-dash for null value", () => {
       renderWithProviders(
-        <VIEW schema={{ type: "VIEW" }}>
-          <DISPLAY_SELECT name="country" value={null} options={options} />
-        </VIEW>,
+        <View>
+          <SelectDisplay
+            name="country"
+            options={options}
+            data={{ country: null }}
+          />
+        </View>,
       );
 
       expect(screen.getByText("—")).toBeInTheDocument();
     });
   });
 
-  describe("Integration with SHOW layout", () => {
+  describe("Integration with Show layout", () => {
     it("displays get values from ShowContext", () => {
       const record = {
         name: "John Doe",
@@ -205,15 +242,15 @@ describe("Display Adapters", () => {
       };
 
       renderWithProviders(
-        <VIEW schema={{ type: "VIEW" }}>
-          <SHOW schema={{ type: "SHOW" }} record={record}>
-            <DISPLAY_TEXT name="name" label="Name" />
-            <DISPLAY_TEXT name="email" label="Email" />
-            <DISPLAY_BADGE name="status" label="Status" />
-            <DISPLAY_BOOLEAN name="verified" label="Verified" />
-            <DISPLAY_TAGS name="tags" label="Tags" />
-          </SHOW>
-        </VIEW>,
+        <View>
+          <Show record={record}>
+            <TextDisplay name="name" label="Name" />
+            <TextDisplay name="email" label="Email" />
+            <BadgeDisplay name="status" label="Status" />
+            <BooleanDisplay name="verified" label="Verified" />
+            <TagsDisplay name="tags" label="Tags" />
+          </Show>
+        </View>,
       );
 
       expect(screen.getByText("John Doe")).toBeInTheDocument();

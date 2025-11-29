@@ -3,9 +3,10 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { UIProvider } from "@ui/provider";
-import { TooltipProvider } from "@ui-components/ui/tooltip";
-import { VIEW, TABLE } from "@ui/adapters/layouts";
-import type { UIServices, ComponentRegistry } from "@ui/registry";
+import { DynamicRenderer } from "@ui/renderer";
+import { TooltipProvider } from "@ui-components/tooltip";
+import type { UIServices } from "@ui/registry";
+import type { UISchema } from "@ui/types";
 import type { ReactNode } from "react";
 
 const mockData = [
@@ -23,11 +24,6 @@ function createMockServices(overrides?: Partial<UIServices>): UIServices {
     ...overrides,
   };
 }
-
-const mockComponents: ComponentRegistry = {
-  VIEW,
-  TABLE,
-} as ComponentRegistry;
 
 interface WrapperProps {
   children: ReactNode;
@@ -47,9 +43,6 @@ function TestWrapper({
   return (
     <QueryClientProvider client={queryClient}>
       <UIProvider
-        components={mockComponents}
-        inputs={{} as never}
-        displays={{} as never}
         services={services}
         translations={{ views: translations, schemas: {}, common: {} }}
         locale="en"
@@ -60,6 +53,18 @@ function TestWrapper({
   );
 }
 
+function renderSchema(
+  schema: UISchema,
+  options?: { services?: UIServices; translations?: Record<string, string> }
+) {
+  const services = options?.services ?? createMockServices();
+  return render(
+    <TestWrapper services={services} translations={options?.translations}>
+      <DynamicRenderer schema={schema} />
+    </TestWrapper>
+  );
+}
+
 describe("Phase 8: TABLE Adapter", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -67,23 +72,20 @@ describe("Phase 8: TABLE Adapter", () => {
 
   describe("8.1 Table Structure", () => {
     it("renders column headers from schema", () => {
-      render(
-        <TestWrapper>
-          <VIEW schema={{ type: "VIEW" }}>
-            <TABLE
-              schema={{
-                type: "TABLE",
-                columns: [
-                  { name: "first_name", label: "First Name" },
-                  { name: "last_name", label: "Last Name" },
-                  { name: "email", label: "Email" },
-                ],
-              }}
-              data={mockData}
-            />
-          </VIEW>
-        </TestWrapper>
-      );
+      renderSchema({
+        type: "VIEW",
+        elements: [
+          {
+            type: "TABLE",
+            columns: [
+              { name: "first_name", label: "First Name" },
+              { name: "last_name", label: "Last Name" },
+              { name: "email", label: "Email" },
+            ],
+            data: mockData,
+          },
+        ],
+      });
 
       expect(screen.getByText("First Name")).toBeInTheDocument();
       expect(screen.getByText("Last Name")).toBeInTheDocument();
@@ -91,21 +93,21 @@ describe("Phase 8: TABLE Adapter", () => {
     });
 
     it("translates column labels", () => {
-      render(
-        <TestWrapper translations={{ first_name: "Prénom", last_name: "Nom" }}>
-          <VIEW schema={{ type: "VIEW" }}>
-            <TABLE
-              schema={{
-                type: "TABLE",
-                columns: [
-                  { name: "first_name", label: "first_name" },
-                  { name: "last_name", label: "last_name" },
-                ],
-              }}
-              data={mockData}
-            />
-          </VIEW>
-        </TestWrapper>
+      renderSchema(
+        {
+          type: "VIEW",
+          elements: [
+            {
+              type: "TABLE",
+              columns: [
+                { name: "first_name", label: "first_name" },
+                { name: "last_name", label: "last_name" },
+              ],
+              data: mockData,
+            },
+          ],
+        },
+        { translations: { first_name: "Prénom", last_name: "Nom" } }
       );
 
       expect(screen.getByText("Prénom")).toBeInTheDocument();
@@ -113,38 +115,32 @@ describe("Phase 8: TABLE Adapter", () => {
     });
 
     it("renders sortable column with sort button", () => {
-      render(
-        <TestWrapper>
-          <VIEW schema={{ type: "VIEW" }}>
-            <TABLE
-              schema={{
-                type: "TABLE",
-                columns: [{ name: "first_name", label: "First Name", sortable: true }],
-              }}
-              data={mockData}
-            />
-          </VIEW>
-        </TestWrapper>
-      );
+      renderSchema({
+        type: "VIEW",
+        elements: [
+          {
+            type: "TABLE",
+            columns: [{ name: "first_name", label: "First Name", sortable: true }],
+            data: mockData,
+          },
+        ],
+      });
 
       // Sortable columns are rendered as buttons
       expect(screen.getByRole("button", { name: /First Name/i })).toBeInTheDocument();
     });
 
     it("renders non-sortable column as plain text", () => {
-      render(
-        <TestWrapper>
-          <VIEW schema={{ type: "VIEW" }}>
-            <TABLE
-              schema={{
-                type: "TABLE",
-                columns: [{ name: "email", label: "Email", sortable: false }],
-              }}
-              data={mockData}
-            />
-          </VIEW>
-        </TestWrapper>
-      );
+      renderSchema({
+        type: "VIEW",
+        elements: [
+          {
+            type: "TABLE",
+            columns: [{ name: "email", label: "Email", sortable: false }],
+            data: mockData,
+          },
+        ],
+      });
 
       // Non-sortable columns are just spans
       expect(screen.queryByRole("button", { name: /Email/i })).not.toBeInTheDocument();
@@ -154,19 +150,16 @@ describe("Phase 8: TABLE Adapter", () => {
 
   describe("8.2 Table Data", () => {
     it("renders rows from data prop", () => {
-      render(
-        <TestWrapper>
-          <VIEW schema={{ type: "VIEW" }}>
-            <TABLE
-              schema={{
-                type: "TABLE",
-                columns: [{ name: "first_name", label: "First Name" }],
-              }}
-              data={mockData}
-            />
-          </VIEW>
-        </TestWrapper>
-      );
+      renderSchema({
+        type: "VIEW",
+        elements: [
+          {
+            type: "TABLE",
+            columns: [{ name: "first_name", label: "First Name" }],
+            data: mockData,
+          },
+        ],
+      });
 
       expect(screen.getByText("John")).toBeInTheDocument();
       expect(screen.getByText("Jane")).toBeInTheDocument();
@@ -174,41 +167,35 @@ describe("Phase 8: TABLE Adapter", () => {
     });
 
     it("renders cell values", () => {
-      render(
-        <TestWrapper>
-          <VIEW schema={{ type: "VIEW" }}>
-            <TABLE
-              schema={{
-                type: "TABLE",
-                columns: [
-                  { name: "first_name", label: "First Name" },
-                  { name: "email", label: "Email" },
-                ],
-              }}
-              data={mockData}
-            />
-          </VIEW>
-        </TestWrapper>
-      );
+      renderSchema({
+        type: "VIEW",
+        elements: [
+          {
+            type: "TABLE",
+            columns: [
+              { name: "first_name", label: "First Name" },
+              { name: "email", label: "Email" },
+            ],
+            data: mockData,
+          },
+        ],
+      });
 
       expect(screen.getByText("john@example.com")).toBeInTheDocument();
       expect(screen.getByText("jane@example.com")).toBeInTheDocument();
     });
 
     it("renders empty state when no data", () => {
-      render(
-        <TestWrapper>
-          <VIEW schema={{ type: "VIEW" }}>
-            <TABLE
-              schema={{
-                type: "TABLE",
-                columns: [{ name: "first_name", label: "First Name" }],
-              }}
-              data={[]}
-            />
-          </VIEW>
-        </TestWrapper>
-      );
+      renderSchema({
+        type: "VIEW",
+        elements: [
+          {
+            type: "TABLE",
+            columns: [{ name: "first_name", label: "First Name" }],
+            data: [],
+          },
+        ],
+      });
 
       expect(screen.getByText("No results.")).toBeInTheDocument();
     });
@@ -216,19 +203,16 @@ describe("Phase 8: TABLE Adapter", () => {
     it("renders — for null values", () => {
       const dataWithNull = [{ id: 1, first_name: null, email: "test@test.com" }];
 
-      render(
-        <TestWrapper>
-          <VIEW schema={{ type: "VIEW" }}>
-            <TABLE
-              schema={{
-                type: "TABLE",
-                columns: [{ name: "first_name", label: "First Name" }],
-              }}
-              data={dataWithNull}
-            />
-          </VIEW>
-        </TestWrapper>
-      );
+      renderSchema({
+        type: "VIEW",
+        elements: [
+          {
+            type: "TABLE",
+            columns: [{ name: "first_name", label: "First Name" }],
+            data: dataWithNull,
+          },
+        ],
+      });
 
       expect(screen.getByText("—")).toBeInTheDocument();
     });
@@ -236,17 +220,17 @@ describe("Phase 8: TABLE Adapter", () => {
 
   describe("8.3 Table Selection", () => {
     it("renders checkbox column when selectable=true", () => {
-      render(
-        <TestWrapper>
-          <VIEW schema={{ type: "VIEW" }}>
-            <TABLE
-              schema={{ type: "TABLE", columns: [{ name: "first_name" }] }}
-              data={mockData}
-              selectable
-            />
-          </VIEW>
-        </TestWrapper>
-      );
+      renderSchema({
+        type: "VIEW",
+        elements: [
+          {
+            type: "TABLE",
+            columns: [{ name: "first_name" }],
+            data: mockData,
+            selectable: true,
+          },
+        ],
+      });
 
       // Header checkbox + 3 row checkboxes
       const checkboxes = screen.getAllByRole("checkbox");
@@ -256,17 +240,17 @@ describe("Phase 8: TABLE Adapter", () => {
     it("header checkbox selects all rows", async () => {
       const user = userEvent.setup();
 
-      render(
-        <TestWrapper>
-          <VIEW schema={{ type: "VIEW" }}>
-            <TABLE
-              schema={{ type: "TABLE", columns: [{ name: "first_name" }] }}
-              data={mockData}
-              selectable
-            />
-          </VIEW>
-        </TestWrapper>
-      );
+      renderSchema({
+        type: "VIEW",
+        elements: [
+          {
+            type: "TABLE",
+            columns: [{ name: "first_name" }],
+            data: mockData,
+            selectable: true,
+          },
+        ],
+      });
 
       const headerCheckbox = screen.getByLabelText("Select all");
       await user.click(headerCheckbox);
@@ -280,17 +264,17 @@ describe("Phase 8: TABLE Adapter", () => {
     it("row checkbox selects single row", async () => {
       const user = userEvent.setup();
 
-      render(
-        <TestWrapper>
-          <VIEW schema={{ type: "VIEW" }}>
-            <TABLE
-              schema={{ type: "TABLE", columns: [{ name: "first_name" }] }}
-              data={mockData}
-              selectable
-            />
-          </VIEW>
-        </TestWrapper>
-      );
+      renderSchema({
+        type: "VIEW",
+        elements: [
+          {
+            type: "TABLE",
+            columns: [{ name: "first_name" }],
+            data: mockData,
+            selectable: true,
+          },
+        ],
+      });
 
       const rowCheckboxes = screen.getAllByLabelText("Select row");
       await user.click(rowCheckboxes[0]);
@@ -303,17 +287,17 @@ describe("Phase 8: TABLE Adapter", () => {
     it("tracks selected row count", async () => {
       const user = userEvent.setup();
 
-      render(
-        <TestWrapper>
-          <VIEW schema={{ type: "VIEW" }}>
-            <TABLE
-              schema={{ type: "TABLE", columns: [{ name: "first_name" }] }}
-              data={mockData}
-              selectable
-            />
-          </VIEW>
-        </TestWrapper>
-      );
+      renderSchema({
+        type: "VIEW",
+        elements: [
+          {
+            type: "TABLE",
+            columns: [{ name: "first_name" }],
+            data: mockData,
+            selectable: true,
+          },
+        ],
+      });
 
       const rowCheckboxes = screen.getAllByLabelText("Select row");
       await user.click(rowCheckboxes[0]);
@@ -325,17 +309,17 @@ describe("Phase 8: TABLE Adapter", () => {
 
   describe("8.4 Table Search", () => {
     it("renders search input when searchable=true", () => {
-      render(
-        <TestWrapper>
-          <VIEW schema={{ type: "VIEW" }}>
-            <TABLE
-              schema={{ type: "TABLE", columns: [{ name: "first_name" }] }}
-              data={mockData}
-              searchable
-            />
-          </VIEW>
-        </TestWrapper>
-      );
+      renderSchema({
+        type: "VIEW",
+        elements: [
+          {
+            type: "TABLE",
+            columns: [{ name: "first_name" }],
+            data: mockData,
+            searchable: true,
+          },
+        ],
+      });
 
       expect(screen.getByPlaceholderText("Search...")).toBeInTheDocument();
     });
@@ -343,17 +327,17 @@ describe("Phase 8: TABLE Adapter", () => {
     it("filters rows on search input", async () => {
       const user = userEvent.setup();
 
-      render(
-        <TestWrapper>
-          <VIEW schema={{ type: "VIEW" }}>
-            <TABLE
-              schema={{ type: "TABLE", columns: [{ name: "first_name" }] }}
-              data={mockData}
-              searchable
-            />
-          </VIEW>
-        </TestWrapper>
-      );
+      renderSchema({
+        type: "VIEW",
+        elements: [
+          {
+            type: "TABLE",
+            columns: [{ name: "first_name" }],
+            data: mockData,
+            searchable: true,
+          },
+        ],
+      });
 
       const searchInput = screen.getByPlaceholderText("Search...");
       await user.type(searchInput, "Jane");
@@ -366,20 +350,20 @@ describe("Phase 8: TABLE Adapter", () => {
     });
 
     it("shows search placeholder from schema", () => {
-      render(
-        <TestWrapper translations={{ search_contacts: "Search contacts..." }}>
-          <VIEW schema={{ type: "VIEW" }}>
-            <TABLE
-              schema={{
-                type: "TABLE",
-                columns: [{ name: "first_name" }],
-                search_placeholder: "search_contacts",
-              }}
-              data={mockData}
-              searchable
-            />
-          </VIEW>
-        </TestWrapper>
+      renderSchema(
+        {
+          type: "VIEW",
+          elements: [
+            {
+              type: "TABLE",
+              columns: [{ name: "first_name" }],
+              data: mockData,
+              searchable: true,
+              search_placeholder: "search_contacts",
+            },
+          ],
+        },
+        { translations: { search_contacts: "Search contacts..." } }
       );
 
       expect(screen.getByPlaceholderText("Search contacts...")).toBeInTheDocument();
@@ -393,17 +377,17 @@ describe("Phase 8: TABLE Adapter", () => {
     }));
 
     it("paginates based on pageSize", () => {
-      render(
-        <TestWrapper>
-          <VIEW schema={{ type: "VIEW" }}>
-            <TABLE
-              schema={{ type: "TABLE", columns: [{ name: "first_name" }] }}
-              data={manyRows}
-              pageSize={10}
-            />
-          </VIEW>
-        </TestWrapper>
-      );
+      renderSchema({
+        type: "VIEW",
+        elements: [
+          {
+            type: "TABLE",
+            columns: [{ name: "first_name" }],
+            data: manyRows,
+            pageSize: 10,
+          },
+        ],
+      });
 
       // Should only show first 10 rows
       expect(screen.getByText("User1")).toBeInTheDocument();
@@ -412,33 +396,33 @@ describe("Phase 8: TABLE Adapter", () => {
     });
 
     it("shows page count", () => {
-      render(
-        <TestWrapper>
-          <VIEW schema={{ type: "VIEW" }}>
-            <TABLE
-              schema={{ type: "TABLE", columns: [{ name: "first_name" }] }}
-              data={manyRows}
-              pageSize={10}
-            />
-          </VIEW>
-        </TestWrapper>
-      );
+      renderSchema({
+        type: "VIEW",
+        elements: [
+          {
+            type: "TABLE",
+            columns: [{ name: "first_name" }],
+            data: manyRows,
+            pageSize: 10,
+          },
+        ],
+      });
 
       expect(screen.getByText("Page 1 of 3")).toBeInTheDocument();
     });
 
     it("Previous button disabled on first page", () => {
-      render(
-        <TestWrapper>
-          <VIEW schema={{ type: "VIEW" }}>
-            <TABLE
-              schema={{ type: "TABLE", columns: [{ name: "first_name" }] }}
-              data={manyRows}
-              pageSize={10}
-            />
-          </VIEW>
-        </TestWrapper>
-      );
+      renderSchema({
+        type: "VIEW",
+        elements: [
+          {
+            type: "TABLE",
+            columns: [{ name: "first_name" }],
+            data: manyRows,
+            pageSize: 10,
+          },
+        ],
+      });
 
       expect(screen.getByRole("button", { name: /Previous/i })).toBeDisabled();
     });
@@ -446,17 +430,17 @@ describe("Phase 8: TABLE Adapter", () => {
     it("Next button disabled on last page", async () => {
       const user = userEvent.setup();
 
-      render(
-        <TestWrapper>
-          <VIEW schema={{ type: "VIEW" }}>
-            <TABLE
-              schema={{ type: "TABLE", columns: [{ name: "first_name" }] }}
-              data={manyRows}
-              pageSize={10}
-            />
-          </VIEW>
-        </TestWrapper>
-      );
+      renderSchema({
+        type: "VIEW",
+        elements: [
+          {
+            type: "TABLE",
+            columns: [{ name: "first_name" }],
+            data: manyRows,
+            pageSize: 10,
+          },
+        ],
+      });
 
       // Go to last page
       await user.click(screen.getByRole("button", { name: /Next/i }));
@@ -468,17 +452,17 @@ describe("Phase 8: TABLE Adapter", () => {
     it("navigates pages on button click", async () => {
       const user = userEvent.setup();
 
-      render(
-        <TestWrapper>
-          <VIEW schema={{ type: "VIEW" }}>
-            <TABLE
-              schema={{ type: "TABLE", columns: [{ name: "first_name" }] }}
-              data={manyRows}
-              pageSize={10}
-            />
-          </VIEW>
-        </TestWrapper>
-      );
+      renderSchema({
+        type: "VIEW",
+        elements: [
+          {
+            type: "TABLE",
+            columns: [{ name: "first_name" }],
+            data: manyRows,
+            pageSize: 10,
+          },
+        ],
+      });
 
       await user.click(screen.getByRole("button", { name: /Next/i }));
 
@@ -492,19 +476,16 @@ describe("Phase 8: TABLE Adapter", () => {
     it("sorts ascending on column header click", async () => {
       const user = userEvent.setup();
 
-      render(
-        <TestWrapper>
-          <VIEW schema={{ type: "VIEW" }}>
-            <TABLE
-              schema={{
-                type: "TABLE",
-                columns: [{ name: "first_name", label: "First Name", sortable: true }],
-              }}
-              data={mockData}
-            />
-          </VIEW>
-        </TestWrapper>
-      );
+      renderSchema({
+        type: "VIEW",
+        elements: [
+          {
+            type: "TABLE",
+            columns: [{ name: "first_name", label: "First Name", sortable: true }],
+            data: mockData,
+          },
+        ],
+      });
 
       await user.click(screen.getByRole("button", { name: /First Name/i }));
 
@@ -519,19 +500,16 @@ describe("Phase 8: TABLE Adapter", () => {
     it("sorts descending on second click", async () => {
       const user = userEvent.setup();
 
-      render(
-        <TestWrapper>
-          <VIEW schema={{ type: "VIEW" }}>
-            <TABLE
-              schema={{
-                type: "TABLE",
-                columns: [{ name: "first_name", label: "First Name", sortable: true }],
-              }}
-              data={mockData}
-            />
-          </VIEW>
-        </TestWrapper>
-      );
+      renderSchema({
+        type: "VIEW",
+        elements: [
+          {
+            type: "TABLE",
+            columns: [{ name: "first_name", label: "First Name", sortable: true }],
+            data: mockData,
+          },
+        ],
+      });
 
       const sortButton = screen.getByRole("button", { name: /First Name/i });
       await user.click(sortButton);
@@ -550,27 +528,20 @@ describe("Phase 8: TABLE Adapter", () => {
     it("opens drawer on row click when rowClick.opens is set", async () => {
       const user = userEvent.setup();
 
-      render(
-        <TestWrapper>
-          <VIEW
-            schema={{
-              type: "VIEW",
-              drawers: {
-                view_drawer: { title: "View Contact", elements: [] },
-              },
-            }}
-          >
-            <TABLE
-              schema={{
-                type: "TABLE",
-                columns: [{ name: "first_name" }],
-              }}
-              data={mockData}
-              rowClick={{ opens: "view_drawer" }}
-            />
-          </VIEW>
-        </TestWrapper>
-      );
+      renderSchema({
+        type: "VIEW",
+        drawers: {
+          view_drawer: { title: "View Contact", elements: [] },
+        },
+        elements: [
+          {
+            type: "TABLE",
+            columns: [{ name: "first_name" }],
+            data: mockData,
+            rowClick: { opens: "view_drawer" },
+          },
+        ],
+      });
 
       const row = screen.getByText("John").closest("tr");
       await user.click(row!);
@@ -579,30 +550,31 @@ describe("Phase 8: TABLE Adapter", () => {
     });
 
     it("calls onRowClick callback when provided", async () => {
+      // Note: onRowClick is a runtime callback, not part of the schema
+      // Testing via schema click behavior that opens drawer
       const user = userEvent.setup();
-      const handleRowClick = vi.fn();
+      const mockNavigate = vi.fn();
+      const services = createMockServices({ navigate: mockNavigate });
 
-      render(
-        <TestWrapper>
-          <VIEW schema={{ type: "VIEW" }}>
-            <TABLE
-              schema={{
-                type: "TABLE",
-                columns: [{ name: "first_name" }],
-              }}
-              data={mockData}
-              onRowClick={handleRowClick}
-            />
-          </VIEW>
-        </TestWrapper>
+      renderSchema(
+        {
+          type: "VIEW",
+          elements: [
+            {
+              type: "TABLE",
+              columns: [{ name: "first_name" }],
+              data: mockData,
+              rowClick: { href: "/contacts/:id" },
+            },
+          ],
+        },
+        { services }
       );
 
       const row = screen.getByText("John").closest("tr");
       await user.click(row!);
 
-      expect(handleRowClick).toHaveBeenCalledWith(
-        expect.objectContaining({ id: 1, first_name: "John" })
-      );
+      expect(mockNavigate).toHaveBeenCalledWith("/contacts/1");
     });
   });
 });

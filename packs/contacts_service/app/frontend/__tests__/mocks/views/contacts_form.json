@@ -10,7 +10,16 @@
       "company_placeholder": "Enter company",
       "job_title_placeholder": "Enter job title",
       "save": "Save",
-      "saving": "Saving..."
+      "saving": "Saving...",
+      "spouse": "Spouse",
+      "addresses": "Addresses",
+      "add_address": "Add Address",
+      "remove_address": "Remove",
+      "label": "Label",
+      "address_line_1": "Address Line 1",
+      "city": "City",
+      "postal_code": "Postal Code",
+      "country": "Country"
     },
     "fr": {
       "basic_info": "Informations de Base",
@@ -21,7 +30,16 @@
       "company_placeholder": "Entrez l'entreprise",
       "job_title_placeholder": "Entrez le poste",
       "save": "Sauvegarder",
-      "saving": "Sauvegarde..."
+      "saving": "Sauvegarde...",
+      "spouse": "Conjoint(e)",
+      "addresses": "Adresses",
+      "add_address": "Ajouter une adresse",
+      "remove_address": "Supprimer",
+      "label": "Libellé",
+      "address_line_1": "Ligne d'adresse 1",
+      "city": "Ville",
+      "postal_code": "Code postal",
+      "country": "Pays"
     }
   },
   "elements": [
@@ -36,29 +54,25 @@
               "label": "basic_info",
               "elements": [
                 {
-                  "type": "COMPONENT",
+                  "type": "INPUT_TEXT",
                   "name": "first_name",
-                  "kind": "INPUT_TEXT",
                   "label": "first_name",
                   "placeholder": "first_name_placeholder"
                 },
                 {
-                  "type": "COMPONENT",
+                  "type": "INPUT_TEXT",
                   "name": "last_name",
-                  "kind": "INPUT_TEXT",
                   "label": "last_name",
                   "placeholder": "last_name_placeholder"
                 },
                 {
-                  "type": "COMPONENT",
+                  "type": "INPUT_TEXT",
                   "name": "email",
-                  "kind": "INPUT_TEXT",
                   "label": "email"
                 },
                 {
-                  "type": "COMPONENT",
+                  "type": "INPUT_TEXT",
                   "name": "phone",
-                  "kind": "INPUT_TEXT",
                   "label": "phone"
                 }
               ]
@@ -68,16 +82,14 @@
               "label": "professional_info",
               "elements": [
                 {
-                  "type": "COMPONENT",
+                  "type": "INPUT_TEXT",
                   "name": "company",
-                  "kind": "INPUT_TEXT",
                   "label": "company",
                   "placeholder": "company_placeholder"
                 },
                 {
-                  "type": "COMPONENT",
+                  "type": "INPUT_TEXT",
                   "name": "job_title",
-                  "kind": "INPUT_TEXT",
                   "label": "job_title",
                   "placeholder": "job_title_placeholder"
                 }
@@ -88,9 +100,8 @@
               "label": "personal_info",
               "elements": [
                 {
-                  "type": "COMPONENT",
+                  "type": "INPUT_SELECT",
                   "name": "gender",
-                  "kind": "INPUT_SELECT",
                   "label": "gender",
                   "options": [
                     {
@@ -112,10 +123,60 @@
                   ]
                 },
                 {
-                  "type": "COMPONENT",
+                  "type": "INPUT_DATE",
                   "name": "date_of_birth",
-                  "kind": "INPUT_DATE",
                   "label": "date_of_birth"
+                }
+              ]
+            },
+            {
+              "type": "GROUP",
+              "name": "spouse_attributes",
+              "label": "spouse",
+              "elements": [
+                {
+                  "type": "INPUT_TEXT",
+                  "name": "spouse_attributes.first_name",
+                  "label": "first_name"
+                },
+                {
+                  "type": "INPUT_TEXT",
+                  "name": "spouse_attributes.last_name",
+                  "label": "last_name"
+                }
+              ]
+            },
+            {
+              "type": "FORM_ARRAY",
+              "name": "addresses_attributes",
+              "label": "addresses",
+              "addLabel": "add_address",
+              "removeLabel": "remove_address",
+              "template": [
+                {
+                  "type": "INPUT_TEXT",
+                  "name": "label",
+                  "label": "label"
+                },
+                {
+                  "type": "INPUT_TEXT",
+                  "name": "address_line_1",
+                  "label": "address_line_1"
+                },
+                {
+                  "type": "INPUT_TEXT",
+                  "name": "city",
+                  "label": "city"
+                },
+                {
+                  "type": "INPUT_TEXT",
+                  "name": "postal_code",
+                  "label": "postal_code"
+                },
+                {
+                  "type": "INPUT_TEXT",
+                  "name": "country",
+                  "label": "country"
                 }
               ]
             },
@@ -127,24 +188,22 @@
               "columns": [
                 {
                   "name": "first_name",
-                  "kind": "DISPLAY_TEXT"
+                  "type": "DISPLAY_TEXT"
                 },
                 {
                   "name": "last_name",
-                  "kind": "DISPLAY_TEXT"
+                  "type": "DISPLAY_TEXT"
                 }
               ],
               "template": [
                 {
-                  "type": "COMPONENT",
+                  "type": "INPUT_TEXT",
                   "name": "first_name",
-                  "kind": "INPUT_TEXT",
                   "label": "first_name"
                 },
                 {
-                  "type": "COMPONENT",
+                  "type": "INPUT_TEXT",
                   "name": "last_name",
-                  "kind": "INPUT_TEXT",
                   "label": "last_name"
                 }
               ]

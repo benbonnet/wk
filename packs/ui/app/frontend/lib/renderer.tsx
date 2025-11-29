@@ -1,134 +1,65 @@
-import { useComponents, useInputs, useDisplays } from "./provider";
+import { adapterRegistry, type AdapterType } from "@ui/adapters/registry";
 import { resolveRules } from "./resolver";
 import type { UISchema } from "./types";
 
 interface DynamicRendererProps {
   schema: UISchema;
   data?: Record<string, unknown>;
+  /** Passthrough prop for parent components like Multistep */
+  active?: boolean;
 }
 
-export function DynamicRenderer({ schema, data = {} }: DynamicRendererProps) {
-  const components = useComponents();
-
-  // Check visibility rules
+/**
+ * DynamicRenderer - the bridge between schema and components
+ *
+ * Takes a schema definition and renders the appropriate component.
+ * Schema logic stops here - components receive spread props, not schema.
+ */
+export function DynamicRenderer({ schema, data = {}, active }: DynamicRendererProps) {
   const { visible, enabled } = resolveRules(schema.rules, data);
   if (!visible) {
     return null;
   }
 
-  const Component = components[schema.type as keyof typeof components];
+  const Component = adapterRegistry[schema.type as AdapterType];
 
   if (!Component) {
     console.warn(`Unknown component type: ${schema.type}`);
     return null;
   }
 
-  // For VIEW type, render children
-  if (schema.type === "VIEW") {
+  // Extract type and spread the rest as props
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { type: _type, elements, template, rules: _rules, ...props } = schema;
+
+  // Apply disabled state from rules
+  const effectiveProps = enabled ? props : { ...props, disabled: true };
+
+  // Pass data for display components to access
+  // Don't overwrite schema.data if it exists (e.g., TABLE with inline data)
+  const propsWithData = {
+    ...effectiveProps,
+    data: effectiveProps.data ?? data,
+    // Pass through active prop from parent (e.g., Multistep cloning Step children)
+    ...(active !== undefined && { active }),
+  };
+
+  // For containers with elements - render children
+  if (elements) {
     return (
-      <Component schema={schema} data={data}>
-        {schema.elements?.map((child, index) => (
+      <Component {...propsWithData} elements={elements}>
+        {elements.map((child, index) => (
           <DynamicRenderer key={index} schema={child} data={data} />
         ))}
       </Component>
     );
   }
 
-  // For COMPONENT type, use the COMPONENT adapter which handles FormContext
-  if (schema.type === "COMPONENT" && schema.kind) {
-    const ComponentAdapter = components["COMPONENT" as keyof typeof components];
-    if (ComponentAdapter) {
-      return <ComponentAdapter schema={schema} data={data} />;
-    }
-    // Fallback to ComponentRouter if COMPONENT adapter not registered
-    return <ComponentRouter schema={schema} data={data} disabled={!enabled} />;
+  // For containers with template (arrays) - pass template, don't render children
+  if (template) {
+    return <Component {...propsWithData} template={template} />;
   }
 
-  // For containers with elements
-  if (schema.elements) {
-    return (
-      <Component schema={schema} data={data}>
-        {schema.elements.map((child, index) => (
-          <DynamicRenderer key={index} schema={child} data={data} />
-        ))}
-      </Component>
-    );
-  }
-
-  // For containers with template (arrays)
-  if (schema.template) {
-    return (
-      <Component schema={schema} data={data}>
-        {schema.template.map((child, index) => (
-          <DynamicRenderer key={index} schema={child} data={data} />
-        ))}
-      </Component>
-    );
-  }
-
-  // Leaf components
-  return <Component schema={schema} data={data} />;
+  // Leaf components - just spread props
+  return <Component {...propsWithData} />;
 }
-
-interface ComponentRouterProps {
-  schema: UISchema;
-  data?: Record<string, unknown>;
-  disabled?: boolean;
-}
-
-function ComponentRouter({ schema, data, disabled }: ComponentRouterProps) {
-  const inputs = useInputs();
-  const displays = useDisplays();
-
-  const kind = schema.kind as string;
-
-  // Route to input component
-  if (kind.startsWith("INPUT_")) {
-    const InputComponent = inputs[kind as keyof typeof inputs];
-    if (!InputComponent) {
-      console.warn(`Unknown input kind: ${kind}`);
-      return null;
-    }
-
-    const value = schema.name && data ? data[schema.name] : undefined;
-
-    return (
-      <InputComponent
-        name={schema.name || ""}
-        label={schema.label}
-        placeholder={schema.placeholder}
-        helperText={schema.helperText}
-        options={schema.options}
-        rows={schema.rows}
-        rules={schema.rules}
-        value={value}
-        disabled={disabled}
-      />
-    );
-  }
-
-  // Route to display component
-  if (kind.startsWith("DISPLAY_")) {
-    const DisplayComponent = displays[kind as keyof typeof displays];
-    if (!DisplayComponent) {
-      console.warn(`Unknown display kind: ${kind}`);
-      return null;
-    }
-
-    const value = schema.name && data ? data[schema.name] : undefined;
-
-    return (
-      <DisplayComponent
-        name={schema.name || ""}
-        label={schema.label}
-        value={value}
-        options={schema.options}
-      />
-    );
-  }
-
-  console.warn(`Unknown kind: ${kind}`);
-  return null;
-}
-
-export { ComponentRouter };

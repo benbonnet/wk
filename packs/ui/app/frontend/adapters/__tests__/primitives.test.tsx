@@ -1,14 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import {
-  BUTTON,
-  DROPDOWN,
-  SEARCH,
-  SUBMIT,
-} from "../primitives";
-import { FORM } from "../layouts";
-import { VIEW } from "../layouts/view";
+import { Button, Dropdown, Search, Submit, Form, View } from "..";
 import { renderWithProviders, resetMocks, mockServices } from "./test-utils";
 
 describe("Primitive Adapters", () => {
@@ -16,12 +10,12 @@ describe("Primitive Adapters", () => {
     resetMocks();
   });
 
-  describe("BUTTON", () => {
+  describe("Button", () => {
     it("renders with label", () => {
       renderWithProviders(
-        <VIEW schema={{ type: "VIEW" }}>
-          <BUTTON schema={{ type: "BUTTON" }} label="Click me" />
-        </VIEW>
+        <View>
+          <Button label="Click me" />
+        </View>,
       );
 
       expect(screen.getByText("Click me")).toBeInTheDocument();
@@ -32,9 +26,9 @@ describe("Primitive Adapters", () => {
       const user = userEvent.setup();
 
       renderWithProviders(
-        <VIEW schema={{ type: "VIEW" }}>
-          <BUTTON schema={{ type: "BUTTON" }} label="Click me" onClick={onClick} />
-        </VIEW>
+        <View>
+          <Button label="Click me" onClick={onClick} />
+        </View>,
       );
 
       await user.click(screen.getByText("Click me"));
@@ -44,12 +38,12 @@ describe("Primitive Adapters", () => {
 
     it("renders with different variants", () => {
       renderWithProviders(
-        <VIEW schema={{ type: "VIEW" }}>
-          <BUTTON schema={{ type: "BUTTON" }} label="Primary" variant="primary" />
-          <BUTTON schema={{ type: "BUTTON" }} label="Secondary" variant="secondary" />
-          <BUTTON schema={{ type: "BUTTON" }} label="Ghost" variant="ghost" />
-          <BUTTON schema={{ type: "BUTTON" }} label="Destructive" variant="destructive" />
-        </VIEW>
+        <View>
+          <Button label="Primary" variant="primary" />
+          <Button label="Secondary" variant="secondary" />
+          <Button label="Ghost" variant="ghost" />
+          <Button label="Destructive" variant="destructive" />
+        </View>,
       );
 
       expect(screen.getByText("Primary")).toBeInTheDocument();
@@ -59,14 +53,14 @@ describe("Primitive Adapters", () => {
     });
   });
 
-  describe("DROPDOWN", () => {
+  describe("Dropdown", () => {
     it("renders trigger button", () => {
       renderWithProviders(
-        <VIEW schema={{ type: "VIEW" }}>
-          <DROPDOWN schema={{ type: "DROPDOWN" }} label="Actions">
+        <View>
+          <Dropdown label="Actions">
             <div>Option 1</div>
-          </DROPDOWN>
-        </VIEW>
+          </Dropdown>
+        </View>,
       );
 
       expect(screen.getByText("Actions")).toBeInTheDocument();
@@ -76,11 +70,11 @@ describe("Primitive Adapters", () => {
       const user = userEvent.setup();
 
       renderWithProviders(
-        <VIEW schema={{ type: "VIEW" }}>
-          <DROPDOWN schema={{ type: "DROPDOWN" }} label="Actions">
+        <View>
+          <Dropdown label="Actions">
             <div>Option 1</div>
-          </DROPDOWN>
-        </VIEW>
+          </Dropdown>
+        </View>,
       );
 
       await user.click(screen.getByText("Actions"));
@@ -89,15 +83,17 @@ describe("Primitive Adapters", () => {
     });
   });
 
-  describe("SEARCH", () => {
+  describe("Search", () => {
     it("renders with placeholder", () => {
       renderWithProviders(
-        <VIEW schema={{ type: "VIEW" }}>
-          <SEARCH schema={{ type: "SEARCH" }} placeholder="Search users..." />
-        </VIEW>
+        <View>
+          <Search placeholder="Search users..." />
+        </View>,
       );
 
-      expect(screen.getByPlaceholderText("Search users...")).toBeInTheDocument();
+      expect(
+        screen.getByPlaceholderText("Search users..."),
+      ).toBeInTheDocument();
     });
 
     it("calls onSearch when value changes", async () => {
@@ -105,9 +101,9 @@ describe("Primitive Adapters", () => {
       const user = userEvent.setup();
 
       renderWithProviders(
-        <VIEW schema={{ type: "VIEW" }}>
-          <SEARCH schema={{ type: "SEARCH" }} onSearch={onSearch} />
-        </VIEW>
+        <View>
+          <Search onSearch={onSearch} />
+        </View>,
       );
 
       const input = screen.getByRole("searchbox");
@@ -120,9 +116,9 @@ describe("Primitive Adapters", () => {
       const user = userEvent.setup();
 
       renderWithProviders(
-        <VIEW schema={{ type: "VIEW" }}>
-          <SEARCH schema={{ type: "SEARCH" }} />
-        </VIEW>
+        <View>
+          <Search />
+        </View>,
       );
 
       const input = screen.getByRole("searchbox");
@@ -137,9 +133,9 @@ describe("Primitive Adapters", () => {
       const user = userEvent.setup();
 
       renderWithProviders(
-        <VIEW schema={{ type: "VIEW" }}>
-          <SEARCH schema={{ type: "SEARCH" }} onSearch={onSearch} />
-        </VIEW>
+        <View>
+          <Search onSearch={onSearch} />
+        </View>,
       );
 
       const input = screen.getByRole("searchbox");
@@ -151,41 +147,48 @@ describe("Primitive Adapters", () => {
     });
   });
 
-  describe("SUBMIT", () => {
+  describe("Submit", () => {
     it("renders with default label", () => {
       renderWithProviders(
-        <VIEW schema={{ type: "VIEW" }}>
-          <FORM schema={{ type: "FORM" }}>
-            <SUBMIT schema={{ type: "SUBMIT" }} />
-          </FORM>
-        </VIEW>
+        <View>
+          <Form>
+            <Submit />
+          </Form>
+        </View>,
       );
 
-      expect(screen.getByRole("button", { name: "Submit" })).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: "Submit" }),
+      ).toBeInTheDocument();
     });
 
     it("renders with custom label", () => {
       renderWithProviders(
-        <VIEW schema={{ type: "VIEW" }}>
-          <FORM schema={{ type: "FORM" }}>
-            <SUBMIT schema={{ type: "SUBMIT" }} label="Save Changes" />
-          </FORM>
-        </VIEW>
+        <View>
+          <Form>
+            <Submit label="Save Changes" />
+          </Form>
+        </View>,
       );
 
-      expect(screen.getByRole("button", { name: "Save Changes" })).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: "Save Changes" }),
+      ).toBeInTheDocument();
     });
 
     it("is type submit", () => {
       renderWithProviders(
-        <VIEW schema={{ type: "VIEW" }}>
-          <FORM schema={{ type: "FORM" }}>
-            <SUBMIT schema={{ type: "SUBMIT" }} />
-          </FORM>
-        </VIEW>
+        <View>
+          <Form>
+            <Submit />
+          </Form>
+        </View>,
       );
 
-      expect(screen.getByRole("button", { name: "Submit" })).toHaveAttribute("type", "submit");
+      expect(screen.getByRole("button", { name: "Submit" })).toHaveAttribute(
+        "type",
+        "submit",
+      );
     });
   });
 });

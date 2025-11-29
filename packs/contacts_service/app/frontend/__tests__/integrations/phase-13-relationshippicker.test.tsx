@@ -2,38 +2,10 @@ import { describe, it, expect, vi, beforeEach, beforeAll } from "vitest";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { UIProvider } from "@ui/lib/provider";
-import { TooltipProvider } from "@ui/components/ui/tooltip";
-import { DynamicRenderer } from "@ui/lib/renderer";
-import {
-  VIEW,
-  FORM,
-  TABLE,
-  PAGE,
-  GROUP,
-  SHOW,
-  DISPLAY_ARRAY,
-} from "@ui/adapters/layouts";
-import {
-  INPUT_TEXT,
-  INPUT_SELECT,
-  INPUT_DATE,
-} from "@ui/adapters/inputs";
-import {
-  DISPLAY_TEXT,
-  DISPLAY_DATE,
-  DISPLAY_SELECT,
-  DISPLAY_TAGS,
-} from "@ui/adapters/displays";
-import {
-  COMPONENT,
-  LINK,
-  SUBMIT,
-  OPTION,
-  DROPDOWN,
-  RELATIONSHIP_PICKER,
-} from "@ui/adapters/primitives";
-import type { UIServices, ComponentRegistry, InputRegistry, DisplayRegistry } from "@ui/lib/registry";
+import { UIProvider } from "@ui/provider";
+import { TooltipProvider } from "@ui-components/tooltip";
+import { DynamicRenderer } from "@ui/renderer";
+import type { UIServices } from "@ui/registry";
 import type { ReactNode } from "react";
 
 // Import the full schema
@@ -79,35 +51,6 @@ function createMockServices(overrides?: Partial<UIServices>): UIServices {
   };
 }
 
-const mockComponents: ComponentRegistry = {
-  VIEW,
-  FORM,
-  TABLE,
-  PAGE,
-  GROUP,
-  SHOW,
-  DISPLAY_ARRAY,
-  COMPONENT,
-  LINK,
-  SUBMIT,
-  OPTION,
-  DROPDOWN,
-  RELATIONSHIP_PICKER,
-} as ComponentRegistry;
-
-const mockInputs: InputRegistry = {
-  INPUT_TEXT,
-  INPUT_SELECT,
-  INPUT_DATE,
-} as InputRegistry;
-
-const mockDisplays: DisplayRegistry = {
-  DISPLAY_TEXT,
-  DISPLAY_DATE,
-  DISPLAY_SELECT,
-  DISPLAY_TAGS,
-} as DisplayRegistry;
-
 interface WrapperProps {
   children: ReactNode;
   services?: UIServices;
@@ -130,9 +73,6 @@ function TestWrapper({
   return (
     <QueryClientProvider client={queryClient}>
       <UIProvider
-        components={mockComponents}
-        inputs={mockInputs}
-        displays={mockDisplays}
         services={services}
         translations={{ views: translations, schemas: {}, common: {} }}
         locale="en"
@@ -156,12 +96,14 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       render(
         <TestWrapper services={services}>
           <DynamicRenderer schema={contactsIndexSchema as never} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       // Wait for page to load
       await waitFor(() => {
-        expect(screen.getByRole("button", { name: "New Contact" })).toBeInTheDocument();
+        expect(
+          screen.getByRole("button", { name: "New Contact" }),
+        ).toBeInTheDocument();
       });
 
       // Open new contact drawer
@@ -174,7 +116,9 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
 
       // RELATIONSHIP_PICKER should render with data-ui attribute
       const drawer = screen.getByTestId("drawer-new_drawer");
-      const picker = within(drawer).getByTestId("relationship-picker-children_attributes");
+      const picker = within(drawer).getByTestId(
+        "relationship-picker-children_attributes",
+      );
       expect(picker).toBeInTheDocument();
     });
 
@@ -185,11 +129,13 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       render(
         <TestWrapper services={services}>
           <DynamicRenderer schema={contactsIndexSchema as never} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
-        expect(screen.getByRole("button", { name: "New Contact" })).toBeInTheDocument();
+        expect(
+          screen.getByRole("button", { name: "New Contact" }),
+        ).toBeInTheDocument();
       });
 
       await user.click(screen.getByRole("button", { name: "New Contact" }));
@@ -199,10 +145,14 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       });
 
       const drawer = screen.getByTestId("drawer-new_drawer");
-      const picker = within(drawer).getByTestId("relationship-picker-children_attributes");
+      const picker = within(drawer).getByTestId(
+        "relationship-picker-children_attributes",
+      );
 
       // Empty state should have Add button
-      expect(within(picker).getByRole("button", { name: /add/i })).toBeInTheDocument();
+      expect(
+        within(picker).getByRole("button", { name: /add/i }),
+      ).toBeInTheDocument();
     });
   });
 
@@ -214,11 +164,13 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       render(
         <TestWrapper services={services}>
           <DynamicRenderer schema={contactsIndexSchema as never} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
-        expect(screen.getByRole("button", { name: "New Contact" })).toBeInTheDocument();
+        expect(
+          screen.getByRole("button", { name: "New Contact" }),
+        ).toBeInTheDocument();
       });
 
       await user.click(screen.getByRole("button", { name: "New Contact" }));
@@ -228,13 +180,18 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       });
 
       const drawer = screen.getByTestId("drawer-new_drawer");
-      const addButton = within(drawer).getByRole("button", { name: /add/i });
+      const picker = within(drawer).getByTestId(
+        "relationship-picker-children_attributes",
+      );
+      const addButton = within(picker).getByRole("button", { name: /add/i });
 
       await user.click(addButton);
 
       // Picker drawer should open
       await waitFor(() => {
-        expect(screen.getByTestId("relationship-picker-drawer-children_attributes")).toBeInTheDocument();
+        expect(
+          screen.getByTestId("relationship-picker-drawer-children_attributes"),
+        ).toBeInTheDocument();
       });
     });
 
@@ -254,11 +211,13 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       render(
         <TestWrapper services={services}>
           <DynamicRenderer schema={contactsIndexSchema as never} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
-        expect(screen.getByRole("button", { name: "New Contact" })).toBeInTheDocument();
+        expect(
+          screen.getByRole("button", { name: "New Contact" }),
+        ).toBeInTheDocument();
       });
 
       await user.click(screen.getByRole("button", { name: "New Contact" }));
@@ -268,19 +227,23 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       });
 
       const drawer = screen.getByTestId("drawer-new_drawer");
-      const addButton = within(drawer).getByRole("button", { name: /add/i });
+      const addButton = within(within(drawer).getByTestId("relationship-picker-children_attributes")).getByRole("button", { name: /add/i });
 
       await user.click(addButton);
 
       // Wait for picker drawer to open and data to load
       await waitFor(() => {
-        expect(screen.getByTestId("relationship-picker-drawer-children_attributes")).toBeInTheDocument();
+        expect(
+          screen.getByTestId("relationship-picker-drawer-children_attributes"),
+        ).toBeInTheDocument();
       });
 
       // Verify API was called for the picker data
       await waitFor(() => {
-        const calls = mockFetch.mock.calls.map(c => c[0]);
-        expect(calls.some((url: string) => url.includes("/api/v1/contacts"))).toBe(true);
+        const calls = mockFetch.mock.calls.map((c) => c[0]);
+        expect(
+          calls.some((url: string) => url.includes("/api/v1/contacts")),
+        ).toBe(true);
       });
     });
 
@@ -291,11 +254,13 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       render(
         <TestWrapper services={services}>
           <DynamicRenderer schema={contactsIndexSchema as never} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
-        expect(screen.getByRole("button", { name: "New Contact" })).toBeInTheDocument();
+        expect(
+          screen.getByRole("button", { name: "New Contact" }),
+        ).toBeInTheDocument();
       });
 
       await user.click(screen.getByRole("button", { name: "New Contact" }));
@@ -305,10 +270,12 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       });
 
       const drawer = screen.getByTestId("drawer-new_drawer");
-      await user.click(within(drawer).getByRole("button", { name: /add/i }));
+      await user.click(within(within(drawer).getByTestId("relationship-picker-children_attributes")).getByRole("button", { name: /add/i }));
 
       await waitFor(() => {
-        const pickerDrawer = screen.getByTestId("relationship-picker-drawer-children_attributes");
+        const pickerDrawer = screen.getByTestId(
+          "relationship-picker-drawer-children_attributes",
+        );
         expect(within(pickerDrawer).getByRole("textbox")).toBeInTheDocument();
       });
     });
@@ -322,11 +289,13 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       render(
         <TestWrapper services={services}>
           <DynamicRenderer schema={contactsIndexSchema as never} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
-        expect(screen.getByRole("button", { name: "New Contact" })).toBeInTheDocument();
+        expect(
+          screen.getByRole("button", { name: "New Contact" }),
+        ).toBeInTheDocument();
       });
 
       await user.click(screen.getByRole("button", { name: "New Contact" }));
@@ -336,11 +305,13 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       });
 
       const drawer = screen.getByTestId("drawer-new_drawer");
-      await user.click(within(drawer).getByRole("button", { name: /add/i }));
+      await user.click(within(within(drawer).getByTestId("relationship-picker-children_attributes")).getByRole("button", { name: /add/i }));
 
       // Wait for data to load in picker drawer
       await waitFor(() => {
-        const pickerDrawer = screen.getByTestId("relationship-picker-drawer-children_attributes");
+        const pickerDrawer = screen.getByTestId(
+          "relationship-picker-drawer-children_attributes",
+        );
         expect(within(pickerDrawer).getByText("Alice")).toBeInTheDocument();
         expect(within(pickerDrawer).getByText("Bob")).toBeInTheDocument();
         expect(within(pickerDrawer).getByText("Charlie")).toBeInTheDocument();
@@ -354,11 +325,13 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       render(
         <TestWrapper services={services}>
           <DynamicRenderer schema={contactsIndexSchema as never} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
-        expect(screen.getByRole("button", { name: "New Contact" })).toBeInTheDocument();
+        expect(
+          screen.getByRole("button", { name: "New Contact" }),
+        ).toBeInTheDocument();
       });
 
       await user.click(screen.getByRole("button", { name: "New Contact" }));
@@ -368,10 +341,12 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       });
 
       const drawer = screen.getByTestId("drawer-new_drawer");
-      await user.click(within(drawer).getByRole("button", { name: /add/i }));
+      await user.click(within(within(drawer).getByTestId("relationship-picker-children_attributes")).getByRole("button", { name: /add/i }));
 
       await waitFor(() => {
-        expect(screen.getByTestId("relationship-picker-drawer-children_attributes")).toBeInTheDocument();
+        expect(
+          screen.getByTestId("relationship-picker-drawer-children_attributes"),
+        ).toBeInTheDocument();
       });
 
       // Wait for table data
@@ -395,11 +370,13 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       render(
         <TestWrapper services={services}>
           <DynamicRenderer schema={contactsIndexSchema as never} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
-        expect(screen.getByRole("button", { name: "New Contact" })).toBeInTheDocument();
+        expect(
+          screen.getByRole("button", { name: "New Contact" }),
+        ).toBeInTheDocument();
       });
 
       await user.click(screen.getByRole("button", { name: "New Contact" }));
@@ -409,7 +386,7 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       });
 
       const drawer = screen.getByTestId("drawer-new_drawer");
-      await user.click(within(drawer).getByRole("button", { name: /add/i }));
+      await user.click(within(within(drawer).getByTestId("relationship-picker-children_attributes")).getByRole("button", { name: /add/i }));
 
       await waitFor(() => {
         expect(screen.getByText("Alice")).toBeInTheDocument();
@@ -420,8 +397,12 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       await user.click(aliceRow!);
 
       // Confirm button should show count
-      const pickerDrawer = screen.getByTestId("relationship-picker-drawer-children_attributes");
-      expect(within(pickerDrawer).getByRole("button", { name: /confirm.*\(1\)/i })).toBeInTheDocument();
+      const pickerDrawer = screen.getByTestId(
+        "relationship-picker-drawer-children_attributes",
+      );
+      expect(
+        within(pickerDrawer).getByRole("button", { name: /confirm.*\(1\)/i }),
+      ).toBeInTheDocument();
     });
   });
 
@@ -433,11 +414,13 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       render(
         <TestWrapper services={services}>
           <DynamicRenderer schema={contactsIndexSchema as never} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
-        expect(screen.getByRole("button", { name: "New Contact" })).toBeInTheDocument();
+        expect(
+          screen.getByRole("button", { name: "New Contact" }),
+        ).toBeInTheDocument();
       });
 
       await user.click(screen.getByRole("button", { name: "New Contact" }));
@@ -447,7 +430,7 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       });
 
       const drawer = screen.getByTestId("drawer-new_drawer");
-      await user.click(within(drawer).getByRole("button", { name: /add/i }));
+      await user.click(within(within(drawer).getByTestId("relationship-picker-children_attributes")).getByRole("button", { name: /add/i }));
 
       await waitFor(() => {
         expect(screen.getByText("Alice")).toBeInTheDocument();
@@ -458,17 +441,27 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       await user.click(aliceRow!);
 
       // Click confirm
-      const pickerDrawer = screen.getByTestId("relationship-picker-drawer-children_attributes");
-      const confirmButton = within(pickerDrawer).getByRole("button", { name: /confirm/i });
+      const pickerDrawer = screen.getByTestId(
+        "relationship-picker-drawer-children_attributes",
+      );
+      const confirmButton = within(pickerDrawer).getByRole("button", {
+        name: /confirm/i,
+      });
       await user.click(confirmButton);
 
       // Picker drawer should close
       await waitFor(() => {
-        expect(screen.queryByTestId("relationship-picker-drawer-children_attributes")).not.toBeInTheDocument();
+        expect(
+          screen.queryByTestId(
+            "relationship-picker-drawer-children_attributes",
+          ),
+        ).not.toBeInTheDocument();
       });
 
       // Selected item should now appear in the field
-      const picker = within(drawer).getByTestId("relationship-picker-children_attributes");
+      const picker = within(drawer).getByTestId(
+        "relationship-picker-children_attributes",
+      );
       expect(within(picker).getByText(/Alice/)).toBeInTheDocument();
     });
 
@@ -479,11 +472,13 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       render(
         <TestWrapper services={services}>
           <DynamicRenderer schema={contactsIndexSchema as never} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
-        expect(screen.getByRole("button", { name: "New Contact" })).toBeInTheDocument();
+        expect(
+          screen.getByRole("button", { name: "New Contact" }),
+        ).toBeInTheDocument();
       });
 
       await user.click(screen.getByRole("button", { name: "New Contact" }));
@@ -493,7 +488,7 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       });
 
       const drawer = screen.getByTestId("drawer-new_drawer");
-      await user.click(within(drawer).getByRole("button", { name: /add/i }));
+      await user.click(within(within(drawer).getByTestId("relationship-picker-children_attributes")).getByRole("button", { name: /add/i }));
 
       await waitFor(() => {
         expect(screen.getByText("Alice")).toBeInTheDocument();
@@ -506,15 +501,23 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       await user.click(bobRow!);
 
       // Confirm button should show (2)
-      const pickerDrawer = screen.getByTestId("relationship-picker-drawer-children_attributes");
-      expect(within(pickerDrawer).getByRole("button", { name: /confirm.*\(2\)/i })).toBeInTheDocument();
+      const pickerDrawer = screen.getByTestId(
+        "relationship-picker-drawer-children_attributes",
+      );
+      expect(
+        within(pickerDrawer).getByRole("button", { name: /confirm.*\(2\)/i }),
+      ).toBeInTheDocument();
 
       // Confirm
-      await user.click(within(pickerDrawer).getByRole("button", { name: /confirm/i }));
+      await user.click(
+        within(pickerDrawer).getByRole("button", { name: /confirm/i }),
+      );
 
       // Both should appear
       await waitFor(() => {
-        const picker = within(drawer).getByTestId("relationship-picker-children_attributes");
+        const picker = within(drawer).getByTestId(
+          "relationship-picker-children_attributes",
+        );
         expect(within(picker).getByText(/Alice/)).toBeInTheDocument();
         expect(within(picker).getByText(/Bob/)).toBeInTheDocument();
       });
@@ -529,11 +532,13 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       render(
         <TestWrapper services={services}>
           <DynamicRenderer schema={contactsIndexSchema as never} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
-        expect(screen.getByRole("button", { name: "New Contact" })).toBeInTheDocument();
+        expect(
+          screen.getByRole("button", { name: "New Contact" }),
+        ).toBeInTheDocument();
       });
 
       await user.click(screen.getByRole("button", { name: "New Contact" }));
@@ -543,7 +548,7 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       });
 
       const drawer = screen.getByTestId("drawer-new_drawer");
-      await user.click(within(drawer).getByRole("button", { name: /add/i }));
+      await user.click(within(within(drawer).getByTestId("relationship-picker-children_attributes")).getByRole("button", { name: /add/i }));
 
       await waitFor(() => {
         expect(screen.getByText("Alice")).toBeInTheDocument();
@@ -552,19 +557,29 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       // Select and confirm
       const aliceRow = screen.getByText("Alice").closest("tr");
       await user.click(aliceRow!);
-      const pickerDrawer = screen.getByTestId("relationship-picker-drawer-children_attributes");
-      await user.click(within(pickerDrawer).getByRole("button", { name: /confirm/i }));
+      const pickerDrawer = screen.getByTestId(
+        "relationship-picker-drawer-children_attributes",
+      );
+      await user.click(
+        within(pickerDrawer).getByRole("button", { name: /confirm/i }),
+      );
 
       // Wait for item to appear
       await waitFor(() => {
-        const picker = within(drawer).getByTestId("relationship-picker-children_attributes");
+        const picker = within(drawer).getByTestId(
+          "relationship-picker-children_attributes",
+        );
         expect(within(picker).getByText(/Alice/)).toBeInTheDocument();
       });
 
       // Find and verify remove button exists
-      const picker = within(drawer).getByTestId("relationship-picker-children_attributes");
+      const picker = within(drawer).getByTestId(
+        "relationship-picker-children_attributes",
+      );
       const itemContainer = within(picker).getByText(/Alice/).closest("div");
-      const buttons = within(itemContainer!.parentElement!).getAllByRole("button");
+      const buttons = within(itemContainer!.parentElement!).getAllByRole(
+        "button",
+      );
       expect(buttons.length).toBeGreaterThan(0);
     });
 
@@ -575,11 +590,13 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       render(
         <TestWrapper services={services}>
           <DynamicRenderer schema={contactsIndexSchema as never} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
-        expect(screen.getByRole("button", { name: "New Contact" })).toBeInTheDocument();
+        expect(
+          screen.getByRole("button", { name: "New Contact" }),
+        ).toBeInTheDocument();
       });
 
       await user.click(screen.getByRole("button", { name: "New Contact" }));
@@ -589,7 +606,7 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       });
 
       const drawer = screen.getByTestId("drawer-new_drawer");
-      await user.click(within(drawer).getByRole("button", { name: /add/i }));
+      await user.click(within(within(drawer).getByTestId("relationship-picker-children_attributes")).getByRole("button", { name: /add/i }));
 
       await waitFor(() => {
         expect(screen.getByText("Alice")).toBeInTheDocument();
@@ -598,20 +615,30 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       // Select and confirm
       const aliceRow = screen.getByText("Alice").closest("tr");
       await user.click(aliceRow!);
-      const pickerDrawer = screen.getByTestId("relationship-picker-drawer-children_attributes");
-      await user.click(within(pickerDrawer).getByRole("button", { name: /confirm/i }));
+      const pickerDrawer = screen.getByTestId(
+        "relationship-picker-drawer-children_attributes",
+      );
+      await user.click(
+        within(pickerDrawer).getByRole("button", { name: /confirm/i }),
+      );
 
       await waitFor(() => {
-        const picker = within(drawer).getByTestId("relationship-picker-children_attributes");
+        const picker = within(drawer).getByTestId(
+          "relationship-picker-children_attributes",
+        );
         expect(within(picker).getByText(/Alice/)).toBeInTheDocument();
       });
 
       // Click remove (X button)
-      const picker = within(drawer).getByTestId("relationship-picker-children_attributes");
-      const itemRow = within(picker).getByText(/Alice/).closest("div")?.parentElement;
-      const removeButton = within(itemRow!).getAllByRole("button").find(btn =>
-        btn.querySelector("svg")
+      const picker = within(drawer).getByTestId(
+        "relationship-picker-children_attributes",
       );
+      const itemRow = within(picker)
+        .getByText(/Alice/)
+        .closest("div")?.parentElement;
+      const removeButton = within(itemRow!)
+        .getAllByRole("button")
+        .find((btn) => btn.querySelector("svg"));
       await user.click(removeButton!);
 
       // Item should be removed from display
@@ -629,11 +656,13 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       render(
         <TestWrapper services={services}>
           <DynamicRenderer schema={contactsIndexSchema as never} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
-        expect(screen.getByRole("button", { name: "New Contact" })).toBeInTheDocument();
+        expect(
+          screen.getByRole("button", { name: "New Contact" }),
+        ).toBeInTheDocument();
       });
 
       await user.click(screen.getByRole("button", { name: "New Contact" }));
@@ -643,11 +672,15 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       });
 
       const drawer = screen.getByTestId("drawer-new_drawer");
-      await user.click(within(drawer).getByRole("button", { name: /add/i }));
+      await user.click(within(within(drawer).getByTestId("relationship-picker-children_attributes")).getByRole("button", { name: /add/i }));
 
       await waitFor(() => {
-        const pickerDrawer = screen.getByTestId("relationship-picker-drawer-children_attributes");
-        expect(within(pickerDrawer).getByRole("button", { name: /create.*new/i })).toBeInTheDocument();
+        const pickerDrawer = screen.getByTestId(
+          "relationship-picker-drawer-children_attributes",
+        );
+        expect(
+          within(pickerDrawer).getByRole("button", { name: /create.*new/i }),
+        ).toBeInTheDocument();
       });
     });
 
@@ -658,11 +691,13 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       render(
         <TestWrapper services={services}>
           <DynamicRenderer schema={contactsIndexSchema as never} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
-        expect(screen.getByRole("button", { name: "New Contact" })).toBeInTheDocument();
+        expect(
+          screen.getByRole("button", { name: "New Contact" }),
+        ).toBeInTheDocument();
       });
 
       await user.click(screen.getByRole("button", { name: "New Contact" }));
@@ -672,18 +707,26 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       });
 
       const drawer = screen.getByTestId("drawer-new_drawer");
-      await user.click(within(drawer).getByRole("button", { name: /add/i }));
+      await user.click(within(within(drawer).getByTestId("relationship-picker-children_attributes")).getByRole("button", { name: /add/i }));
 
       await waitFor(() => {
-        expect(screen.getByTestId("relationship-picker-drawer-children_attributes")).toBeInTheDocument();
+        expect(
+          screen.getByTestId("relationship-picker-drawer-children_attributes"),
+        ).toBeInTheDocument();
       });
 
-      const pickerDrawer = screen.getByTestId("relationship-picker-drawer-children_attributes");
-      await user.click(within(pickerDrawer).getByRole("button", { name: /create.*new/i }));
+      const pickerDrawer = screen.getByTestId(
+        "relationship-picker-drawer-children_attributes",
+      );
+      await user.click(
+        within(pickerDrawer).getByRole("button", { name: /create.*new/i }),
+      );
 
       // Create drawer should open
       await waitFor(() => {
-        expect(screen.getByTestId("relationship-create-drawer-children_attributes")).toBeInTheDocument();
+        expect(
+          screen.getByTestId("relationship-create-drawer-children_attributes"),
+        ).toBeInTheDocument();
       });
     });
 
@@ -694,11 +737,13 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       render(
         <TestWrapper services={services}>
           <DynamicRenderer schema={contactsIndexSchema as never} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
-        expect(screen.getByRole("button", { name: "New Contact" })).toBeInTheDocument();
+        expect(
+          screen.getByRole("button", { name: "New Contact" }),
+        ).toBeInTheDocument();
       });
 
       await user.click(screen.getByRole("button", { name: "New Contact" }));
@@ -708,25 +753,39 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       });
 
       const drawer = screen.getByTestId("drawer-new_drawer");
-      await user.click(within(drawer).getByRole("button", { name: /add/i }));
+      await user.click(within(within(drawer).getByTestId("relationship-picker-children_attributes")).getByRole("button", { name: /add/i }));
 
       await waitFor(() => {
-        expect(screen.getByTestId("relationship-picker-drawer-children_attributes")).toBeInTheDocument();
+        expect(
+          screen.getByTestId("relationship-picker-drawer-children_attributes"),
+        ).toBeInTheDocument();
       });
 
-      const pickerDrawer = screen.getByTestId("relationship-picker-drawer-children_attributes");
-      await user.click(within(pickerDrawer).getByRole("button", { name: /create.*new/i }));
+      const pickerDrawer = screen.getByTestId(
+        "relationship-picker-drawer-children_attributes",
+      );
+      await user.click(
+        within(pickerDrawer).getByRole("button", { name: /create.*new/i }),
+      );
 
       await waitFor(() => {
-        expect(screen.getByTestId("relationship-create-drawer-children_attributes")).toBeInTheDocument();
+        expect(
+          screen.getByTestId("relationship-create-drawer-children_attributes"),
+        ).toBeInTheDocument();
       });
 
-      const createDrawer = screen.getByTestId("relationship-create-drawer-children_attributes");
+      const createDrawer = screen.getByTestId(
+        "relationship-create-drawer-children_attributes",
+      );
 
       // Find inputs by name attribute within the create drawer form
       const inputs = within(createDrawer).getAllByRole("textbox");
-      const firstNameInput = inputs.find(input => input.getAttribute("name") === "first_name")!;
-      const lastNameInput = inputs.find(input => input.getAttribute("name") === "last_name")!;
+      const firstNameInput = inputs.find(
+        (input) => input.getAttribute("name") === "first_name",
+      )!;
+      const lastNameInput = inputs.find(
+        (input) => input.getAttribute("name") === "last_name",
+      )!;
 
       await user.type(firstNameInput, "David");
       expect(firstNameInput).toHaveValue("David");
@@ -737,35 +796,42 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
 
     it("Submitting create form adds new item to picker", async () => {
       const user = userEvent.setup();
-      const mockFetch = vi.fn().mockImplementation((url: string, options?: RequestInit) => {
-        // Table data
-        if (url.includes("/api/v1/workspaces/contacts") && !options?.method) {
-          return Promise.resolve({ data: mockData.items });
-        }
-        // Relationship picker data
-        if (url.includes("/api/v1/contacts") && (!options?.method || options.method === "GET")) {
-          return Promise.resolve(mockRelatedContacts);
-        }
-        // POST to create new item
-        if (url.includes("/api/v1/contacts") && options?.method === "POST") {
-          const body = JSON.parse(options.body as string);
-          return Promise.resolve({
-            id: 999,
-            data: body.data,
-          });
-        }
-        return Promise.resolve({ data: [] });
-      });
+      const mockFetch = vi
+        .fn()
+        .mockImplementation((url: string, options?: RequestInit) => {
+          // Table data
+          if (url.includes("/api/v1/workspaces/contacts") && !options?.method) {
+            return Promise.resolve({ data: mockData.items });
+          }
+          // Relationship picker data
+          if (
+            url.includes("/api/v1/contacts") &&
+            (!options?.method || options.method === "GET")
+          ) {
+            return Promise.resolve(mockRelatedContacts);
+          }
+          // POST to create new item
+          if (url.includes("/api/v1/contacts") && options?.method === "POST") {
+            const body = JSON.parse(options.body as string);
+            return Promise.resolve({
+              id: 999,
+              data: body.data,
+            });
+          }
+          return Promise.resolve({ data: [] });
+        });
       const services = createMockServices({ fetch: mockFetch });
 
       render(
         <TestWrapper services={services}>
           <DynamicRenderer schema={contactsIndexSchema as never} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
-        expect(screen.getByRole("button", { name: "New Contact" })).toBeInTheDocument();
+        expect(
+          screen.getByRole("button", { name: "New Contact" }),
+        ).toBeInTheDocument();
       });
 
       await user.click(screen.getByRole("button", { name: "New Contact" }));
@@ -775,53 +841,89 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       });
 
       const drawer = screen.getByTestId("drawer-new_drawer");
-      await user.click(within(drawer).getByRole("button", { name: /add/i }));
+      await user.click(within(within(drawer).getByTestId("relationship-picker-children_attributes")).getByRole("button", { name: /add/i }));
 
       await waitFor(() => {
-        expect(screen.getByTestId("relationship-picker-drawer-children_attributes")).toBeInTheDocument();
+        expect(
+          screen.getByTestId("relationship-picker-drawer-children_attributes"),
+        ).toBeInTheDocument();
       });
 
-      const pickerDrawer = screen.getByTestId("relationship-picker-drawer-children_attributes");
-      await user.click(within(pickerDrawer).getByRole("button", { name: /create.*new/i }));
+      const pickerDrawer = screen.getByTestId(
+        "relationship-picker-drawer-children_attributes",
+      );
+      await user.click(
+        within(pickerDrawer).getByRole("button", { name: /create.*new/i }),
+      );
 
       await waitFor(() => {
-        expect(screen.getByTestId("relationship-create-drawer-children_attributes")).toBeInTheDocument();
+        expect(
+          screen.getByTestId("relationship-create-drawer-children_attributes"),
+        ).toBeInTheDocument();
       });
 
-      const createDrawer = screen.getByTestId("relationship-create-drawer-children_attributes");
+      const createDrawer = screen.getByTestId(
+        "relationship-create-drawer-children_attributes",
+      );
 
       // Fill the form - find inputs by name attribute
       const inputs = within(createDrawer).getAllByRole("textbox");
-      const firstNameInput = inputs.find(input => input.getAttribute("name") === "first_name")!;
-      const lastNameInput = inputs.find(input => input.getAttribute("name") === "last_name")!;
+      const firstNameInput = inputs.find(
+        (input) => input.getAttribute("name") === "first_name",
+      )!;
+      const lastNameInput = inputs.find(
+        (input) => input.getAttribute("name") === "last_name",
+      )!;
       await user.type(firstNameInput, "David");
       await user.type(lastNameInput, "Miller");
 
       // Submit the form
-      const submitButton = within(createDrawer).getByRole("button", { name: /add/i });
+      const submitButton = within(createDrawer).getByRole("button", {
+        name: /add/i,
+      });
       await user.click(submitButton);
 
       // Create drawer should close, back to picker drawer
       await waitFor(() => {
-        expect(screen.queryByTestId("relationship-create-drawer-children_attributes")).not.toBeInTheDocument();
+        expect(
+          screen.queryByTestId(
+            "relationship-create-drawer-children_attributes",
+          ),
+        ).not.toBeInTheDocument();
       });
 
       // The item is auto-selected in picker drawer, confirm button should show (1)
-      const pickerDrawerAfterCreate = screen.getByTestId("relationship-picker-drawer-children_attributes");
+      const pickerDrawerAfterCreate = screen.getByTestId(
+        "relationship-picker-drawer-children_attributes",
+      );
       await waitFor(() => {
-        expect(within(pickerDrawerAfterCreate).getByRole("button", { name: /confirm.*\(1\)/i })).toBeInTheDocument();
+        expect(
+          within(pickerDrawerAfterCreate).getByRole("button", {
+            name: /confirm.*\(1\)/i,
+          }),
+        ).toBeInTheDocument();
       });
 
       // Click confirm to add to picker field
-      await user.click(within(pickerDrawerAfterCreate).getByRole("button", { name: /confirm/i }));
+      await user.click(
+        within(pickerDrawerAfterCreate).getByRole("button", {
+          name: /confirm/i,
+        }),
+      );
 
       // Picker drawer should close
       await waitFor(() => {
-        expect(screen.queryByTestId("relationship-picker-drawer-children_attributes")).not.toBeInTheDocument();
+        expect(
+          screen.queryByTestId(
+            "relationship-picker-drawer-children_attributes",
+          ),
+        ).not.toBeInTheDocument();
       });
 
       // New item should appear in picker field
-      const picker = within(drawer).getByTestId("relationship-picker-children_attributes");
+      const picker = within(drawer).getByTestId(
+        "relationship-picker-children_attributes",
+      );
       await waitFor(() => {
         expect(within(picker).getByText(/David/)).toBeInTheDocument();
         expect(within(picker).getByText(/Miller/)).toBeInTheDocument();
@@ -837,11 +939,13 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       render(
         <TestWrapper services={services}>
           <DynamicRenderer schema={contactsIndexSchema as never} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
-        expect(screen.getByRole("button", { name: "New Contact" })).toBeInTheDocument();
+        expect(
+          screen.getByRole("button", { name: "New Contact" }),
+        ).toBeInTheDocument();
       });
 
       await user.click(screen.getByRole("button", { name: "New Contact" }));
@@ -851,10 +955,12 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       });
 
       const drawer = screen.getByTestId("drawer-new_drawer");
-      await user.click(within(drawer).getByRole("button", { name: /add/i }));
+      await user.click(within(within(drawer).getByTestId("relationship-picker-children_attributes")).getByRole("button", { name: /add/i }));
 
       await waitFor(() => {
-        expect(screen.getByTestId("relationship-picker-drawer-children_attributes")).toBeInTheDocument();
+        expect(
+          screen.getByTestId("relationship-picker-drawer-children_attributes"),
+        ).toBeInTheDocument();
       });
 
       // Select something but then cancel
@@ -865,16 +971,26 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       await user.click(aliceRow!);
 
       // Click cancel
-      const pickerDrawer = screen.getByTestId("relationship-picker-drawer-children_attributes");
-      await user.click(within(pickerDrawer).getByRole("button", { name: /cancel/i }));
+      const pickerDrawer = screen.getByTestId(
+        "relationship-picker-drawer-children_attributes",
+      );
+      await user.click(
+        within(pickerDrawer).getByRole("button", { name: /cancel/i }),
+      );
 
       // Drawer should close
       await waitFor(() => {
-        expect(screen.queryByTestId("relationship-picker-drawer-children_attributes")).not.toBeInTheDocument();
+        expect(
+          screen.queryByTestId(
+            "relationship-picker-drawer-children_attributes",
+          ),
+        ).not.toBeInTheDocument();
       });
 
       // No item should be added
-      const picker = within(drawer).getByTestId("relationship-picker-children_attributes");
+      const picker = within(drawer).getByTestId(
+        "relationship-picker-children_attributes",
+      );
       expect(within(picker).queryByText(/Alice/)).not.toBeInTheDocument();
     });
   });

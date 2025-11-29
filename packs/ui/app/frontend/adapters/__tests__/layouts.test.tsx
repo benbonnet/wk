@@ -1,19 +1,20 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {
-  VIEW,
-  PAGE,
-  FORM,
-  SHOW,
-  GROUP,
-  CARD_GROUP,
-  ACTIONS,
-  ALERT,
-} from "../layouts";
-import { BUTTON } from "../primitives";
-import { INPUT_TEXT } from "../inputs";
-import { DISPLAY_TEXT } from "../displays";
+  View,
+  Page,
+  Form,
+  Show,
+  Group,
+  CardGroup,
+  Actions,
+  Alert,
+  Button,
+  TextInput,
+  TextDisplay,
+} from "..";
 import { renderWithProviders, resetMocks } from "./test-utils";
 
 describe("Layout Adapters", () => {
@@ -21,12 +22,12 @@ describe("Layout Adapters", () => {
     resetMocks();
   });
 
-  describe("VIEW", () => {
+  describe("View", () => {
     it("renders children", () => {
       renderWithProviders(
-        <VIEW schema={{ type: "VIEW" }}>
+        <View>
           <div>View Content</div>
-        </VIEW>,
+        </View>,
       );
 
       expect(screen.getByText("View Content")).toBeInTheDocument();
@@ -34,9 +35,9 @@ describe("Layout Adapters", () => {
 
     it("has data-ui attribute", () => {
       const { container } = renderWithProviders(
-        <VIEW schema={{ type: "VIEW" }}>
+        <View>
           <div>Content</div>
-        </VIEW>,
+        </View>,
       );
 
       const viewElement = container.querySelector('[data-ui="view"]');
@@ -44,14 +45,12 @@ describe("Layout Adapters", () => {
     });
   });
 
-  describe("PAGE", () => {
+  describe("Page", () => {
     it("renders title and description", () => {
       renderWithProviders(
-        <PAGE
-          schema={{ type: "PAGE", title: "Users", description: "Manage users" }}
-        >
+        <Page title="Users" description="Manage users">
           <div>Page content</div>
-        </PAGE>,
+        </Page>,
       );
 
       expect(screen.getByText("Users")).toBeInTheDocument();
@@ -60,23 +59,23 @@ describe("Layout Adapters", () => {
 
     it("renders children", () => {
       renderWithProviders(
-        <PAGE schema={{ type: "PAGE" }}>
+        <Page>
           <div>Page content</div>
-        </PAGE>,
+        </Page>,
       );
 
       expect(screen.getByText("Page content")).toBeInTheDocument();
     });
   });
 
-  describe("FORM", () => {
+  describe("Form", () => {
     it("renders form element", () => {
       const { container } = renderWithProviders(
-        <VIEW schema={{ type: "VIEW" }}>
-          <FORM schema={{ type: "FORM" }}>
+        <View>
+          <Form>
             <div>Form content</div>
-          </FORM>
-        </VIEW>,
+          </Form>
+        </View>,
       );
 
       const formElement = container.querySelector("form");
@@ -88,11 +87,11 @@ describe("Layout Adapters", () => {
       const user = userEvent.setup();
 
       renderWithProviders(
-        <VIEW schema={{ type: "VIEW" }}>
-          <FORM schema={{ type: "FORM" }} onSubmit={onSubmit}>
+        <View>
+          <Form onSubmit={onSubmit}>
             <button type="submit">Submit</button>
-          </FORM>
-        </VIEW>,
+          </Form>
+        </View>,
       );
 
       await user.click(screen.getByText("Submit"));
@@ -105,16 +104,12 @@ describe("Layout Adapters", () => {
       const onSubmit = vi.fn();
 
       renderWithProviders(
-        <VIEW schema={{ type: "VIEW" }}>
-          <FORM
-            schema={{ type: "FORM" }}
-            onSubmit={onSubmit}
-            defaultValues={{ email: "" }}
-          >
-            <INPUT_TEXT name="email" label="Email" />
+        <View>
+          <Form onSubmit={onSubmit} defaultValues={{ email: "" }}>
+            <TextInput name="email" label="Email" />
             <button type="submit">Submit</button>
-          </FORM>
-        </VIEW>,
+          </Form>
+        </View>,
       );
 
       const input = screen.getByLabelText("Email");
@@ -125,17 +120,17 @@ describe("Layout Adapters", () => {
     });
   });
 
-  describe("SHOW", () => {
+  describe("Show", () => {
     it("renders children with record context", () => {
       const record = { name: "John Doe", email: "john@example.com" };
 
       renderWithProviders(
-        <VIEW schema={{ type: "VIEW" }}>
-          <SHOW schema={{ type: "SHOW" }} record={record}>
-            <DISPLAY_TEXT name="name" label="Name" />
-            <DISPLAY_TEXT name="email" label="Email" />
-          </SHOW>
-        </VIEW>,
+        <View>
+          <Show record={record}>
+            <TextDisplay name="name" label="Name" />
+            <TextDisplay name="email" label="Email" />
+          </Show>
+        </View>,
       );
 
       expect(screen.getByText("John Doe")).toBeInTheDocument();
@@ -144,23 +139,23 @@ describe("Layout Adapters", () => {
 
     it("renders with title in Card", () => {
       renderWithProviders(
-        <SHOW schema={{ type: "SHOW", title: "User Details" }} record={{}}>
+        <Show title="User Details" record={{}}>
           <div>Content</div>
-        </SHOW>,
+        </Show>,
       );
 
       expect(screen.getByText("User Details")).toBeInTheDocument();
     });
   });
 
-  describe("GROUP", () => {
+  describe("Group", () => {
     it("renders label", () => {
       renderWithProviders(
-        <VIEW schema={{ type: "VIEW" }}>
-          <GROUP schema={{ type: "GROUP", label: "Personal Info" }}>
+        <View>
+          <Group label="Personal Info">
             <div>Group content</div>
-          </GROUP>
-        </VIEW>,
+          </Group>
+        </View>,
       );
 
       expect(screen.getByText("Personal Info")).toBeInTheDocument();
@@ -168,23 +163,23 @@ describe("Layout Adapters", () => {
 
     it("renders children", () => {
       renderWithProviders(
-        <VIEW schema={{ type: "VIEW" }}>
-          <GROUP schema={{ type: "GROUP" }}>
+        <View>
+          <Group>
             <div>Group content</div>
-          </GROUP>
-        </VIEW>,
+          </Group>
+        </View>,
       );
 
       expect(screen.getByText("Group content")).toBeInTheDocument();
     });
   });
 
-  describe("CARD_GROUP", () => {
+  describe("CardGroup", () => {
     it("renders in Card with title", () => {
       renderWithProviders(
-        <CARD_GROUP schema={{ type: "CARD_GROUP", label: "Settings" }}>
+        <CardGroup label="Settings">
           <div>Card content</div>
-        </CARD_GROUP>,
+        </CardGroup>,
       );
 
       expect(screen.getByText("Settings")).toBeInTheDocument();
@@ -192,18 +187,15 @@ describe("Layout Adapters", () => {
     });
   });
 
-  describe("ACTIONS", () => {
+  describe("Actions", () => {
     it("renders children in flex container", () => {
       renderWithProviders(
-        <VIEW schema={{ type: "VIEW" }}>
-          <ACTIONS schema={{ type: "ACTIONS" }}>
-            <BUTTON schema={{ type: "BUTTON", label: "Save" }} label="Save" />
-            <BUTTON
-              schema={{ type: "BUTTON", label: "Cancel" }}
-              label="Cancel"
-            />
-          </ACTIONS>
-        </VIEW>,
+        <View>
+          <Actions>
+            <Button label="Save" />
+            <Button label="Cancel" />
+          </Actions>
+        </View>,
       );
 
       expect(screen.getByText("Save")).toBeInTheDocument();
@@ -211,19 +203,15 @@ describe("Layout Adapters", () => {
     });
   });
 
-  describe("ALERT", () => {
+  describe("Alert", () => {
     it("renders alert with label", () => {
-      renderWithProviders(
-        <ALERT schema={{ type: "ALERT" }} label="Warning message" />,
-      );
+      renderWithProviders(<Alert label="Warning message" />);
 
       expect(screen.getByText("Warning message")).toBeInTheDocument();
     });
 
     it("applies color variant", () => {
-      renderWithProviders(
-        <ALERT schema={{ type: "ALERT" }} label="Error" color="red" />,
-      );
+      renderWithProviders(<Alert label="Error" color="red" />);
 
       const alert = screen.getByRole("alert");
       expect(alert.className).toContain("text-red");

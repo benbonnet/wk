@@ -3,16 +3,11 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { UIProvider } from "@ui/provider";
-import { TooltipProvider } from "@ui-components/ui/tooltip";
-import {
-  BUTTON,
-  LINK,
-  DROPDOWN,
-  OPTION,
-  SUBMIT,
-} from "@ui/adapters/primitives";
-import { VIEW, DrawerContext, FormContext } from "@ui/adapters/layouts";
+import { DynamicRenderer } from "@ui/renderer";
+import { TooltipProvider } from "@ui-components/tooltip";
+import { FormContext } from "@ui/adapters";
 import type { UIServices, FormContextValue } from "@ui/registry";
+import type { UISchema } from "@ui/types";
 import type { ReactNode } from "react";
 
 function createMockServices(overrides?: Partial<UIServices>): UIServices {
@@ -44,105 +39,72 @@ function TestWrapper({
 }: WrapperProps) {
   return (
     <QueryClientProvider client={queryClient}>
-      <UIProvider
-        components={{} as never}
-        inputs={{} as never}
-        displays={{} as never}
-        services={services}
-        locale="en"
-      >
+      <UIProvider services={services} locale="en">
         <TooltipProvider>{children}</TooltipProvider>
       </UIProvider>
     </QueryClientProvider>
   );
 }
 
-// Wrapper that includes VIEW for components needing DrawerContext
-function TestWrapperWithView({
-  children,
-  services = createMockServices(),
-  queryClient = createQueryClient(),
-}: WrapperProps) {
-  return (
-    <TestWrapper services={services} queryClient={queryClient}>
-      <VIEW schema={{ type: "VIEW" }}>{children}</VIEW>
+function renderSchema(
+  schema: UISchema,
+  options?: { services?: UIServices; data?: Record<string, unknown> }
+) {
+  const services = options?.services ?? createMockServices();
+  return render(
+    <TestWrapper services={services}>
+      <DynamicRenderer schema={schema} data={options?.data} />
     </TestWrapper>
   );
+}
+
+// Wrap in VIEW for components needing DrawerContext
+function renderSchemaInView(
+  schema: UISchema,
+  options?: { services?: UIServices; data?: Record<string, unknown> }
+) {
+  const services = options?.services ?? createMockServices();
+  return {
+    ...render(
+      <TestWrapper services={services}>
+        <DynamicRenderer
+          schema={{ type: "VIEW", elements: [schema] }}
+          data={options?.data}
+        />
+      </TestWrapper>
+    ),
+    services,
+  };
 }
 
 describe("Phase 4: Primitive Adapters", () => {
   describe("4.1 Button/Link", () => {
     describe("BUTTON", () => {
       it("renders with label", () => {
-        render(
-          <TestWrapper>
-            <BUTTON schema={{ type: "BUTTON", label: "Click Me" }} />
-          </TestWrapper>
-        );
+        renderSchema({ type: "BUTTON", label: "Click Me" });
         expect(screen.getByRole("button", { name: "Click Me" })).toBeInTheDocument();
       });
 
-      it("calls onClick when clicked", async () => {
-        const user = userEvent.setup();
-        const handleClick = vi.fn();
-
-        render(
-          <TestWrapper>
-            <BUTTON
-              schema={{ type: "BUTTON", label: "Click" }}
-              onClick={handleClick}
-            />
-          </TestWrapper>
-        );
-
-        await user.click(screen.getByRole("button"));
-        expect(handleClick).toHaveBeenCalledTimes(1);
-      });
-
       it("renders with primary variant by default", () => {
-        render(
-          <TestWrapper>
-            <BUTTON schema={{ type: "BUTTON", label: "Primary" }} />
-          </TestWrapper>
-        );
-        // Default variant maps to shadcn "default" which has no variant modifier
+        renderSchema({ type: "BUTTON", label: "Primary" });
         expect(screen.getByRole("button")).toBeInTheDocument();
       });
 
       it("renders with destructive variant", () => {
-        render(
-          <TestWrapper>
-            <BUTTON
-              schema={{ type: "BUTTON", label: "Delete" }}
-              variant="destructive"
-            />
-          </TestWrapper>
-        );
+        renderSchema({ type: "BUTTON", label: "Delete", variant: "destructive" });
         const button = screen.getByRole("button");
         expect(button).toHaveClass("bg-destructive");
       });
 
       it("renders with icon", () => {
-        render(
-          <TestWrapper>
-            <BUTTON
-              schema={{ type: "BUTTON", label: "Settings" }}
-              icon="settings"
-            />
-          </TestWrapper>
-        );
-        // Icon should be rendered (as SVG)
+        renderSchema({ type: "BUTTON", label: "Settings", icon: "settings" });
         expect(screen.getByRole("button").querySelector("svg")).toBeInTheDocument();
       });
     });
 
     describe("LINK", () => {
       it("renders with label", () => {
-        render(
-          <TestWrapperWithView>
-            <LINK schema={{ type: "LINK", label: "Go" }} />
-          </TestWrapperWithView>
-        );
+        renderSchemaInView({ type: "LINK", label: "Go" });
         expect(screen.getByRole("button", { name: "Go" })).toBeInTheDocument();
       });
 
@@ -150,11 +112,7 @@ describe("Phase 4: Primitive Adapters", () => {
         const user = userEvent.setup();
         const services = createMockServices();
 
-        render(
-          <TestWrapperWithView services={services}>
-            <LINK schema={{ type: "LINK", label: "Go", href: "/dashboard" }} />
-          </TestWrapperWithView>
-        );
+        renderSchemaInView({ type: "LINK", label: "Go", href: "/dashboard" }, { services });
 
         await user.click(screen.getByRole("button"));
         expect(services.navigate).toHaveBeenCalledWith("/dashboard");
@@ -164,13 +122,9 @@ describe("Phase 4: Primitive Adapters", () => {
         const user = userEvent.setup();
         const services = createMockServices();
 
-        render(
-          <TestWrapperWithView services={services}>
-            <LINK
-              schema={{ type: "LINK", label: "View", href: "/users/:id" }}
-              data={{ id: 123 }}
-            />
-          </TestWrapperWithView>
+        renderSchemaInView(
+          { type: "LINK", label: "View", href: "/users/:id" },
+          { services, data: { id: 123 } }
         );
 
         await user.click(screen.getByRole("button"));
@@ -179,10 +133,11 @@ describe("Phase 4: Primitive Adapters", () => {
 
       it("opens drawer when opens attribute is set", async () => {
         const user = userEvent.setup();
+        const services = createMockServices();
 
         render(
-          <TestWrapper>
-            <VIEW
+          <TestWrapper services={services}>
+            <DynamicRenderer
               schema={{
                 type: "VIEW",
                 drawers: {
@@ -191,10 +146,9 @@ describe("Phase 4: Primitive Adapters", () => {
                     elements: [],
                   },
                 },
+                elements: [{ type: "LINK", label: "Open", opens: "test_drawer" }],
               }}
-            >
-              <LINK schema={{ type: "LINK", label: "Open", opens: "test_drawer" }} />
-            </VIEW>
+            />
           </TestWrapper>
         );
 
@@ -204,11 +158,7 @@ describe("Phase 4: Primitive Adapters", () => {
       });
 
       it("renders with data-testid when opens is set", () => {
-        render(
-          <TestWrapperWithView>
-            <LINK schema={{ type: "LINK", label: "New", opens: "new_drawer" }} />
-          </TestWrapperWithView>
-        );
+        renderSchemaInView({ type: "LINK", label: "New", opens: "new_drawer" });
         expect(screen.getByTestId("link-opens-new_drawer")).toBeInTheDocument();
       });
 
@@ -216,17 +166,9 @@ describe("Phase 4: Primitive Adapters", () => {
         const user = userEvent.setup();
         const services = createMockServices();
 
-        render(
-          <TestWrapperWithView services={services}>
-            <LINK
-              schema={{
-                type: "LINK",
-                label: "Delete",
-                href: "/delete",
-                confirm: "Are you sure?",
-              }}
-            />
-          </TestWrapperWithView>
+        renderSchemaInView(
+          { type: "LINK", label: "Delete", href: "/delete", confirm: "Are you sure?" },
+          { services }
         );
 
         await user.click(screen.getByRole("button"));
@@ -239,17 +181,9 @@ describe("Phase 4: Primitive Adapters", () => {
           confirm: vi.fn().mockResolvedValue(false),
         });
 
-        render(
-          <TestWrapperWithView services={services}>
-            <LINK
-              schema={{
-                type: "LINK",
-                label: "Delete",
-                href: "/delete",
-                confirm: "Are you sure?",
-              }}
-            />
-          </TestWrapperWithView>
+        renderSchemaInView(
+          { type: "LINK", label: "Delete", href: "/delete", confirm: "Are you sure?" },
+          { services }
         );
 
         await user.click(screen.getByRole("button"));
@@ -260,38 +194,26 @@ describe("Phase 4: Primitive Adapters", () => {
 
   describe("4.2 Dropdown", () => {
     it("renders trigger button with label", () => {
-      render(
-        <TestWrapperWithView>
-          <DROPDOWN schema={{ type: "DROPDOWN", label: "Actions" }}>
-            <div>Menu content</div>
-          </DROPDOWN>
-        </TestWrapperWithView>
-      );
+      renderSchemaInView({ type: "DROPDOWN", label: "Actions", elements: [] });
       expect(screen.getByRole("button", { name: /Actions/i })).toBeInTheDocument();
     });
 
     it("renders icon-only trigger when no label", () => {
-      render(
-        <TestWrapperWithView>
-          <DROPDOWN schema={{ type: "DROPDOWN" }}>
-            <div>Menu content</div>
-          </DROPDOWN>
-        </TestWrapperWithView>
-      );
+      renderSchemaInView({ type: "DROPDOWN", elements: [] });
       expect(screen.getByRole("button", { name: "Open menu" })).toBeInTheDocument();
     });
 
     it("opens menu on click", async () => {
       const user = userEvent.setup();
 
-      render(
-        <TestWrapperWithView>
-          <DROPDOWN schema={{ type: "DROPDOWN", label: "Actions" }}>
-            <OPTION schema={{ type: "OPTION", label: "Edit" }} />
-            <OPTION schema={{ type: "OPTION", label: "Delete" }} />
-          </DROPDOWN>
-        </TestWrapperWithView>
-      );
+      renderSchemaInView({
+        type: "DROPDOWN",
+        label: "Actions",
+        elements: [
+          { type: "OPTION", label: "Edit" },
+          { type: "OPTION", label: "Delete" },
+        ],
+      });
 
       await user.click(screen.getByRole("button", { name: /Actions/i }));
       expect(screen.getByRole("menuitem", { name: "Edit" })).toBeInTheDocument();
@@ -302,14 +224,13 @@ describe("Phase 4: Primitive Adapters", () => {
       const user = userEvent.setup();
       const services = createMockServices();
 
-      render(
-        <TestWrapperWithView services={services}>
-          <DROPDOWN schema={{ type: "DROPDOWN", label: "Actions" }}>
-            <OPTION
-              schema={{ type: "OPTION", label: "Go", href: "/somewhere" }}
-            />
-          </DROPDOWN>
-        </TestWrapperWithView>
+      renderSchemaInView(
+        {
+          type: "DROPDOWN",
+          label: "Actions",
+          elements: [{ type: "OPTION", label: "Go", href: "/somewhere" }],
+        },
+        { services }
       );
 
       await user.click(screen.getByRole("button", { name: /Actions/i }));
@@ -319,10 +240,11 @@ describe("Phase 4: Primitive Adapters", () => {
 
     it("OPTION can open drawer", async () => {
       const user = userEvent.setup();
+      const services = createMockServices();
 
       render(
-        <TestWrapper>
-          <VIEW
+        <TestWrapper services={services}>
+          <DynamicRenderer
             schema={{
               type: "VIEW",
               drawers: {
@@ -331,14 +253,15 @@ describe("Phase 4: Primitive Adapters", () => {
                   elements: [],
                 },
               },
+              elements: [
+                {
+                  type: "DROPDOWN",
+                  label: "Actions",
+                  elements: [{ type: "OPTION", label: "Edit", opens: "edit_drawer" }],
+                },
+              ],
             }}
-          >
-            <DROPDOWN schema={{ type: "DROPDOWN", label: "Actions" }}>
-              <OPTION
-                schema={{ type: "OPTION", label: "Edit", opens: "edit_drawer" }}
-              />
-            </DROPDOWN>
-          </VIEW>
+          />
         </TestWrapper>
       );
 
@@ -350,16 +273,11 @@ describe("Phase 4: Primitive Adapters", () => {
     it("OPTION renders with destructive variant", async () => {
       const user = userEvent.setup();
 
-      render(
-        <TestWrapperWithView>
-          <DROPDOWN schema={{ type: "DROPDOWN", label: "Actions" }}>
-            <OPTION
-              schema={{ type: "OPTION", label: "Delete" }}
-              variant="destructive"
-            />
-          </DROPDOWN>
-        </TestWrapperWithView>
-      );
+      renderSchemaInView({
+        type: "DROPDOWN",
+        label: "Actions",
+        elements: [{ type: "OPTION", label: "Delete", variant: "destructive" }],
+      });
 
       await user.click(screen.getByRole("button", { name: /Actions/i }));
       const deleteOption = screen.getByRole("menuitem", { name: "Delete" });
@@ -368,7 +286,6 @@ describe("Phase 4: Primitive Adapters", () => {
   });
 
   describe("4.3 Submit", () => {
-    // Create a mock FormContext
     function createMockFormContext(overrides?: Partial<FormContextValue>): FormContextValue {
       return {
         values: {},
@@ -406,7 +323,7 @@ describe("Phase 4: Primitive Adapters", () => {
 
       render(
         <SubmitWrapper formContext={formContext}>
-          <SUBMIT schema={{ type: "SUBMIT", label: "Save" }} />
+          <DynamicRenderer schema={{ type: "SUBMIT", label: "Save" }} />
         </SubmitWrapper>
       );
 
@@ -420,7 +337,7 @@ describe("Phase 4: Primitive Adapters", () => {
 
       render(
         <SubmitWrapper formContext={formContext}>
-          <SUBMIT schema={{ type: "SUBMIT", label: "Save" }} />
+          <DynamicRenderer schema={{ type: "SUBMIT", label: "Save" }} />
         </SubmitWrapper>
       );
 
@@ -433,9 +350,7 @@ describe("Phase 4: Primitive Adapters", () => {
 
       render(
         <SubmitWrapper formContext={formContext}>
-          <SUBMIT
-            schema={{ type: "SUBMIT", label: "Save", loadingLabel: "Saving..." }}
-          />
+          <DynamicRenderer schema={{ type: "SUBMIT", label: "Save", loadingLabel: "Saving..." }} />
         </SubmitWrapper>
       );
 
@@ -447,7 +362,7 @@ describe("Phase 4: Primitive Adapters", () => {
 
       render(
         <SubmitWrapper formContext={formContext}>
-          <SUBMIT schema={{ type: "SUBMIT", label: "Save" }} />
+          <DynamicRenderer schema={{ type: "SUBMIT", label: "Save" }} />
         </SubmitWrapper>
       );
 
@@ -459,7 +374,7 @@ describe("Phase 4: Primitive Adapters", () => {
 
       render(
         <SubmitWrapper formContext={formContext}>
-          <SUBMIT schema={{ type: "SUBMIT" }} />
+          <DynamicRenderer schema={{ type: "SUBMIT" }} />
         </SubmitWrapper>
       );
 

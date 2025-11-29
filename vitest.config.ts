@@ -10,9 +10,17 @@ const dirname =
     ? __dirname
     : path.dirname(fileURLToPath(import.meta.url));
 
-const aliases = {
-  "@": path.resolve(dirname, "./app/frontend"),
-  "@ui": path.resolve(dirname, "./packs/ui/app/frontend"),
+const uiRoot = path.resolve(dirname, "./packs/ui/app/frontend");
+
+// Order matters: more specific paths must come before less specific
+const aliases: Record<string, string> = {
+  "@/": `${path.resolve(dirname, "./app/frontend/")}/`,
+  "@ui-components/": `${uiRoot}/components/`,
+  "@ui/adapters/": `${uiRoot}/adapters/`,
+  "@ui/adapters": `${uiRoot}/adapters/index.ts`,
+  "@ui/": `${uiRoot}/lib/`,
+  "@ui": `${uiRoot}/lib/index.ts`,
+  "@storybook-decorators": `${path.resolve(dirname, ".storybook/decorators.tsx")}`,
 };
 
 export default defineConfig({

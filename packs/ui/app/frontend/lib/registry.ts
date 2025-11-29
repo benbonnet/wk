@@ -1,44 +1,74 @@
-import type { ComponentType, ReactNode } from "react";
-import type {
-  UISchema,
-  UISchemaColumn,
-  Option,
-  Rule,
-  TranslationsMap,
-} from "./types";
+import type { ReactNode } from "react";
+import type { UISchema, UISchemaColumn, Option, Rule } from "./types";
 
 // ============================================
-// COMPONENT PROPS CONTRACTS
+// BASE PROPS
 // ============================================
 
-export interface BaseComponentProps {
-  schema: UISchema;
-  data?: Record<string, unknown>;
+export interface BaseProps {
+  className?: string;
+  disabled?: boolean;
   children?: ReactNode;
+  data?: Record<string, unknown>;
 }
 
-export interface PageProps extends BaseComponentProps {
+// ============================================
+// INPUT PROPS
+// ============================================
+
+export interface InputProps extends BaseProps {
+  name: string;
+  label?: string;
+  placeholder?: string;
+  helperText?: string;
+  options?: Option[];
+  rows?: number;
+  rules?: Rule[];
+}
+
+// ============================================
+// DISPLAY PROPS
+// ============================================
+
+export interface DisplayProps extends BaseProps {
+  name: string;
+  label?: string;
+  options?: Option[];
+}
+
+// ============================================
+// LAYOUT PROPS
+// ============================================
+
+export interface ViewProps extends BaseProps {
+  url?: string;
+  api?: Record<string, { method: string; path: string }>;
+  drawers?: Record<string, { title?: string; elements?: UISchema[] }>;
+}
+
+export interface PageProps extends BaseProps {
   title?: string;
   description?: string;
   actions?: UISchema[];
 }
 
-export interface DrawerProps extends BaseComponentProps {
+export interface DrawerProps extends BaseProps {
   title?: string;
   description?: string;
   open?: boolean;
   onClose?: () => void;
 }
 
-export interface FormProps extends BaseComponentProps {
+export interface FormProps extends BaseProps {
   action?: string;
+  use_record?: boolean;
+  notification?: { success?: string; error?: string };
   onSubmit?: (data: Record<string, unknown>) => void | Promise<void>;
   defaultValues?: Record<string, unknown>;
 }
 
-export interface TableProps extends BaseComponentProps {
-  columns: UISchemaColumn[];
-  data?: Record<string, unknown>[];
+export interface TableProps extends BaseProps {
+  columns?: UISchemaColumn[];
   searchable?: boolean;
   selectable?: boolean;
   pageSize?: number;
@@ -47,48 +77,60 @@ export interface TableProps extends BaseComponentProps {
   rowActions?: { icon?: string; elements: UISchema[] };
   bulkActions?: { elements: UISchema[] };
   onRowClick?: (row: Record<string, unknown>) => void;
+  search_placeholder?: string;
+  toggle_columns?: boolean;
+  page_size?: number;
 }
 
-export interface ShowProps extends BaseComponentProps {
+export interface ShowProps extends BaseProps {
   record?: Record<string, unknown>;
 }
 
-export interface GroupProps extends BaseComponentProps {
+export interface GroupProps extends BaseProps {
+  label?: string;
+  name?: string;
+}
+
+export interface CardGroupProps extends BaseProps {
   label?: string;
 }
 
-export interface CardGroupProps extends BaseComponentProps {
-  label?: string;
-}
-
-export interface MultistepProps extends BaseComponentProps {
+export interface MultistepProps extends BaseProps {
   currentStep?: number;
   onStepChange?: (step: number) => void;
 }
 
-export interface StepProps extends BaseComponentProps {
+export interface StepProps extends BaseProps {
   label: string;
   active?: boolean;
 }
 
-export interface FormArrayProps extends BaseComponentProps {
+export interface FormArrayProps extends BaseProps {
   name: string;
-  template: UISchema[];
+  label?: string;
+  template?: UISchema[];
   addLabel?: string;
   removeLabel?: string;
 }
 
-export interface DisplayArrayProps extends BaseComponentProps {
+export interface DisplayArrayProps extends BaseProps {
   name: string;
-  template: UISchema[];
+  label?: string;
+  template?: UISchema[];
 }
 
-export interface AlertProps extends BaseComponentProps {
+export interface AlertProps extends BaseProps {
   label: string;
   color?: "default" | "red" | "green" | "blue" | "yellow";
 }
 
-export interface LinkProps extends BaseComponentProps {
+export type ActionsProps = BaseProps;
+
+// ============================================
+// PRIMITIVE PROPS
+// ============================================
+
+export interface LinkProps extends BaseProps {
   label: string;
   href?: string;
   opens?: string;
@@ -96,21 +138,23 @@ export interface LinkProps extends BaseComponentProps {
   variant?: "primary" | "secondary" | "ghost" | "destructive";
   icon?: string;
   confirm?: string;
+  notification?: { success?: string; error?: string };
 }
 
-export interface ButtonProps extends BaseComponentProps {
+export interface ButtonProps extends BaseProps {
   label: string;
   variant?: "primary" | "secondary" | "ghost" | "destructive";
   icon?: string;
   onClick?: () => void;
 }
 
-export interface DropdownProps extends BaseComponentProps {
+export interface DropdownProps extends BaseProps {
   label?: string;
   icon?: string;
+  elements?: UISchema[];
 }
 
-export interface OptionProps extends BaseComponentProps {
+export interface OptionProps extends BaseProps {
   label: string;
   href?: string;
   opens?: string;
@@ -120,16 +164,17 @@ export interface OptionProps extends BaseComponentProps {
   variant?: "primary" | "secondary" | "ghost" | "destructive";
 }
 
-export interface SearchProps extends BaseComponentProps {
+export interface SearchProps extends BaseProps {
   placeholder?: string;
   onSearch?: (query: string) => void;
 }
 
-export interface SubmitProps extends BaseComponentProps {
+export interface SubmitProps extends BaseProps {
   label?: string;
+  loadingLabel?: string;
 }
 
-export interface RelationshipPickerProps extends BaseComponentProps {
+export interface RelationshipPickerProps extends BaseProps {
   name: string;
   cardinality: "one" | "many";
   relationSchema: string;
@@ -139,97 +184,6 @@ export interface RelationshipPickerProps extends BaseComponentProps {
   emptyMessage?: string;
 }
 
-export interface ComponentProps extends BaseComponentProps {
-  name: string;
-  kind: string;
-  options?: Option[];
-  placeholder?: string;
-  rules?: Rule[];
-}
-
-// ============================================
-// INPUT PROPS CONTRACT
-// ============================================
-
-export interface InputProps {
-  name: string;
-  label?: string;
-  placeholder?: string;
-  helperText?: string;
-  options?: Option[];
-  rows?: number;
-  disabled?: boolean;
-  rules?: Rule[];
-  value?: unknown;
-  onChange?: (value: unknown) => void;
-  error?: string;
-}
-
-// ============================================
-// DISPLAY PROPS CONTRACT
-// ============================================
-
-export interface DisplayProps {
-  name: string;
-  label?: string;
-  value?: unknown;
-  options?: Option[];
-}
-
-// ============================================
-// COMPONENT REGISTRIES
-// ============================================
-
-export interface ComponentRegistry {
-  VIEW: ComponentType<BaseComponentProps>;
-  PAGE: ComponentType<PageProps>;
-  DRAWER: ComponentType<DrawerProps>;
-  FORM: ComponentType<FormProps>;
-  TABLE: ComponentType<TableProps>;
-  SHOW: ComponentType<ShowProps>;
-  ACTIONS: ComponentType<BaseComponentProps>;
-  GROUP: ComponentType<GroupProps>;
-  CARD_GROUP: ComponentType<CardGroupProps>;
-  MULTISTEP: ComponentType<MultistepProps>;
-  STEP: ComponentType<StepProps>;
-  FORM_ARRAY: ComponentType<FormArrayProps>;
-  DISPLAY_ARRAY: ComponentType<DisplayArrayProps>;
-  ALERT: ComponentType<AlertProps>;
-  LINK: ComponentType<LinkProps>;
-  BUTTON: ComponentType<ButtonProps>;
-  DROPDOWN: ComponentType<DropdownProps>;
-  OPTION: ComponentType<OptionProps>;
-  SEARCH: ComponentType<SearchProps>;
-  SUBMIT: ComponentType<SubmitProps>;
-  COMPONENT: ComponentType<ComponentProps>;
-  RELATIONSHIP_PICKER: ComponentType<RelationshipPickerProps>;
-}
-
-export interface InputRegistry {
-  INPUT_TEXT: ComponentType<InputProps>;
-  INPUT_TEXTAREA: ComponentType<InputProps>;
-  INPUT_SELECT: ComponentType<InputProps>;
-  INPUT_CHECKBOX: ComponentType<InputProps>;
-  INPUT_CHECKBOXES: ComponentType<InputProps>;
-  INPUT_RADIOS: ComponentType<InputProps>;
-  INPUT_DATE: ComponentType<InputProps>;
-  INPUT_DATETIME: ComponentType<InputProps>;
-  INPUT_TAGS: ComponentType<InputProps>;
-  INPUT_AI_RICH_TEXT: ComponentType<InputProps>;
-}
-
-export interface DisplayRegistry {
-  DISPLAY_TEXT: ComponentType<DisplayProps>;
-  DISPLAY_LONGTEXT: ComponentType<DisplayProps>;
-  DISPLAY_NUMBER: ComponentType<DisplayProps>;
-  DISPLAY_DATE: ComponentType<DisplayProps>;
-  DISPLAY_DATETIME: ComponentType<DisplayProps>;
-  DISPLAY_BADGE: ComponentType<DisplayProps>;
-  DISPLAY_TAGS: ComponentType<DisplayProps>;
-  DISPLAY_BOOLEAN: ComponentType<DisplayProps>;
-  DISPLAY_SELECT: ComponentType<DisplayProps>;
-}
-
 // ============================================
 // SERVICES
 // ============================================
@@ -237,7 +191,10 @@ export interface DisplayRegistry {
 export interface UIServices {
   fetch: (url: string, options?: RequestInit) => Promise<Response>;
   navigate: (path: string) => void;
-  toast: (message: string, type: "success" | "error") => void;
+  toast: (
+    message: string | { type: string; message: string },
+    type?: "success" | "error",
+  ) => void;
   confirm: (message: string) => Promise<boolean>;
 }
 
@@ -246,11 +203,8 @@ export interface UIServices {
 // ============================================
 
 export interface UIContextValue {
-  components: ComponentRegistry;
-  inputs: InputRegistry;
-  displays: DisplayRegistry;
   services: UIServices;
-  translations?: TranslationsMap;
+  translations?: Record<string, Record<string, string>>;
   locale: string;
   t: (key: string, namespace?: string) => string;
 }

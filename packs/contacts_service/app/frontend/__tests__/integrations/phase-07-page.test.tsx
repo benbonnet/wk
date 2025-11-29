@@ -2,11 +2,11 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { UIProvider } from "@ui/provider";
-import { TooltipProvider } from "@ui-components/ui/tooltip";
+import { TooltipProvider } from "@ui-components/tooltip";
 import { DynamicRenderer } from "@ui/renderer";
-import { VIEW, PAGE } from "@ui/adapters/layouts";
-import { LINK, DROPDOWN, OPTION } from "@ui/adapters/primitives";
-import type { UIServices, ComponentRegistry } from "@ui/registry";
+import { VIEW, PAGE } from "@ui/adapters";
+import { LINK, DROPDOWN, OPTION } from "@ui/adapters";
+import type { AdapterRegistry, UIServices } from "@ui/registry";
 import type { ReactNode } from "react";
 
 const mockServices: UIServices = {
@@ -16,13 +16,13 @@ const mockServices: UIServices = {
   confirm: vi.fn(),
 };
 
-const mockComponents: ComponentRegistry = {
+const mockAdapters: AdapterRegistry = {
   VIEW,
   PAGE,
   LINK,
   DROPDOWN,
   OPTION,
-} as ComponentRegistry;
+} as AdapterRegistry;
 
 interface WrapperProps {
   children: ReactNode;
@@ -37,9 +37,7 @@ function TestWrapper({ children, translations = {} }: WrapperProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <UIProvider
-        components={mockComponents}
-        inputs={{} as never}
-        displays={{} as never}
+        adapters={mockAdapters}
         services={mockServices}
         translations={{ views: translations, schemas: {}, common: {} }}
         locale="en"

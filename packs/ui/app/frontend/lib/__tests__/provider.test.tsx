@@ -3,70 +3,11 @@ import { render, screen } from "@testing-library/react";
 import {
   UIProvider,
   useUI,
-  useComponents,
-  useInputs,
-  useDisplays,
   useServices,
   useTranslate,
   useLocale,
 } from "../provider";
-import type {
-  ComponentRegistry,
-  InputRegistry,
-  DisplayRegistry,
-  UIServices,
-} from "../registry";
-
-// Mock registries
-const mockComponents = {
-  VIEW: () => <div>VIEW</div>,
-  PAGE: () => <div>PAGE</div>,
-  DRAWER: () => <div>DRAWER</div>,
-  FORM: () => <div>FORM</div>,
-  TABLE: () => <div>TABLE</div>,
-  SHOW: () => <div>SHOW</div>,
-  ACTIONS: () => <div>ACTIONS</div>,
-  GROUP: () => <div>GROUP</div>,
-  CARD_GROUP: () => <div>CARD_GROUP</div>,
-  MULTISTEP: () => <div>MULTISTEP</div>,
-  STEP: () => <div>STEP</div>,
-  FORM_ARRAY: () => <div>FORM_ARRAY</div>,
-  DISPLAY_ARRAY: () => <div>DISPLAY_ARRAY</div>,
-  ALERT: () => <div>ALERT</div>,
-  LINK: () => <div>LINK</div>,
-  BUTTON: () => <div>BUTTON</div>,
-  DROPDOWN: () => <div>DROPDOWN</div>,
-  OPTION: () => <div>OPTION</div>,
-  SEARCH: () => <div>SEARCH</div>,
-  SUBMIT: () => <div>SUBMIT</div>,
-  COMPONENT: () => <div>COMPONENT</div>,
-  RELATIONSHIP_PICKER: () => <div>RELATIONSHIP_PICKER</div>,
-} as unknown as ComponentRegistry;
-
-const mockInputs = {
-  INPUT_TEXT: () => <input type="text" />,
-  INPUT_TEXTAREA: () => <textarea />,
-  INPUT_SELECT: () => <select />,
-  INPUT_CHECKBOX: () => <input type="checkbox" />,
-  INPUT_CHECKBOXES: () => <div>CHECKBOXES</div>,
-  INPUT_RADIOS: () => <div>RADIOS</div>,
-  INPUT_DATE: () => <input type="date" />,
-  INPUT_DATETIME: () => <input type="datetime-local" />,
-  INPUT_TAGS: () => <div>TAGS</div>,
-  INPUT_AI_RICH_TEXT: () => <div>RICH_TEXT</div>,
-} as unknown as InputRegistry;
-
-const mockDisplays = {
-  DISPLAY_TEXT: () => <span>TEXT</span>,
-  DISPLAY_LONGTEXT: () => <p>LONGTEXT</p>,
-  DISPLAY_NUMBER: () => <span>NUMBER</span>,
-  DISPLAY_DATE: () => <span>DATE</span>,
-  DISPLAY_DATETIME: () => <span>DATETIME</span>,
-  DISPLAY_BADGE: () => <span>BADGE</span>,
-  DISPLAY_TAGS: () => <span>TAGS</span>,
-  DISPLAY_BOOLEAN: () => <span>BOOLEAN</span>,
-  DISPLAY_SELECT: () => <span>SELECT</span>,
-} as unknown as DisplayRegistry;
+import type { UIServices } from "../registry";
 
 const mockServices: UIServices = {
   fetch: vi.fn(),
@@ -84,9 +25,6 @@ const mockTranslations = {
 describe("UIProvider", () => {
   const wrapper = ({ children }: { children: React.ReactNode }) => (
     <UIProvider
-      components={mockComponents}
-      inputs={mockInputs}
-      displays={mockDisplays}
       services={mockServices}
       translations={mockTranslations}
       locale="en"
@@ -108,96 +46,50 @@ describe("UIProvider", () => {
     });
 
     it("returns context value when inside provider", () => {
-      let contextValue: ReturnType<typeof useUI> | null = null;
-
       const TestComponent = () => {
-        contextValue = useUI();
-        return <div>Test</div>;
+        const ctx = useUI();
+        return (
+          <div>
+            <span data-testid="has-services">{ctx.services ? "yes" : "no"}</span>
+            <span data-testid="locale">{ctx.locale}</span>
+          </div>
+        );
       };
 
       render(<TestComponent />, { wrapper });
 
-      expect(contextValue).not.toBeNull();
-      expect(contextValue!.components).toBe(mockComponents);
-      expect(contextValue!.inputs).toBe(mockInputs);
-      expect(contextValue!.displays).toBe(mockDisplays);
-      expect(contextValue!.services).toBe(mockServices);
-      expect(contextValue!.locale).toBe("en");
-    });
-  });
-
-  describe("useComponents", () => {
-    it("returns component registry", () => {
-      let components: ComponentRegistry | null = null;
-
-      const TestComponent = () => {
-        components = useComponents();
-        return <div>Test</div>;
-      };
-
-      render(<TestComponent />, { wrapper });
-
-      expect(components).toBe(mockComponents);
-    });
-  });
-
-  describe("useInputs", () => {
-    it("returns input registry", () => {
-      let inputs: InputRegistry | null = null;
-
-      const TestComponent = () => {
-        inputs = useInputs();
-        return <div>Test</div>;
-      };
-
-      render(<TestComponent />, { wrapper });
-
-      expect(inputs).toBe(mockInputs);
-    });
-  });
-
-  describe("useDisplays", () => {
-    it("returns display registry", () => {
-      let displays: DisplayRegistry | null = null;
-
-      const TestComponent = () => {
-        displays = useDisplays();
-        return <div>Test</div>;
-      };
-
-      render(<TestComponent />, { wrapper });
-
-      expect(displays).toBe(mockDisplays);
+      expect(screen.getByTestId("has-services").textContent).toBe("yes");
+      expect(screen.getByTestId("locale").textContent).toBe("en");
     });
   });
 
   describe("useServices", () => {
     it("returns services", () => {
-      let services: UIServices | null = null;
-
       const TestComponent = () => {
-        services = useServices();
-        return <div>Test</div>;
+        const services = useServices();
+        return (
+          <div data-testid="has-services">
+            {services && typeof services.fetch === "function" ? "yes" : "no"}
+          </div>
+        );
       };
 
       render(<TestComponent />, { wrapper });
 
-      expect(services).toBe(mockServices);
+      expect(screen.getByTestId("has-services").textContent).toBe("yes");
     });
   });
 
   describe("useLocale", () => {
     it("returns locale", () => {
-      let locale: string | null = null;
-
       const TestComponent = () => {
-        locale = useLocale();
-        return <div>Test</div>;
+        const locale = useLocale();
+        return <div data-testid="locale">{locale}</div>;
       };
 
       render(<TestComponent />, { wrapper });
 
-      expect(locale).toBe("en");
+      expect(screen.getByTestId("locale").textContent).toBe("en");
     });
   });
 
@@ -249,9 +141,6 @@ describe("UIProvider", () => {
     it("returns key when no translations provided", () => {
       const noTranslationsWrapper = ({ children }: { children: React.ReactNode }) => (
         <UIProvider
-          components={mockComponents}
-          inputs={mockInputs}
-          displays={mockDisplays}
           services={mockServices}
           locale="en"
         >

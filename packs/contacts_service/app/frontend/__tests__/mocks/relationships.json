@@ -1,0 +1,46 @@
+{
+  "contact": {
+    "spouse": {
+      "name": "spouse",
+      "cardinality": "one",
+      "target_schema": "contact",
+      "inverse_name": "spouse",
+      "description": null
+    },
+    "addresses": {
+      "name": "addresses",
+      "cardinality": "many",
+      "target_schema": "address",
+      "inverse_name": "contact",
+      "description": null
+    },
+    "children": {
+      "name": "children",
+      "cardinality": "many",
+      "target_schema": "contact",
+      "inverse_name": "parents",
+      "description": null
+    },
+    "parents": {
+      "name": "parents",
+      "cardinality": "many",
+      "target_schema": "contact",
+      "inverse_name": "children",
+      "description": null
+    },
+    "phones": {
+      "name": "phones",
+      "cardinality": "many",
+      "target_schema": "phone",
+      "inverse_name": "contact",
+      "description": null
+    },
+    "emails": {
+      "name": "emails",
+      "cardinality": "many",
+      "target_schema": "email",
+      "inverse_name": "contact",
+      "description": null
+    }
+  }
+}

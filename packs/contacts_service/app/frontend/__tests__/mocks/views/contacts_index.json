@@ -7,46 +7,17 @@
       "page_description": "Manage your contacts",
       "new_contact": "New Contact",
       "edit_contact": "Edit Contact",
-      "view_contact": "View Contact",
       "search_placeholder": "Search contacts...",
       "actions": "Actions",
       "export_csv": "Export CSV",
       "import": "Import",
+      "view_contact": "View Contact",
       "edit": "Edit",
       "delete": "Delete",
       "delete_confirm": "Are you sure you want to delete this contact?",
-      "first_name": "First Name",
-      "first_name_placeholder": "Enter first name",
-      "last_name": "Last Name",
-      "last_name_placeholder": "Enter last name",
-      "middle_name": "Middle Name",
+      "created_at": "Created At",
       "email": "Email",
       "phone": "Phone",
-      "company": "Company",
-      "company_placeholder": "Enter company name",
-      "job_title": "Job Title",
-      "job_title_placeholder": "Enter job title",
-      "gender": "Gender",
-      "male": "Male",
-      "female": "Female",
-      "other": "Other",
-      "prefer_not_to_say": "Prefer not to say",
-      "date_of_birth": "Date of Birth",
-      "place_of_birth": "Place of Birth",
-      "nationality": "Nationality",
-      "tags": "Tags",
-      "tags_section": "Tags",
-      "addresses_section": "Addresses",
-      "address_line_1": "Address Line 1",
-      "city": "City",
-      "postal_code": "Postal Code",
-      "country": "Country",
-      "basic_info": "Basic Information",
-      "professional_info": "Professional Information",
-      "personal_info": "Personal Information",
-      "created_at": "Created At",
-      "save": "Save",
-      "saving": "Saving...",
       "contact_created": "Contact created successfully",
       "contact_create_failed": "Failed to create contact",
       "contact_updated": "Contact updated successfully",
@@ -59,7 +30,14 @@
       "contacts_deleted": "%{count} contacts deleted successfully",
       "contacts_delete_failed": "Failed to delete contacts",
       "contacts_exported": "%{count} contacts exported successfully",
-      "contacts_export_failed": "Failed to export contacts"
+      "contacts_export_failed": "Failed to export contacts",
+      "first_name": "First Name",
+      "last_name": "Last Name",
+      "company": "Company",
+      "job_title": "Job Title",
+      "basic_info": "Basic Information",
+      "professional_info": "Professional Information",
+      "personal_info": "Personal Information"
     },
     "fr": {
       "page_title": "Contacts",
@@ -129,29 +107,25 @@
                   "label": "basic_info",
                   "elements": [
                     {
-                      "type": "COMPONENT",
+                      "type": "INPUT_TEXT",
                       "name": "first_name",
-                      "kind": "INPUT_TEXT",
                       "label": "first_name",
                       "placeholder": "first_name_placeholder"
                     },
                     {
-                      "type": "COMPONENT",
+                      "type": "INPUT_TEXT",
                       "name": "last_name",
-                      "kind": "INPUT_TEXT",
                       "label": "last_name",
                       "placeholder": "last_name_placeholder"
                     },
                     {
-                      "type": "COMPONENT",
+                      "type": "INPUT_TEXT",
                       "name": "email",
-                      "kind": "INPUT_TEXT",
                       "label": "email"
                     },
                     {
-                      "type": "COMPONENT",
+                      "type": "INPUT_TEXT",
                       "name": "phone",
-                      "kind": "INPUT_TEXT",
                       "label": "phone"
                     }
                   ]
@@ -161,16 +135,14 @@
                   "label": "professional_info",
                   "elements": [
                     {
-                      "type": "COMPONENT",
+                      "type": "INPUT_TEXT",
                       "name": "company",
-                      "kind": "INPUT_TEXT",
                       "label": "company",
                       "placeholder": "company_placeholder"
                     },
                     {
-                      "type": "COMPONENT",
+                      "type": "INPUT_TEXT",
                       "name": "job_title",
-                      "kind": "INPUT_TEXT",
                       "label": "job_title",
                       "placeholder": "job_title_placeholder"
                     }
@@ -181,9 +153,8 @@
                   "label": "personal_info",
                   "elements": [
                     {
-                      "type": "COMPONENT",
+                      "type": "INPUT_SELECT",
                       "name": "gender",
-                      "kind": "INPUT_SELECT",
                       "label": "gender",
                       "options": [
                         {
@@ -205,10 +176,60 @@
                       ]
                     },
                     {
-                      "type": "COMPONENT",
+                      "type": "INPUT_DATE",
                       "name": "date_of_birth",
-                      "kind": "INPUT_DATE",
                       "label": "date_of_birth"
+                    }
+                  ]
+                },
+                {
+                  "type": "GROUP",
+                  "name": "spouse_attributes",
+                  "label": "spouse",
+                  "elements": [
+                    {
+                      "type": "INPUT_TEXT",
+                      "name": "spouse_attributes.first_name",
+                      "label": "first_name"
+                    },
+                    {
+                      "type": "INPUT_TEXT",
+                      "name": "spouse_attributes.last_name",
+                      "label": "last_name"
+                    }
+                  ]
+                },
+                {
+                  "type": "FORM_ARRAY",
+                  "name": "addresses_attributes",
+                  "label": "addresses",
+                  "addLabel": "add_address",
+                  "removeLabel": "remove_address",
+                  "template": [
+                    {
+                      "type": "INPUT_TEXT",
+                      "name": "label",
+                      "label": "label"
+                    },
+                    {
+                      "type": "INPUT_TEXT",
+                      "name": "address_line_1",
+                      "label": "address_line_1"
+                    },
+                    {
+                      "type": "INPUT_TEXT",
+                      "name": "city",
+                      "label": "city"
+                    },
+                    {
+                      "type": "INPUT_TEXT",
+                      "name": "postal_code",
+                      "label": "postal_code"
+                    },
+                    {
+                      "type": "INPUT_TEXT",
+                      "name": "country",
+                      "label": "country"
                     }
                   ]
                 },
@@ -220,24 +241,22 @@
                   "columns": [
                     {
                       "name": "first_name",
-                      "kind": "DISPLAY_TEXT"
+                      "type": "DISPLAY_TEXT"
                     },
                     {
                       "name": "last_name",
-                      "kind": "DISPLAY_TEXT"
+                      "type": "DISPLAY_TEXT"
                     }
                   ],
                   "template": [
                     {
-                      "type": "COMPONENT",
+                      "type": "INPUT_TEXT",
                       "name": "first_name",
-                      "kind": "INPUT_TEXT",
                       "label": "first_name"
                     },
                     {
-                      "type": "COMPONENT",
+                      "type": "INPUT_TEXT",
                       "name": "last_name",
-                      "kind": "INPUT_TEXT",
                       "label": "last_name"
                     }
                   ]
@@ -283,29 +302,25 @@
                   "label": "basic_info",
                   "elements": [
                     {
-                      "type": "COMPONENT",
+                      "type": "INPUT_TEXT",
                       "name": "first_name",
-                      "kind": "INPUT_TEXT",
                       "label": "first_name",
                       "placeholder": "first_name_placeholder"
                     },
                     {
-                      "type": "COMPONENT",
+                      "type": "INPUT_TEXT",
                       "name": "last_name",
-                      "kind": "INPUT_TEXT",
                       "label": "last_name",
                       "placeholder": "last_name_placeholder"
                     },
                     {
-                      "type": "COMPONENT",
+                      "type": "INPUT_TEXT",
                       "name": "email",
-                      "kind": "INPUT_TEXT",
                       "label": "email"
                     },
                     {
-                      "type": "COMPONENT",
+                      "type": "INPUT_TEXT",
                       "name": "phone",
-                      "kind": "INPUT_TEXT",
                       "label": "phone"
                     }
                   ]
@@ -315,16 +330,14 @@
                   "label": "professional_info",
                   "elements": [
                     {
-                      "type": "COMPONENT",
+                      "type": "INPUT_TEXT",
                       "name": "company",
-                      "kind": "INPUT_TEXT",
                       "label": "company",
                       "placeholder": "company_placeholder"
                     },
                     {
-                      "type": "COMPONENT",
+                      "type": "INPUT_TEXT",
                       "name": "job_title",
-                      "kind": "INPUT_TEXT",
                       "label": "job_title",
                       "placeholder": "job_title_placeholder"
                     }
@@ -335,9 +348,8 @@
                   "label": "personal_info",
                   "elements": [
                     {
-                      "type": "COMPONENT",
+                      "type": "INPUT_SELECT",
                       "name": "gender",
-                      "kind": "INPUT_SELECT",
                       "label": "gender",
                       "options": [
                         {
@@ -359,10 +371,60 @@
                       ]
                     },
                     {
-                      "type": "COMPONENT",
+                      "type": "INPUT_DATE",
                       "name": "date_of_birth",
-                      "kind": "INPUT_DATE",
                       "label": "date_of_birth"
+                    }
+                  ]
+                },
+                {
+                  "type": "GROUP",
+                  "name": "spouse_attributes",
+                  "label": "spouse",
+                  "elements": [
+                    {
+                      "type": "INPUT_TEXT",
+                      "name": "spouse_attributes.first_name",
+                      "label": "first_name"
+                    },
+                    {
+                      "type": "INPUT_TEXT",
+                      "name": "spouse_attributes.last_name",
+                      "label": "last_name"
+                    }
+                  ]
+                },
+                {
+                  "type": "FORM_ARRAY",
+                  "name": "addresses_attributes",
+                  "label": "addresses",
+                  "addLabel": "add_address",
+                  "removeLabel": "remove_address",
+                  "template": [
+                    {
+                      "type": "INPUT_TEXT",
+                      "name": "label",
+                      "label": "label"
+                    },
+                    {
+                      "type": "INPUT_TEXT",
+                      "name": "address_line_1",
+                      "label": "address_line_1"
+                    },
+                    {
+                      "type": "INPUT_TEXT",
+                      "name": "city",
+                      "label": "city"
+                    },
+                    {
+                      "type": "INPUT_TEXT",
+                      "name": "postal_code",
+                      "label": "postal_code"
+                    },
+                    {
+                      "type": "INPUT_TEXT",
+                      "name": "country",
+                      "label": "country"
                     }
                   ]
                 },
@@ -374,24 +436,22 @@
                   "columns": [
                     {
                       "name": "first_name",
-                      "kind": "DISPLAY_TEXT"
+                      "type": "DISPLAY_TEXT"
                     },
                     {
                       "name": "last_name",
-                      "kind": "DISPLAY_TEXT"
+                      "type": "DISPLAY_TEXT"
                     }
                   ],
                   "template": [
                     {
-                      "type": "COMPONENT",
+                      "type": "INPUT_TEXT",
                       "name": "first_name",
-                      "kind": "INPUT_TEXT",
                       "label": "first_name"
                     },
                     {
-                      "type": "COMPONENT",
+                      "type": "INPUT_TEXT",
                       "name": "last_name",
-                      "kind": "INPUT_TEXT",
                       "label": "last_name"
                     }
                   ]
@@ -434,21 +494,18 @@
               "label": "basic_info",
               "elements": [
                 {
-                  "type": "COMPONENT",
+                  "type": "DISPLAY_TEXT",
                   "name": "first_name",
-                  "kind": "DISPLAY_TEXT",
                   "label": "first_name"
                 },
                 {
-                  "type": "COMPONENT",
+                  "type": "DISPLAY_TEXT",
                   "name": "middle_name",
-                  "kind": "DISPLAY_TEXT",
                   "label": "middle_name"
                 },
                 {
-                  "type": "COMPONENT",
+                  "type": "DISPLAY_TEXT",
                   "name": "last_name",
-                  "kind": "DISPLAY_TEXT",
                   "label": "last_name"
                 }
               ],
@@ -459,15 +516,13 @@
               "label": "professional_info",
               "elements": [
                 {
-                  "type": "COMPONENT",
+                  "type": "DISPLAY_TEXT",
                   "name": "company",
-                  "kind": "DISPLAY_TEXT",
                   "label": "company"
                 },
                 {
-                  "type": "COMPONENT",
+                  "type": "DISPLAY_TEXT",
                   "name": "job_title",
-                  "kind": "DISPLAY_TEXT",
                   "label": "job_title"
                 }
               ],
@@ -478,9 +533,8 @@
               "label": "personal_info",
               "elements": [
                 {
-                  "type": "COMPONENT",
+                  "type": "DISPLAY_SELECT",
                   "name": "gender",
-                  "kind": "DISPLAY_SELECT",
                   "label": "gender",
                   "options": [
                     {
@@ -502,21 +556,18 @@
                   ]
                 },
                 {
-                  "type": "COMPONENT",
+                  "type": "DISPLAY_DATE",
                   "name": "date_of_birth",
-                  "kind": "DISPLAY_DATE",
                   "label": "date_of_birth"
                 },
                 {
-                  "type": "COMPONENT",
+                  "type": "DISPLAY_TEXT",
                   "name": "place_of_birth",
-                  "kind": "DISPLAY_TEXT",
                   "label": "place_of_birth"
                 },
                 {
-                  "type": "COMPONENT",
+                  "type": "DISPLAY_TEXT",
                   "name": "nationality",
-                  "kind": "DISPLAY_TEXT",
                   "label": "nationality"
                 }
               ],
@@ -527,9 +578,8 @@
               "label": "tags_section",
               "elements": [
                 {
-                  "type": "COMPONENT",
+                  "type": "DISPLAY_TAGS",
                   "name": "tags",
-                  "kind": "DISPLAY_TAGS",
                   "label": "tags"
                 }
               ],
@@ -540,27 +590,23 @@
               "name": "addresses",
               "template": [
                 {
-                  "type": "COMPONENT",
+                  "type": "DISPLAY_TEXT",
                   "name": "address_line_1",
-                  "kind": "DISPLAY_TEXT",
                   "label": "address_line_1"
                 },
                 {
-                  "type": "COMPONENT",
+                  "type": "DISPLAY_TEXT",
                   "name": "city",
-                  "kind": "DISPLAY_TEXT",
                   "label": "city"
                 },
                 {
-                  "type": "COMPONENT",
+                  "type": "DISPLAY_TEXT",
                   "name": "postal_code",
-                  "kind": "DISPLAY_TEXT",
                   "label": "postal_code"
                 },
                 {
-                  "type": "COMPONENT",
+                  "type": "DISPLAY_TEXT",
                   "name": "country",
-                  "kind": "DISPLAY_TEXT",
                   "label": "country"
                 }
               ],
@@ -612,40 +658,40 @@
               "columns": [
                 {
                   "name": "first_name",
-                  "kind": "DISPLAY_TEXT",
+                  "type": "DISPLAY_TEXT",
                   "label": "first_name",
                   "sortable": true
                 },
                 {
                   "name": "last_name",
-                  "kind": "DISPLAY_TEXT",
+                  "type": "DISPLAY_TEXT",
                   "label": "last_name",
                   "sortable": true
                 },
                 {
                   "name": "email",
-                  "kind": "DISPLAY_TEXT",
+                  "type": "DISPLAY_TEXT",
                   "label": "email",
                   "sortable": true
                 },
                 {
                   "name": "phone",
-                  "kind": "DISPLAY_TEXT",
+                  "type": "DISPLAY_TEXT",
                   "label": "phone"
                 },
                 {
                   "name": "company",
-                  "kind": "DISPLAY_TEXT",
+                  "type": "DISPLAY_TEXT",
                   "label": "company"
                 },
                 {
                   "name": "job_title",
-                  "kind": "DISPLAY_TEXT",
+                  "type": "DISPLAY_TEXT",
                   "label": "job_title"
                 },
                 {
                   "name": "created_at",
-                  "kind": "DISPLAY_DATE",
+                  "type": "DISPLAY_DATE",
                   "label": "created_at"
                 }
               ],

@@ -12,7 +12,7 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { UIProvider } from "@ui/provider";
-import { TooltipProvider } from "@ui-components/ui/tooltip";
+import { TooltipProvider } from "@ui-components/tooltip";
 import { DynamicRenderer } from "@ui/renderer";
 import {
   VIEW,
@@ -22,18 +22,18 @@ import {
   GROUP,
   SHOW,
   DISPLAY_ARRAY,
-} from "@ui/adapters/layouts";
+} from "@ui/adapters";
 import {
   INPUT_TEXT,
   INPUT_SELECT,
   INPUT_DATE,
-} from "@ui/adapters/inputs";
+} from "@ui/adapters";
 import {
   DISPLAY_TEXT,
   DISPLAY_DATE,
   DISPLAY_SELECT,
   DISPLAY_TAGS,
-} from "@ui/adapters/displays";
+} from "@ui/adapters";
 import {
   COMPONENT,
   LINK,
@@ -41,8 +41,8 @@ import {
   OPTION,
   DROPDOWN,
   RELATIONSHIP_PICKER,
-} from "@ui/adapters/primitives";
-import type { UIServices, ComponentRegistry, InputRegistry, DisplayRegistry } from "@ui/registry";
+} from "@ui/adapters";
+import type { AdapterRegistry, UIServices } from "@ui/registry";
 import type { ReactNode } from "react";
 
 // Import mock data and schema
@@ -59,7 +59,7 @@ function createMockServices(overrides?: Partial<UIServices>): UIServices {
   };
 }
 
-const mockComponents: ComponentRegistry = {
+const mockAdapters: AdapterRegistry = {
   VIEW,
   FORM,
   TABLE,
@@ -73,20 +73,14 @@ const mockComponents: ComponentRegistry = {
   OPTION,
   DROPDOWN,
   RELATIONSHIP_PICKER,
-} as ComponentRegistry;
-
-const mockInputs: InputRegistry = {
   INPUT_TEXT,
   INPUT_SELECT,
   INPUT_DATE,
-} as InputRegistry;
-
-const mockDisplays: DisplayRegistry = {
   DISPLAY_TEXT,
   DISPLAY_DATE,
   DISPLAY_SELECT,
   DISPLAY_TAGS,
-} as DisplayRegistry;
+} as AdapterRegistry;
 
 interface WrapperProps {
   children: ReactNode;
@@ -111,9 +105,7 @@ function TestWrapper({
   return (
     <QueryClientProvider client={queryClient}>
       <UIProvider
-        components={mockComponents}
-        inputs={mockInputs}
-        displays={mockDisplays}
+        adapters={mockAdapters}
         services={services}
         translations={{ views: translations, schemas: {}, common: {} }}
         locale="en"

@@ -1,4 +1,4 @@
-import type { Rule, Condition, RuleEffect } from "./types";
+import type { Rule, Condition } from "./types";
 
 /**
  * Evaluates a single condition against form data

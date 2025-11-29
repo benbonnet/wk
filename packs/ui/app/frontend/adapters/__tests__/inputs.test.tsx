@@ -1,58 +1,76 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { screen, fireEvent } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {
-  INPUT_TEXT,
-  INPUT_TEXTAREA,
-  INPUT_SELECT,
-  INPUT_CHECKBOX,
-  INPUT_CHECKBOXES,
-  INPUT_RADIOS,
-  INPUT_TAGS,
-} from "../inputs";
+  TextInput,
+  Textarea,
+  Select,
+  Checkbox,
+  Checkboxes,
+  Radios,
+  TagsInput,
+  View,
+  Form,
+} from "..";
 import { renderWithProviders, resetMocks } from "./test-utils";
+
+// Wrapper to provide FormContext for inputs
+const InputWrapper = ({ children }: { children: React.ReactNode }) => (
+  <View>
+    <Form>{children}</Form>
+  </View>
+);
 
 describe("Input Adapters", () => {
   beforeEach(() => {
     resetMocks();
   });
 
-  describe("INPUT_TEXT", () => {
+  describe("TextInput", () => {
     it("renders with label", () => {
-      renderWithProviders(<INPUT_TEXT name="email" label="Email Address" />);
+      renderWithProviders(
+        <InputWrapper>
+          <TextInput name="email" label="Email Address" />
+        </InputWrapper>,
+      );
 
       expect(screen.getByLabelText("Email Address")).toBeInTheDocument();
     });
 
     it("renders with placeholder", () => {
       renderWithProviders(
-        <INPUT_TEXT name="email" placeholder="Enter email" />,
+        <InputWrapper>
+          <TextInput name="email" placeholder="Enter email" />
+        </InputWrapper>,
       );
 
       expect(screen.getByPlaceholderText("Enter email")).toBeInTheDocument();
     });
 
-    it("calls onChange when value changes", async () => {
-      const onChange = vi.fn();
+    it("updates value when typing", async () => {
       const user = userEvent.setup();
 
-      renderWithProviders(<INPUT_TEXT name="email" onChange={onChange} />);
+      renderWithProviders(
+        <InputWrapper>
+          <TextInput name="email" />
+        </InputWrapper>,
+      );
 
       const input = screen.getByRole("textbox");
       await user.type(input, "test@example.com");
 
-      expect(onChange).toHaveBeenCalled();
-    });
-
-    it("displays error message", () => {
-      renderWithProviders(<INPUT_TEXT name="email" error="Invalid email" />);
-
-      expect(screen.getByText("Invalid email")).toBeInTheDocument();
+      expect(input).toHaveValue("test@example.com");
     });
 
     it("displays helper text", () => {
       renderWithProviders(
-        <INPUT_TEXT name="email" helperText="We'll never share your email" />,
+        <InputWrapper>
+          <TextInput
+            name="email"
+            helperText="We'll never share your email"
+          />
+        </InputWrapper>,
       );
 
       expect(
@@ -61,30 +79,45 @@ describe("Input Adapters", () => {
     });
 
     it("can be disabled", () => {
-      renderWithProviders(<INPUT_TEXT name="email" disabled />);
+      renderWithProviders(
+        <InputWrapper>
+          <TextInput name="email" disabled />
+        </InputWrapper>,
+      );
 
       expect(screen.getByRole("textbox")).toBeDisabled();
     });
   });
 
-  describe("INPUT_TEXTAREA", () => {
+  describe("Textarea", () => {
     it("renders with correct rows", () => {
-      renderWithProviders(<INPUT_TEXTAREA name="description" rows={5} />);
+      renderWithProviders(
+        <InputWrapper>
+          <Textarea name="description" rows={5} />
+        </InputWrapper>,
+      );
 
       const textarea = screen.getByRole("textbox");
       expect(textarea).toHaveAttribute("rows", "5");
     });
 
-    it("displays value", () => {
+    it("can be typed into", async () => {
+      const user = userEvent.setup();
+
       renderWithProviders(
-        <INPUT_TEXTAREA name="description" value="Test content" />,
+        <InputWrapper>
+          <Textarea name="description" />
+        </InputWrapper>,
       );
 
-      expect(screen.getByDisplayValue("Test content")).toBeInTheDocument();
+      const textarea = screen.getByRole("textbox");
+      await user.type(textarea, "Test content");
+
+      expect(textarea).toHaveValue("Test content");
     });
   });
 
-  describe("INPUT_SELECT", () => {
+  describe("Select", () => {
     const options = [
       { value: "us", label: "United States" },
       { value: "uk", label: "United Kingdom" },
@@ -93,11 +126,13 @@ describe("Input Adapters", () => {
 
     it("renders with placeholder", () => {
       renderWithProviders(
-        <INPUT_SELECT
-          name="country"
-          placeholder="Select country"
-          options={options}
-        />,
+        <InputWrapper>
+          <Select
+            name="country"
+            placeholder="Select country"
+            options={options}
+          />
+        </InputWrapper>,
       );
 
       expect(screen.getByRole("combobox")).toBeInTheDocument();
@@ -106,46 +141,66 @@ describe("Input Adapters", () => {
     it("renders all options", async () => {
       const user = userEvent.setup();
 
-      renderWithProviders(<INPUT_SELECT name="country" options={options} />);
+      renderWithProviders(
+        <InputWrapper>
+          <Select name="country" options={options} />
+        </InputWrapper>,
+      );
 
       await user.click(screen.getByRole("combobox"));
 
-      expect(screen.getByText("United States")).toBeInTheDocument();
-      expect(screen.getByText("United Kingdom")).toBeInTheDocument();
-      expect(screen.getByText("Canada")).toBeInTheDocument();
+      // Radix Select may render multiple elements for accessibility
+      expect(screen.getAllByText("United States").length).toBeGreaterThan(0);
+      expect(screen.getAllByText("United Kingdom").length).toBeGreaterThan(0);
+      expect(screen.getAllByText("Canada").length).toBeGreaterThan(0);
     });
   });
 
-  describe("INPUT_CHECKBOX", () => {
+  describe("Checkbox", () => {
     it("renders with label", () => {
       renderWithProviders(
-        <INPUT_CHECKBOX name="agree" label="I agree to terms" />,
+        <InputWrapper>
+          <Checkbox name="agree" label="I agree to terms" />
+        </InputWrapper>,
       );
 
       expect(screen.getByText("I agree to terms")).toBeInTheDocument();
     });
 
     it("can be checked", async () => {
-      const onChange = vi.fn();
       const user = userEvent.setup();
 
       renderWithProviders(
-        <INPUT_CHECKBOX name="agree" label="I agree" onChange={onChange} />,
+        <InputWrapper>
+          <Checkbox name="agree" label="I agree" />
+        </InputWrapper>,
       );
 
-      await user.click(screen.getByRole("checkbox"));
+      const checkbox = screen.getByRole("checkbox");
+      await user.click(checkbox);
 
-      expect(onChange).toHaveBeenCalledWith(true);
+      expect(checkbox).toBeChecked();
     });
 
-    it("respects initial value", () => {
-      renderWithProviders(<INPUT_CHECKBOX name="agree" value={true} />);
+    it("can be unchecked", async () => {
+      const user = userEvent.setup();
 
-      expect(screen.getByRole("checkbox")).toBeChecked();
+      renderWithProviders(
+        <InputWrapper>
+          <Checkbox name="agree" label="I agree" />
+        </InputWrapper>,
+      );
+
+      const checkbox = screen.getByRole("checkbox");
+      await user.click(checkbox);
+      expect(checkbox).toBeChecked();
+
+      await user.click(checkbox);
+      expect(checkbox).not.toBeChecked();
     });
   });
 
-  describe("INPUT_CHECKBOXES", () => {
+  describe("Checkboxes", () => {
     const options = [
       { value: "email", label: "Email" },
       { value: "sms", label: "SMS" },
@@ -154,7 +209,9 @@ describe("Input Adapters", () => {
 
     it("renders all options", () => {
       renderWithProviders(
-        <INPUT_CHECKBOXES name="notifications" options={options} />,
+        <InputWrapper>
+          <Checkboxes name="notifications" options={options} />
+        </InputWrapper>,
       );
 
       expect(screen.getByText("Email")).toBeInTheDocument();
@@ -162,41 +219,26 @@ describe("Input Adapters", () => {
       expect(screen.getByText("Push")).toBeInTheDocument();
     });
 
-    it("shows selected values", () => {
-      renderWithProviders(
-        <INPUT_CHECKBOXES
-          name="notifications"
-          options={options}
-          value={["email", "push"]}
-        />,
-      );
-
-      const checkboxes = screen.getAllByRole("checkbox");
-      expect(checkboxes[0]).toBeChecked(); // email
-      expect(checkboxes[1]).not.toBeChecked(); // sms
-      expect(checkboxes[2]).toBeChecked(); // push
-    });
-
-    it("calls onChange with updated array", async () => {
-      const onChange = vi.fn();
+    it("can check options", async () => {
       const user = userEvent.setup();
 
       renderWithProviders(
-        <INPUT_CHECKBOXES
-          name="notifications"
-          options={options}
-          value={["email"]}
-          onChange={onChange}
-        />,
+        <InputWrapper>
+          <Checkboxes name="notifications" options={options} />
+        </InputWrapper>,
       );
 
-      await user.click(screen.getByText("SMS"));
+      const checkboxes = screen.getAllByRole("checkbox");
+      await user.click(checkboxes[0]); // email
+      await user.click(checkboxes[2]); // push
 
-      expect(onChange).toHaveBeenCalledWith(["email", "sms"]);
+      expect(checkboxes[0]).toBeChecked();
+      expect(checkboxes[1]).not.toBeChecked();
+      expect(checkboxes[2]).toBeChecked();
     });
   });
 
-  describe("INPUT_RADIOS", () => {
+  describe("Radios", () => {
     const options = [
       { value: "free", label: "Free Plan" },
       { value: "pro", label: "Pro Plan" },
@@ -204,92 +246,99 @@ describe("Input Adapters", () => {
     ];
 
     it("renders all options", () => {
-      renderWithProviders(<INPUT_RADIOS name="plan" options={options} />);
+      renderWithProviders(
+        <InputWrapper>
+          <Radios name="plan" options={options} />
+        </InputWrapper>,
+      );
 
       expect(screen.getByText("Free Plan")).toBeInTheDocument();
       expect(screen.getByText("Pro Plan")).toBeInTheDocument();
       expect(screen.getByText("Enterprise")).toBeInTheDocument();
     });
 
-    it("shows selected value", () => {
+    it("can select an option", async () => {
+      const user = userEvent.setup();
+
       renderWithProviders(
-        <INPUT_RADIOS name="plan" options={options} value="pro" />,
+        <InputWrapper>
+          <Radios name="plan" options={options} />
+        </InputWrapper>,
       );
+
+      await user.click(screen.getByText("Pro Plan"));
 
       const radios = screen.getAllByRole("radio");
       expect(radios[0]).not.toBeChecked();
       expect(radios[1]).toBeChecked();
       expect(radios[2]).not.toBeChecked();
     });
-
-    it("calls onChange with selected value", async () => {
-      const onChange = vi.fn();
-      const user = userEvent.setup();
-
-      renderWithProviders(
-        <INPUT_RADIOS name="plan" options={options} onChange={onChange} />,
-      );
-
-      await user.click(screen.getByText("Enterprise"));
-
-      expect(onChange).toHaveBeenCalledWith("enterprise");
-    });
   });
 
-  describe("INPUT_TAGS", () => {
-    it("displays existing tags", () => {
+  describe("TagsInput", () => {
+    it("renders empty state", () => {
       renderWithProviders(
-        <INPUT_TAGS name="skills" value={["React", "TypeScript"]} />,
+        <InputWrapper>
+          <TagsInput name="skills" />
+        </InputWrapper>,
       );
 
-      expect(screen.getByText("React")).toBeInTheDocument();
-      expect(screen.getByText("TypeScript")).toBeInTheDocument();
+      expect(screen.getByRole("textbox")).toBeInTheDocument();
     });
 
     it("adds tag on Enter", async () => {
-      const onChange = vi.fn();
       const user = userEvent.setup();
 
       renderWithProviders(
-        <INPUT_TAGS name="skills" value={[]} onChange={onChange} />,
+        <InputWrapper>
+          <TagsInput name="skills" />
+        </InputWrapper>,
       );
 
       const input = screen.getByRole("textbox");
       await user.type(input, "JavaScript{enter}");
 
-      expect(onChange).toHaveBeenCalledWith(["JavaScript"]);
+      expect(screen.getByText("JavaScript")).toBeInTheDocument();
     });
 
     it("removes tag when X is clicked", async () => {
-      const onChange = vi.fn();
       const user = userEvent.setup();
 
       renderWithProviders(
-        <INPUT_TAGS
-          name="skills"
-          value={["React", "Vue"]}
-          onChange={onChange}
-        />,
-      );
-
-      const removeButtons = screen.getAllByRole("button");
-      await user.click(removeButtons[0]);
-
-      expect(onChange).toHaveBeenCalledWith(["Vue"]);
-    });
-
-    it("prevents duplicate tags", async () => {
-      const onChange = vi.fn();
-      const user = userEvent.setup();
-
-      renderWithProviders(
-        <INPUT_TAGS name="skills" value={["React"]} onChange={onChange} />,
+        <InputWrapper>
+          <TagsInput name="skills" />
+        </InputWrapper>,
       );
 
       const input = screen.getByRole("textbox");
       await user.type(input, "React{enter}");
+      await user.type(input, "Vue{enter}");
 
-      expect(onChange).not.toHaveBeenCalled();
+      expect(screen.getByText("React")).toBeInTheDocument();
+      expect(screen.getByText("Vue")).toBeInTheDocument();
+
+      const removeButtons = screen.getAllByRole("button");
+      await user.click(removeButtons[0]);
+
+      expect(screen.queryByText("React")).not.toBeInTheDocument();
+      expect(screen.getByText("Vue")).toBeInTheDocument();
+    });
+
+    it("prevents duplicate tags", async () => {
+      const user = userEvent.setup();
+
+      renderWithProviders(
+        <InputWrapper>
+          <TagsInput name="skills" />
+        </InputWrapper>,
+      );
+
+      const input = screen.getByRole("textbox");
+      await user.type(input, "React{enter}");
+      await user.type(input, "React{enter}");
+
+      // Should only have one "React" badge
+      expect(screen.getAllByText("React")).toHaveLength(1);
     });
   });
 });

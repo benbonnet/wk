@@ -1,16 +1,17 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { PAGE, CARD_GROUP, GROUP, SHOW } from "@ui/adapters/layouts";
 import {
-  DISPLAY_TEXT,
-  DISPLAY_LONGTEXT,
-  DISPLAY_NUMBER,
-  DISPLAY_DATE,
-  DISPLAY_DATETIME,
-  DISPLAY_BADGE,
-  DISPLAY_TAGS,
-  DISPLAY_BOOLEAN,
-  DISPLAY_SELECT,
-} from "@ui/adapters/displays";
+  Page,
+  CardGroup,
+  TextDisplay,
+  LongtextDisplay,
+  NumberDisplay,
+  DateDisplay,
+  DatetimeDisplay,
+  BadgeDisplay,
+  TagsDisplay,
+  BooleanDisplay,
+  SelectDisplay,
+} from "@ui/adapters";
 
 const meta: Meta = {
   title: "Compositions/Display Patterns",
@@ -25,52 +26,51 @@ type Story = StoryObj;
 export const AllDisplayTypes: Story = {
   render: () => (
     <div className="min-h-screen bg-slate-50 p-6">
-      <PAGE
-        schema={{ type: "PAGE" }}
+      <Page
         title="Display Components"
         description="All available display field types"
       >
         <div className="max-w-2xl mx-auto space-y-6">
-          <CARD_GROUP schema={{ type: "CARD_GROUP" }} label="Text Displays">
-            <DISPLAY_TEXT name="text" label="Text" value="Hello World" />
-            <DISPLAY_LONGTEXT
+          <CardGroup label="Text Displays">
+            <TextDisplay name="text" label="Text" data={{ text: "Hello World" }} />
+            <LongtextDisplay
               name="longtext"
               label="Long Text"
-              value="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+              data={{ longtext: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." }}
             />
-            <DISPLAY_NUMBER name="number" label="Number" value={1234567} />
-          </CARD_GROUP>
+            <NumberDisplay name="number" label="Number" data={{ number: 1234567 }} />
+          </CardGroup>
 
-          <CARD_GROUP schema={{ type: "CARD_GROUP" }} label="Date & Time">
-            <DISPLAY_DATE name="date" label="Date" value="2025-01-15" />
-            <DISPLAY_DATETIME
+          <CardGroup label="Date & Time">
+            <DateDisplay name="date" label="Date" data={{ date: "2025-01-15" }} />
+            <DatetimeDisplay
               name="datetime"
               label="Date & Time"
-              value="2025-01-15T14:30:00Z"
+              data={{ datetime: "2025-01-15T14:30:00Z" }}
             />
-          </CARD_GROUP>
+          </CardGroup>
 
-          <CARD_GROUP schema={{ type: "CARD_GROUP" }} label="Status & Tags">
-            <DISPLAY_BADGE name="status" label="Status" value="active" />
-            <DISPLAY_TAGS
+          <CardGroup label="Status & Tags">
+            <BadgeDisplay name="status" label="Status" data={{ status: "active" }} />
+            <TagsDisplay
               name="tags"
               label="Tags"
-              value={["React", "TypeScript", "Tailwind"]}
+              data={{ tags: ["React", "TypeScript", "Tailwind"] }}
             />
-            <DISPLAY_BOOLEAN name="verified" label="Email Verified" value={true} />
-            <DISPLAY_SELECT
+            <BooleanDisplay name="verified" label="Email Verified" data={{ verified: true }} />
+            <SelectDisplay
               name="country"
               label="Country"
-              value="us"
+              data={{ country: "us" }}
               options={[
                 { value: "us", label: "United States" },
                 { value: "uk", label: "United Kingdom" },
                 { value: "ca", label: "Canada" },
               ]}
             />
-          </CARD_GROUP>
+          </CardGroup>
         </div>
-      </PAGE>
+      </Page>
     </div>
   ),
 };
@@ -78,84 +78,80 @@ export const AllDisplayTypes: Story = {
 export const UserProfile: Story = {
   render: () => (
     <div className="min-h-screen bg-slate-50 p-6">
-      <PAGE
-        schema={{ type: "PAGE" }}
+      <Page
         title="User Profile"
         description="View user information"
       >
         <div className="max-w-2xl mx-auto space-y-6">
-          <CARD_GROUP
-            schema={{ type: "CARD_GROUP" }}
-            label="Personal Information"
-          >
+          <CardGroup label="Personal Information">
             <div className="grid grid-cols-2 gap-4">
-              <DISPLAY_TEXT name="first_name" label="First Name" value="John" />
-              <DISPLAY_TEXT name="last_name" label="Last Name" value="Doe" />
+              <TextDisplay name="first_name" label="First Name" data={{ first_name: "John" }} />
+              <TextDisplay name="last_name" label="Last Name" data={{ last_name: "Doe" }} />
             </div>
-            <DISPLAY_TEXT
+            <TextDisplay
               name="email"
               label="Email Address"
-              value="john.doe@example.com"
+              data={{ email: "john.doe@example.com" }}
             />
-            <DISPLAY_TEXT name="phone" label="Phone" value="+1 (555) 123-4567" />
-          </CARD_GROUP>
+            <TextDisplay name="phone" label="Phone" data={{ phone: "+1 (555) 123-4567" }} />
+          </CardGroup>
 
-          <CARD_GROUP schema={{ type: "CARD_GROUP" }} label="Account Details">
+          <CardGroup label="Account Details">
             <div className="grid grid-cols-2 gap-4">
-              <DISPLAY_BADGE name="status" label="Account Status" value="active" />
-              <DISPLAY_BOOLEAN
+              <BadgeDisplay name="status" label="Account Status" data={{ status: "active" }} />
+              <BooleanDisplay
                 name="verified"
                 label="Email Verified"
-                value={true}
+                data={{ verified: true }}
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <DISPLAY_DATE
+              <DateDisplay
                 name="created_at"
                 label="Member Since"
-                value="2023-06-15"
+                data={{ created_at: "2023-06-15" }}
               />
-              <DISPLAY_DATETIME
+              <DatetimeDisplay
                 name="last_login"
                 label="Last Login"
-                value="2025-01-14T09:30:00Z"
+                data={{ last_login: "2025-01-14T09:30:00Z" }}
               />
             </div>
-          </CARD_GROUP>
+          </CardGroup>
 
-          <CARD_GROUP schema={{ type: "CARD_GROUP" }} label="Skills & Expertise">
-            <DISPLAY_TAGS
+          <CardGroup label="Skills & Expertise">
+            <TagsDisplay
               name="skills"
               label="Skills"
-              value={[
+              data={{ skills: [
                 "JavaScript",
                 "React",
                 "Node.js",
                 "TypeScript",
                 "PostgreSQL",
-              ]}
+              ] }}
             />
-            <DISPLAY_SELECT
+            <SelectDisplay
               name="experience_level"
               label="Experience Level"
-              value="senior"
+              data={{ experience_level: "senior" }}
               options={[
                 { value: "junior", label: "Junior (0-2 years)" },
                 { value: "mid", label: "Mid-Level (2-5 years)" },
                 { value: "senior", label: "Senior (5+ years)" },
               ]}
             />
-          </CARD_GROUP>
+          </CardGroup>
 
-          <CARD_GROUP schema={{ type: "CARD_GROUP" }} label="About">
-            <DISPLAY_LONGTEXT
+          <CardGroup label="About">
+            <LongtextDisplay
               name="bio"
               label="Biography"
-              value="Senior software engineer with over 10 years of experience building web applications. Passionate about clean code, user experience, and continuous learning. Currently focused on React and TypeScript development with a strong background in full-stack development."
+              data={{ bio: "Senior software engineer with over 10 years of experience building web applications. Passionate about clean code, user experience, and continuous learning. Currently focused on React and TypeScript development with a strong background in full-stack development." }}
             />
-          </CARD_GROUP>
+          </CardGroup>
         </div>
-      </PAGE>
+      </Page>
     </div>
   ),
 };
@@ -163,66 +159,65 @@ export const UserProfile: Story = {
 export const OrderDetails: Story = {
   render: () => (
     <div className="min-h-screen bg-slate-50 p-6">
-      <PAGE
-        schema={{ type: "PAGE" }}
+      <Page
         title="Order #12345"
         description="Order details and status"
       >
         <div className="max-w-2xl mx-auto space-y-6">
-          <CARD_GROUP schema={{ type: "CARD_GROUP" }} label="Order Information">
+          <CardGroup label="Order Information">
             <div className="grid grid-cols-2 gap-4">
-              <DISPLAY_TEXT name="order_id" label="Order ID" value="#12345" />
-              <DISPLAY_BADGE name="status" label="Status" value="processing" />
+              <TextDisplay name="order_id" label="Order ID" data={{ order_id: "#12345" }} />
+              <BadgeDisplay name="status" label="Status" data={{ status: "processing" }} />
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <DISPLAY_DATETIME
+              <DatetimeDisplay
                 name="order_date"
                 label="Order Date"
-                value="2025-01-10T14:22:00Z"
+                data={{ order_date: "2025-01-10T14:22:00Z" }}
               />
-              <DISPLAY_DATE
+              <DateDisplay
                 name="delivery_date"
                 label="Expected Delivery"
-                value="2025-01-17"
+                data={{ delivery_date: "2025-01-17" }}
               />
             </div>
-          </CARD_GROUP>
+          </CardGroup>
 
-          <CARD_GROUP schema={{ type: "CARD_GROUP" }} label="Customer">
-            <DISPLAY_TEXT
+          <CardGroup label="Customer">
+            <TextDisplay
               name="customer_name"
               label="Name"
-              value="Jane Smith"
+              data={{ customer_name: "Jane Smith" }}
             />
-            <DISPLAY_TEXT
+            <TextDisplay
               name="customer_email"
               label="Email"
-              value="jane.smith@email.com"
+              data={{ customer_email: "jane.smith@email.com" }}
             />
-            <DISPLAY_LONGTEXT
+            <LongtextDisplay
               name="shipping_address"
               label="Shipping Address"
-              value="456 Oak Avenue, Apt 7B\nNew York, NY 10001\nUnited States"
+              data={{ shipping_address: "456 Oak Avenue, Apt 7B\nNew York, NY 10001\nUnited States" }}
             />
-          </CARD_GROUP>
+          </CardGroup>
 
-          <CARD_GROUP schema={{ type: "CARD_GROUP" }} label="Payment">
+          <CardGroup label="Payment">
             <div className="grid grid-cols-2 gap-4">
-              <DISPLAY_NUMBER name="subtotal" label="Subtotal" value={149.99} />
-              <DISPLAY_NUMBER name="shipping" label="Shipping" value={9.99} />
+              <NumberDisplay name="subtotal" label="Subtotal" data={{ subtotal: 149.99 }} />
+              <NumberDisplay name="shipping" label="Shipping" data={{ shipping: 9.99 }} />
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <DISPLAY_NUMBER name="tax" label="Tax" value={12.8} />
-              <DISPLAY_NUMBER name="total" label="Total" value={172.78} />
+              <NumberDisplay name="tax" label="Tax" data={{ tax: 12.8 }} />
+              <NumberDisplay name="total" label="Total" data={{ total: 172.78 }} />
             </div>
-            <DISPLAY_BADGE
+            <BadgeDisplay
               name="payment_status"
               label="Payment Status"
-              value="completed"
+              data={{ payment_status: "completed" }}
             />
-          </CARD_GROUP>
+          </CardGroup>
         </div>
-      </PAGE>
+      </Page>
     </div>
   ),
 };
@@ -230,26 +225,26 @@ export const OrderDetails: Story = {
 export const ProductCard: Story = {
   render: () => (
     <div className="p-6 max-w-md">
-      <CARD_GROUP schema={{ type: "CARD_GROUP" }} label="MacBook Pro 16">
+      <CardGroup label="MacBook Pro 16">
         <div className="space-y-4">
           <div className="flex justify-between items-start">
-            <DISPLAY_BADGE name="availability" value="active" />
-            <DISPLAY_NUMBER name="price" label="Price" value={2499} />
+            <BadgeDisplay name="availability" data={{ availability: "active" }} />
+            <NumberDisplay name="price" label="Price" data={{ price: 2499 }} />
           </div>
-          <DISPLAY_LONGTEXT
+          <LongtextDisplay
             name="description"
             label="Description"
-            value="The most powerful MacBook Pro ever is here. With the blazing-fast M3 Pro or M3 Max chip, up to 22 hours of battery life, and a stunning Liquid Retina XDR display."
+            data={{ description: "The most powerful MacBook Pro ever is here. With the blazing-fast M3 Pro or M3 Max chip, up to 22 hours of battery life, and a stunning Liquid Retina XDR display." }}
           />
-          <DISPLAY_TAGS
+          <TagsDisplay
             name="features"
             label="Key Features"
-            value={["M3 Pro", "22hr Battery", "Liquid Retina XDR", "120Hz"]}
+            data={{ features: ["M3 Pro", "22hr Battery", "Liquid Retina XDR", "120Hz"] }}
           />
-          <DISPLAY_SELECT
+          <SelectDisplay
             name="category"
             label="Category"
-            value="laptops"
+            data={{ category: "laptops" }}
             options={[
               { value: "laptops", label: "Laptops" },
               { value: "desktops", label: "Desktops" },
@@ -257,7 +252,7 @@ export const ProductCard: Story = {
             ]}
           />
         </div>
-      </CARD_GROUP>
+      </CardGroup>
     </div>
   ),
 };

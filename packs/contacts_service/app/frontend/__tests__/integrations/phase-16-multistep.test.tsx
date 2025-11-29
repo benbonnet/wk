@@ -3,11 +3,10 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { UIProvider } from "@ui/provider";
-import { TooltipProvider } from "@ui-components/ui/tooltip";
-import { VIEW, FORM, GROUP, MULTISTEP } from "@ui/adapters/layouts";
-import { INPUT_TEXT } from "@ui/adapters/inputs";
-import { COMPONENT, SUBMIT } from "@ui/adapters/primitives";
-import type { UIServices, ComponentRegistry, InputRegistry } from "@ui/registry";
+import { DynamicRenderer } from "@ui/renderer";
+import { TooltipProvider } from "@ui-components/tooltip";
+import type { UIServices } from "@ui/registry";
+import type { UISchema } from "@ui/types";
 import type { ReactNode } from "react";
 
 function createMockServices(overrides?: Partial<UIServices>): UIServices {
@@ -19,19 +18,6 @@ function createMockServices(overrides?: Partial<UIServices>): UIServices {
     ...overrides,
   };
 }
-
-const mockComponents: ComponentRegistry = {
-  VIEW,
-  FORM,
-  GROUP,
-  MULTISTEP,
-  COMPONENT,
-  SUBMIT,
-} as ComponentRegistry;
-
-const mockInputs: InputRegistry = {
-  INPUT_TEXT,
-} as InputRegistry;
 
 interface WrapperProps {
   children: ReactNode;
@@ -51,9 +37,6 @@ function TestWrapper({
   return (
     <QueryClientProvider client={queryClient}>
       <UIProvider
-        components={mockComponents}
-        inputs={mockInputs}
-        displays={{} as never}
         services={services}
         translations={{ views: translations, schemas: {}, common: { required: "This field is required" } }}
         locale="en"
@@ -64,9 +47,15 @@ function TestWrapper({
   );
 }
 
-// Step component for use with MULTISTEP (children-based API)
-function Step({ label, children, active }: { label: string; children: ReactNode; active?: boolean }) {
-  return <div data-testid={`step-${label}`}>{children}</div>;
+function renderSchema(
+  schema: UISchema,
+  options?: { translations?: Record<string, string> }
+) {
+  return render(
+    <TestWrapper translations={options?.translations}>
+      <DynamicRenderer schema={schema} />
+    </TestWrapper>
+  );
 }
 
 describe("Phase 16: MULTISTEP (Wizard Forms)", () => {
@@ -76,22 +65,23 @@ describe("Phase 16: MULTISTEP (Wizard Forms)", () => {
 
   describe("16.1 Step Rendering", () => {
     it("MULTISTEP renders first step by default", () => {
-      render(
-        <TestWrapper>
-          <VIEW schema={{ type: "VIEW" }}>
-            <FORM schema={{ type: "FORM" }}>
-              <MULTISTEP schema={{ type: "MULTISTEP" }}>
-                <Step label="step1">
-                  <div>Step 1 Content</div>
-                </Step>
-                <Step label="step2">
-                  <div>Step 2 Content</div>
-                </Step>
-              </MULTISTEP>
-            </FORM>
-          </VIEW>
-        </TestWrapper>
-      );
+      renderSchema({
+        type: "VIEW",
+        elements: [
+          {
+            type: "FORM",
+            elements: [
+              {
+                type: "MULTISTEP",
+                elements: [
+                  { type: "STEP", label: "step1", elements: [{ type: "ALERT", label: "Step 1 Content" }] },
+                  { type: "STEP", label: "step2", elements: [{ type: "ALERT", label: "Step 2 Content" }] },
+                ],
+              },
+            ],
+          },
+        ],
+      });
 
       // First step should be visible
       expect(screen.getByText("Step 1 Content")).toBeInTheDocument();
@@ -100,40 +90,50 @@ describe("Phase 16: MULTISTEP (Wizard Forms)", () => {
     });
 
     it("MULTISTEP renders step labels in indicator", () => {
-      render(
-        <TestWrapper translations={{ personal_info: "Personal Info", contact_info: "Contact Info" }}>
-          <VIEW schema={{ type: "VIEW" }}>
-            <FORM schema={{ type: "FORM" }}>
-              <MULTISTEP schema={{ type: "MULTISTEP" }}>
-                <Step label="personal_info">
-                  <div>Step 1</div>
-                </Step>
-                <Step label="contact_info">
-                  <div>Step 2</div>
-                </Step>
-              </MULTISTEP>
-            </FORM>
-          </VIEW>
-        </TestWrapper>
+      renderSchema(
+        {
+          type: "VIEW",
+          elements: [
+            {
+              type: "FORM",
+              elements: [
+                {
+                  type: "MULTISTEP",
+                  elements: [
+                    { type: "STEP", label: "personal_info", elements: [{ type: "ALERT", label: "Step 1" }] },
+                    { type: "STEP", label: "contact_info", elements: [{ type: "ALERT", label: "Step 2" }] },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        { translations: { personal_info: "Personal Info", contact_info: "Contact Info" } }
       );
 
-      expect(screen.getByText("Personal Info")).toBeInTheDocument();
-      expect(screen.getByText("Contact Info")).toBeInTheDocument();
+      // Step labels appear in both the indicator and step header
+      expect(screen.getAllByText("Personal Info").length).toBeGreaterThan(0);
+      expect(screen.getAllByText("Contact Info").length).toBeGreaterThan(0);
     });
 
     it("MULTISTEP shows navigation buttons", () => {
-      render(
-        <TestWrapper>
-          <VIEW schema={{ type: "VIEW" }}>
-            <FORM schema={{ type: "FORM" }}>
-              <MULTISTEP schema={{ type: "MULTISTEP" }}>
-                <Step label="step1"><div>Step 1</div></Step>
-                <Step label="step2"><div>Step 2</div></Step>
-              </MULTISTEP>
-            </FORM>
-          </VIEW>
-        </TestWrapper>
-      );
+      renderSchema({
+        type: "VIEW",
+        elements: [
+          {
+            type: "FORM",
+            elements: [
+              {
+                type: "MULTISTEP",
+                elements: [
+                  { type: "STEP", label: "step1", elements: [{ type: "ALERT", label: "Step 1" }] },
+                  { type: "STEP", label: "step2", elements: [{ type: "ALERT", label: "Step 2" }] },
+                ],
+              },
+            ],
+          },
+        ],
+      });
 
       // On first step, should have Previous (disabled) and Next buttons
       expect(screen.getByRole("button", { name: /Previous/i })).toBeInTheDocument();
@@ -145,22 +145,23 @@ describe("Phase 16: MULTISTEP (Wizard Forms)", () => {
     it("Click Next advances to next step", async () => {
       const user = userEvent.setup();
 
-      render(
-        <TestWrapper>
-          <VIEW schema={{ type: "VIEW" }}>
-            <FORM schema={{ type: "FORM" }}>
-              <MULTISTEP schema={{ type: "MULTISTEP" }}>
-                <Step label="step1">
-                  <div>First Step</div>
-                </Step>
-                <Step label="step2">
-                  <div>Second Step</div>
-                </Step>
-              </MULTISTEP>
-            </FORM>
-          </VIEW>
-        </TestWrapper>
-      );
+      renderSchema({
+        type: "VIEW",
+        elements: [
+          {
+            type: "FORM",
+            elements: [
+              {
+                type: "MULTISTEP",
+                elements: [
+                  { type: "STEP", label: "step1", elements: [{ type: "ALERT", label: "First Step" }] },
+                  { type: "STEP", label: "step2", elements: [{ type: "ALERT", label: "Second Step" }] },
+                ],
+              },
+            ],
+          },
+        ],
+      });
 
       // Initially on step 1
       expect(screen.getByText("First Step")).toBeInTheDocument();
@@ -179,22 +180,23 @@ describe("Phase 16: MULTISTEP (Wizard Forms)", () => {
     it("Click Previous returns to previous step", async () => {
       const user = userEvent.setup();
 
-      render(
-        <TestWrapper>
-          <VIEW schema={{ type: "VIEW" }}>
-            <FORM schema={{ type: "FORM" }}>
-              <MULTISTEP schema={{ type: "MULTISTEP" }}>
-                <Step label="step1">
-                  <div>First Step</div>
-                </Step>
-                <Step label="step2">
-                  <div>Second Step</div>
-                </Step>
-              </MULTISTEP>
-            </FORM>
-          </VIEW>
-        </TestWrapper>
-      );
+      renderSchema({
+        type: "VIEW",
+        elements: [
+          {
+            type: "FORM",
+            elements: [
+              {
+                type: "MULTISTEP",
+                elements: [
+                  { type: "STEP", label: "step1", elements: [{ type: "ALERT", label: "First Step" }] },
+                  { type: "STEP", label: "step2", elements: [{ type: "ALERT", label: "Second Step" }] },
+                ],
+              },
+            ],
+          },
+        ],
+      });
 
       // Go to step 2
       await user.click(screen.getByRole("button", { name: /Next/i }));
@@ -213,18 +215,23 @@ describe("Phase 16: MULTISTEP (Wizard Forms)", () => {
     });
 
     it("Previous button disabled on first step", () => {
-      render(
-        <TestWrapper>
-          <VIEW schema={{ type: "VIEW" }}>
-            <FORM schema={{ type: "FORM" }}>
-              <MULTISTEP schema={{ type: "MULTISTEP" }}>
-                <Step label="step1"><div>Step 1</div></Step>
-                <Step label="step2"><div>Step 2</div></Step>
-              </MULTISTEP>
-            </FORM>
-          </VIEW>
-        </TestWrapper>
-      );
+      renderSchema({
+        type: "VIEW",
+        elements: [
+          {
+            type: "FORM",
+            elements: [
+              {
+                type: "MULTISTEP",
+                elements: [
+                  { type: "STEP", label: "step1", elements: [{ type: "ALERT", label: "Step 1" }] },
+                  { type: "STEP", label: "step2", elements: [{ type: "ALERT", label: "Step 2" }] },
+                ],
+              },
+            ],
+          },
+        ],
+      });
 
       // On first step, Previous button is disabled
       expect(screen.getByRole("button", { name: /Previous/i })).toBeDisabled();
@@ -233,18 +240,23 @@ describe("Phase 16: MULTISTEP (Wizard Forms)", () => {
     it("Last step shows Submit instead of Next", async () => {
       const user = userEvent.setup();
 
-      render(
-        <TestWrapper>
-          <VIEW schema={{ type: "VIEW" }}>
-            <FORM schema={{ type: "FORM" }}>
-              <MULTISTEP schema={{ type: "MULTISTEP" }}>
-                <Step label="step1"><div>Step 1</div></Step>
-                <Step label="step2"><div>Step 2</div></Step>
-              </MULTISTEP>
-            </FORM>
-          </VIEW>
-        </TestWrapper>
-      );
+      renderSchema({
+        type: "VIEW",
+        elements: [
+          {
+            type: "FORM",
+            elements: [
+              {
+                type: "MULTISTEP",
+                elements: [
+                  { type: "STEP", label: "step1", elements: [{ type: "ALERT", label: "Step 1" }] },
+                  { type: "STEP", label: "step2", elements: [{ type: "ALERT", label: "Step 2" }] },
+                ],
+              },
+            ],
+          },
+        ],
+      });
 
       // Go to last step
       await user.click(screen.getByRole("button", { name: /Next/i }));
@@ -259,19 +271,24 @@ describe("Phase 16: MULTISTEP (Wizard Forms)", () => {
 
   describe("16.3 Progress Indication", () => {
     it("MULTISTEP shows step number indicators", () => {
-      render(
-        <TestWrapper>
-          <VIEW schema={{ type: "VIEW" }}>
-            <FORM schema={{ type: "FORM" }}>
-              <MULTISTEP schema={{ type: "MULTISTEP" }}>
-                <Step label="step1"><div>Step 1</div></Step>
-                <Step label="step2"><div>Step 2</div></Step>
-                <Step label="step3"><div>Step 3</div></Step>
-              </MULTISTEP>
-            </FORM>
-          </VIEW>
-        </TestWrapper>
-      );
+      renderSchema({
+        type: "VIEW",
+        elements: [
+          {
+            type: "FORM",
+            elements: [
+              {
+                type: "MULTISTEP",
+                elements: [
+                  { type: "STEP", label: "step1", elements: [{ type: "ALERT", label: "Step 1" }] },
+                  { type: "STEP", label: "step2", elements: [{ type: "ALERT", label: "Step 2" }] },
+                  { type: "STEP", label: "step3", elements: [{ type: "ALERT", label: "Step 3" }] },
+                ],
+              },
+            ],
+          },
+        ],
+      });
 
       // Should show step number indicators (1, 2, 3)
       expect(screen.getByText("1")).toBeInTheDocument();
@@ -282,22 +299,23 @@ describe("Phase 16: MULTISTEP (Wizard Forms)", () => {
     it("Step indicator clickable for completed steps", async () => {
       const user = userEvent.setup();
 
-      render(
-        <TestWrapper>
-          <VIEW schema={{ type: "VIEW" }}>
-            <FORM schema={{ type: "FORM" }}>
-              <MULTISTEP schema={{ type: "MULTISTEP" }}>
-                <Step label="step1">
-                  <div>First Step</div>
-                </Step>
-                <Step label="step2">
-                  <div>Second Step</div>
-                </Step>
-              </MULTISTEP>
-            </FORM>
-          </VIEW>
-        </TestWrapper>
-      );
+      renderSchema({
+        type: "VIEW",
+        elements: [
+          {
+            type: "FORM",
+            elements: [
+              {
+                type: "MULTISTEP",
+                elements: [
+                  { type: "STEP", label: "step1", elements: [{ type: "ALERT", label: "First Step" }] },
+                  { type: "STEP", label: "step2", elements: [{ type: "ALERT", label: "Second Step" }] },
+                ],
+              },
+            ],
+          },
+        ],
+      });
 
       // Go to step 2
       await user.click(screen.getByRole("button", { name: /Next/i }));
@@ -317,21 +335,27 @@ describe("Phase 16: MULTISTEP (Wizard Forms)", () => {
 
   describe("16.4 Step Content", () => {
     it("MULTISTEP renders step children content", () => {
-      render(
-        <TestWrapper>
-          <VIEW schema={{ type: "VIEW" }}>
-            <FORM schema={{ type: "FORM" }}>
-              <MULTISTEP schema={{ type: "MULTISTEP" }}>
-                <Step label="step1">
-                  <div data-testid="step-content">Custom Content</div>
-                </Step>
-              </MULTISTEP>
-            </FORM>
-          </VIEW>
-        </TestWrapper>
-      );
+      renderSchema({
+        type: "VIEW",
+        elements: [
+          {
+            type: "FORM",
+            elements: [
+              {
+                type: "MULTISTEP",
+                elements: [
+                  {
+                    type: "STEP",
+                    label: "step1",
+                    elements: [{ type: "ALERT", label: "Custom Content" }],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      });
 
-      expect(screen.getByTestId("step-content")).toBeInTheDocument();
       expect(screen.getByText("Custom Content")).toBeInTheDocument();
     });
   });

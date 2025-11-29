@@ -33,21 +33,18 @@
           "label": "basic_info",
           "elements": [
             {
-              "type": "COMPONENT",
+              "type": "DISPLAY_TEXT",
               "name": "first_name",
-              "kind": "DISPLAY_TEXT",
               "label": "first_name"
             },
             {
-              "type": "COMPONENT",
+              "type": "DISPLAY_TEXT",
               "name": "middle_name",
-              "kind": "DISPLAY_TEXT",
               "label": "middle_name"
             },
             {
-              "type": "COMPONENT",
+              "type": "DISPLAY_TEXT",
               "name": "last_name",
-              "kind": "DISPLAY_TEXT",
               "label": "last_name"
             }
           ],
@@ -58,15 +55,13 @@
           "label": "professional_info",
           "elements": [
             {
-              "type": "COMPONENT",
+              "type": "DISPLAY_TEXT",
               "name": "company",
-              "kind": "DISPLAY_TEXT",
               "label": "company"
             },
             {
-              "type": "COMPONENT",
+              "type": "DISPLAY_TEXT",
               "name": "job_title",
-              "kind": "DISPLAY_TEXT",
               "label": "job_title"
             }
           ],
@@ -77,9 +72,8 @@
           "label": "personal_info",
           "elements": [
             {
-              "type": "COMPONENT",
+              "type": "DISPLAY_SELECT",
               "name": "gender",
-              "kind": "DISPLAY_SELECT",
               "label": "gender",
               "options": [
                 {
@@ -101,21 +95,18 @@
               ]
             },
             {
-              "type": "COMPONENT",
+              "type": "DISPLAY_DATE",
               "name": "date_of_birth",
-              "kind": "DISPLAY_DATE",
               "label": "date_of_birth"
             },
             {
-              "type": "COMPONENT",
+              "type": "DISPLAY_TEXT",
               "name": "place_of_birth",
-              "kind": "DISPLAY_TEXT",
               "label": "place_of_birth"
             },
             {
-              "type": "COMPONENT",
+              "type": "DISPLAY_TEXT",
               "name": "nationality",
-              "kind": "DISPLAY_TEXT",
               "label": "nationality"
             }
           ],
@@ -126,9 +117,8 @@
           "label": "tags_section",
           "elements": [
             {
-              "type": "COMPONENT",
+              "type": "DISPLAY_TAGS",
               "name": "tags",
-              "kind": "DISPLAY_TAGS",
               "label": "tags"
             }
           ],
@@ -139,27 +129,23 @@
           "name": "addresses",
           "template": [
             {
-              "type": "COMPONENT",
+              "type": "DISPLAY_TEXT",
               "name": "address_line_1",
-              "kind": "DISPLAY_TEXT",
               "label": "address_line_1"
             },
             {
-              "type": "COMPONENT",
+              "type": "DISPLAY_TEXT",
               "name": "city",
-              "kind": "DISPLAY_TEXT",
               "label": "city"
             },
             {
-              "type": "COMPONENT",
+              "type": "DISPLAY_TEXT",
               "name": "postal_code",
-              "kind": "DISPLAY_TEXT",
               "label": "postal_code"
             },
             {
-              "type": "COMPONENT",
+              "type": "DISPLAY_TEXT",
               "name": "country",
-              "kind": "DISPLAY_TEXT",
               "label": "country"
             }
           ],

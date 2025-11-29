@@ -2,6 +2,14 @@ import "@testing-library/jest-dom";
 
 global.fetch = vi.fn();
 
+// Mock ResizeObserver for Radix UI components
+class ResizeObserverMock {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+global.ResizeObserver = ResizeObserverMock;
+
 // Mock pointer capture methods for Radix UI components
 Element.prototype.hasPointerCapture = vi.fn().mockReturnValue(false);
 Element.prototype.setPointerCapture = vi.fn();

@@ -1,8 +1,15 @@
+import { useEffect } from "react";
 import { Outlet } from "react-router";
 import { useAuth } from "@/hooks/use-auth";
 
 export default function Layout() {
   const { user, isLoading, isAuthenticated } = useAuth();
+
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      window.location.href = "/users/auth/auth0";
+    }
+  }, [isLoading, isAuthenticated]);
 
   if (isLoading) {
     return (
@@ -13,8 +20,7 @@ export default function Layout() {
   }
 
   if (!isAuthenticated) {
-    // Redirect to Rails login
-    window.location.href = "/users/auth/auth0";
+    // Will redirect via effect
     return null;
   }
 

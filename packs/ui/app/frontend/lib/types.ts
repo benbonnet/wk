@@ -1,35 +1,6 @@
 import type { CSSProperties } from "react";
 
 // ============================================
-// FIELD KINDS (from inventory.json)
-// ============================================
-
-export type InputKind =
-  | "INPUT_TEXT"
-  | "INPUT_TEXTAREA"
-  | "INPUT_SELECT"
-  | "INPUT_CHECKBOX"
-  | "INPUT_CHECKBOXES"
-  | "INPUT_RADIOS"
-  | "INPUT_AI_RICH_TEXT"
-  | "INPUT_DATE"
-  | "INPUT_DATETIME"
-  | "INPUT_TAGS";
-
-export type DisplayKind =
-  | "DISPLAY_TEXT"
-  | "DISPLAY_LONGTEXT"
-  | "DISPLAY_NUMBER"
-  | "DISPLAY_DATE"
-  | "DISPLAY_DATETIME"
-  | "DISPLAY_BADGE"
-  | "DISPLAY_TAGS"
-  | "DISPLAY_BOOLEAN"
-  | "DISPLAY_SELECT";
-
-export type KindType = InputKind | DisplayKind | "DROPDOWN";
-
-// ============================================
 // UI SCHEMA TYPES
 // ============================================
 
@@ -55,12 +26,32 @@ export type UISchemaType =
   | "GROUP"
   | "CARD_GROUP"
   // Form elements
-  | "COMPONENT"
   | "FORM_ARRAY"
   | "DISPLAY_ARRAY"
   | "RELATIONSHIP_PICKER"
   | "ALERT"
-  | "SUBMIT";
+  | "SUBMIT"
+  // Inputs
+  | "INPUT_TEXT"
+  | "INPUT_TEXTAREA"
+  | "INPUT_SELECT"
+  | "INPUT_CHECKBOX"
+  | "INPUT_CHECKBOXES"
+  | "INPUT_RADIOS"
+  | "INPUT_AI_RICH_TEXT"
+  | "INPUT_DATE"
+  | "INPUT_DATETIME"
+  | "INPUT_TAGS"
+  // Displays
+  | "DISPLAY_TEXT"
+  | "DISPLAY_LONGTEXT"
+  | "DISPLAY_NUMBER"
+  | "DISPLAY_DATE"
+  | "DISPLAY_DATETIME"
+  | "DISPLAY_BADGE"
+  | "DISPLAY_TAGS"
+  | "DISPLAY_BOOLEAN"
+  | "DISPLAY_SELECT";
 
 // ============================================
 // RULES & CONDITIONS
@@ -110,7 +101,7 @@ export interface Option {
 
 export interface UISchemaColumn {
   name: string;
-  kind: KindType;
+  type: UISchemaType;
   label?: string;
   sortable?: boolean;
   hideable?: boolean;
@@ -151,7 +142,6 @@ export interface UISchemaInterface {
 
   // Field
   name?: string;
-  kind?: KindType;
   options?: Option[];
   placeholder?: string;
   searchPlaceholder?: string;
