@@ -14,7 +14,7 @@ module ItemsService
       end
 
       def execute(user_id:, workspace_id:, id:, data:, **_)
-        item = Item.find(id)
+        item = scoped(Item).find(id)
 
         item.update!(
           data: item.data.merge(data.stringify_keys),

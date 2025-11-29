@@ -63,15 +63,17 @@ RSpec.describe Core::Tools::Base do
   end
 
   describe "#find_item!" do
-    let(:item) { create(:item, schema_slug: "contact", created_by: user) }
+    let(:item) { create(:item, schema_slug: "contact", created_by: user, workspace:) }
 
     it "returns item when found" do
       tool = tool_class.new
+      tool.instance_variable_set(:@workspace_id, workspace.id)
       expect(tool.send(:find_item!, item.id)).to eq(item)
     end
 
     it "raises NotFoundError when not found" do
       tool = tool_class.new
+      tool.instance_variable_set(:@workspace_id, workspace.id)
       expect { tool.send(:find_item!, 99999) }
         .to raise_error(Core::Tools::NotFoundError)
     end

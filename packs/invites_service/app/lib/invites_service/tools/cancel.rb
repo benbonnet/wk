@@ -13,10 +13,7 @@ module InvitesService
       CANCELLABLE_STATUSES = %w[pending sent opened clicked].freeze
 
       def execute(user_id:, workspace_id:, invite_id:, **_)
-        invite = Invite
-          .joins(invite_items: :item)
-          .where(items: { workspace_id: })
-          .find(invite_id)
+        invite = scoped(Invite).find(invite_id)
 
         unless invite.status.in?(CANCELLABLE_STATUSES)
           return {

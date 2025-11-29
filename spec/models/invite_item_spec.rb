@@ -9,7 +9,7 @@ RSpec.describe InviteItem, type: :model do
   end
 
   describe "validations" do
-    subject { build(:invite_item) }
+    subject { create(:invite_item) }
 
     it { is_expected.to validate_uniqueness_of(:invite_id).scoped_to(:item_id) }
   end

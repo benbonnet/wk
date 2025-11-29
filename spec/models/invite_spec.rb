@@ -4,6 +4,7 @@ require "rails_helper"
 
 RSpec.describe Invite, type: :model do
   describe "associations" do
+    it { is_expected.to belong_to(:workspace).required }
     it { is_expected.to belong_to(:inviter).class_name("User") }
     it { is_expected.to belong_to(:invitee).class_name("User") }
     it { is_expected.to belong_to(:recipient_workspace).class_name("Workspace").optional }

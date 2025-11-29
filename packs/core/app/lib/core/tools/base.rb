@@ -22,9 +22,14 @@ module Core
 
         # Entry point - called by controller and workflows
         def execute(**params)
-          new.execute(**params)
+          instance = new
+          instance.instance_variable_set(:@workspace_id, params[:workspace_id])
+          instance.instance_variable_set(:@user_id, params[:user_id])
+          instance.execute(**params)
         end
       end
+
+      attr_reader :workspace_id, :user_id
 
       def execute(**params)
         raise NotImplementedError, "#{self.class}#execute must be implemented"
@@ -36,8 +41,16 @@ module Core
           self.class.schema_class
         end
 
+        # Scoped query helper - use for ALL model queries
+        def scoped(model)
+          unless model.included_modules.include?(WorkspaceScoped)
+            raise ArgumentError, "#{model} does not include WorkspaceScoped"
+          end
+          model.for_workspace(workspace_id)
+        end
+
         def items
-          Item.where(schema_slug: self.class.schema_slug)
+          scoped(Item).where(schema_slug: self.class.schema_slug)
         end
 
         def find_item(id)

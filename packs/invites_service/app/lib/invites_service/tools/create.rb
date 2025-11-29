@@ -22,6 +22,7 @@ module InvitesService
 
         ActiveRecord::Base.transaction do
           invite = Invite.create!(
+            workspace_id:,
             inviter_id:,
             invitee_id:,
             recipient_workspace_id:,

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_24_043400) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_29_065359) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -152,11 +152,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_24_043400) do
     t.string "auth_link_hash", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "workspace_id", null: false
     t.index ["auth_link_hash"], name: "index_invites_on_auth_link_hash", unique: true
     t.index ["invitee_id"], name: "index_invites_on_invitee_id"
     t.index ["inviter_id"], name: "index_invites_on_inviter_id"
     t.index ["recipient_workspace_id"], name: "index_invites_on_recipient_workspace_id"
     t.index ["status"], name: "index_invites_on_status"
+    t.index ["workspace_id"], name: "index_invites_on_workspace_id"
   end
 
   create_table "item_recipients", force: :cascade do |t|
@@ -311,6 +313,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_24_043400) do
   add_foreign_key "invite_items", "items"
   add_foreign_key "invites", "users", column: "invitee_id"
   add_foreign_key "invites", "users", column: "inviter_id"
+  add_foreign_key "invites", "workspaces"
   add_foreign_key "invites", "workspaces", column: "recipient_workspace_id"
   add_foreign_key "item_recipients", "items"
   add_foreign_key "item_recipients", "users"

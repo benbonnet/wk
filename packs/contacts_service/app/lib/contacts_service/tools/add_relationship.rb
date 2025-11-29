@@ -6,9 +6,9 @@ module ContactsService
       route method: :post, scope: :member, action: "relationships"
       schema "contact"
 
-      def execute(id:, relationship_type:, target_id:, metadata: {}, **_)
+      def execute(user_id:, workspace_id:, id:, relationship_type:, target_id:, metadata: {}, **_)
         source = find_item!(id)
-        target = Item.find(target_id)
+        target = scoped(Item).find(target_id)
 
         relationship = source.add_relationship(
           target,

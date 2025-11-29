@@ -1,5 +1,7 @@
-PATH
-  remote: ../durable_workflow
+GIT
+  remote: https://github.com/getnvoi/durable_workflows.git
+  revision: 15b378fa666cae905e902b9997f32a2521ee2c0b
+  branch: main
   specs:
     durable_workflow (0.1.0)
       async (~> 2.21)

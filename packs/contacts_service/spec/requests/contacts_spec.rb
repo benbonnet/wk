@@ -85,6 +85,7 @@ RSpec.describe "Contacts API", type: :request do
   describe "GET /api/v1/workspaces/contacts/:id" do
     let(:contact) do
       create(:item,
+        workspace:,
         schema_slug: "contact",
         tool_slug: "create",
         data: { "first_name" => "Jane", "last_name" => "Smith" },
@@ -108,6 +109,7 @@ RSpec.describe "Contacts API", type: :request do
 
     it "includes relationships from schema definition" do
       spouse = create(:item,
+        workspace:,
         schema_slug: "contact",
         tool_slug: "create",
         data: { "first_name" => "John", "last_name" => "Smith" },
@@ -115,6 +117,7 @@ RSpec.describe "Contacts API", type: :request do
       )
 
       child = create(:item,
+        workspace:,
         schema_slug: "contact",
         tool_slug: "create",
         data: { "first_name" => "Junior", "last_name" => "Smith" },
@@ -148,6 +151,7 @@ RSpec.describe "Contacts API", type: :request do
   describe "PUT /api/v1/workspaces/contacts/:id" do
     let(:contact) do
       create(:item,
+        workspace:,
         schema_slug: "contact",
         tool_slug: "create",
         data: { "first_name" => "Jane", "last_name" => "Smith" },
@@ -170,6 +174,7 @@ RSpec.describe "Contacts API", type: :request do
   describe "DELETE /api/v1/workspaces/contacts/:id" do
     let(:contact) do
       create(:item,
+        workspace:,
         schema_slug: "contact",
         tool_slug: "create",
         data: { "first_name" => "Jane", "last_name" => "Smith" },
@@ -192,6 +197,7 @@ RSpec.describe "Contacts API", type: :request do
   describe "POST /api/v1/workspaces/contacts/:id/relationships" do
     let(:parent) do
       create(:item,
+        workspace:,
         schema_slug: "contact",
         tool_slug: "create",
         data: { "first_name" => "Parent", "last_name" => "Contact" },
@@ -201,6 +207,7 @@ RSpec.describe "Contacts API", type: :request do
 
     let(:child) do
       create(:item,
+        workspace:,
         schema_slug: "contact",
         tool_slug: "create",
         data: { "first_name" => "Child", "last_name" => "Contact" },

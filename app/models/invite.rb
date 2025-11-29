@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Invite < ApplicationRecord
+  include WorkspaceScoped
+
   STATUSES = %w[pending sent opened clicked confirmed cancelled].freeze
 
   belongs_to :inviter, class_name: "User"

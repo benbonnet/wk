@@ -18,7 +18,7 @@ RSpec.describe InvitesService::Tools::Cancel do
     end
 
     context "when invite is pending" do
-      let(:invite) { create(:invite, inviter:, invitee:, status: "pending", items: [item]) }
+      let(:invite) { create(:invite, workspace:, inviter:, invitee:, status: "pending", items: [item]) }
 
       it "cancels the invite" do
         result = described_class.execute(**valid_params)
@@ -30,7 +30,7 @@ RSpec.describe InvitesService::Tools::Cancel do
     end
 
     context "when invite is sent" do
-      let(:invite) { create(:invite, inviter:, invitee:, status: "sent", items: [item]) }
+      let(:invite) { create(:invite, workspace:, inviter:, invitee:, status: "sent", items: [item]) }
 
       it "cancels the invite" do
         result = described_class.execute(**valid_params)
@@ -41,7 +41,7 @@ RSpec.describe InvitesService::Tools::Cancel do
     end
 
     context "when invite is opened" do
-      let(:invite) { create(:invite, inviter:, invitee:, status: "opened", items: [item]) }
+      let(:invite) { create(:invite, workspace:, inviter:, invitee:, status: "opened", items: [item]) }
 
       it "cancels the invite" do
         result = described_class.execute(**valid_params)
@@ -52,7 +52,7 @@ RSpec.describe InvitesService::Tools::Cancel do
     end
 
     context "when invite is clicked" do
-      let(:invite) { create(:invite, inviter:, invitee:, status: "clicked", items: [item]) }
+      let(:invite) { create(:invite, workspace:, inviter:, invitee:, status: "clicked", items: [item]) }
 
       it "cancels the invite" do
         result = described_class.execute(**valid_params)
@@ -63,7 +63,7 @@ RSpec.describe InvitesService::Tools::Cancel do
     end
 
     context "when invite is already confirmed" do
-      let(:invite) { create(:invite, inviter:, invitee:, status: "confirmed", items: [item]) }
+      let(:invite) { create(:invite, workspace:, inviter:, invitee:, status: "confirmed", items: [item]) }
 
       it "does not cancel the invite" do
         result = described_class.execute(**valid_params)
@@ -75,7 +75,7 @@ RSpec.describe InvitesService::Tools::Cancel do
     end
 
     context "when invite is already cancelled" do
-      let(:invite) { create(:invite, inviter:, invitee:, status: "cancelled", items: [item]) }
+      let(:invite) { create(:invite, workspace:, inviter:, invitee:, status: "cancelled", items: [item]) }
 
       it "does not change the invite" do
         result = described_class.execute(**valid_params)

@@ -10,7 +10,8 @@
       "@/*": ["./app/frontend/*"],
       "@ui": ["./packs/ui/app/frontend/lib/index.ts"],
       "@ui/*": ["./packs/ui/app/frontend/lib/*"],
-      "@ui-components/*": ["./packs/ui/app/frontend/components/*"]
+      "@ui-components/*": ["./packs/ui/app/frontend/components/*"],
+      "@ui-hooks/*": ["./packs/ui/app/frontend/hooks/*"]
     }
   }
 }
