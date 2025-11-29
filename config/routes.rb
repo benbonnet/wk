@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  # Swagger UI (development only)
+  if Rails.env.development?
+    mount Rswag::Ui::Engine => "/api-docs"
+    mount Rswag::Api::Engine => "/api-docs"
+  end
+
   devise_for(:users, module: :devise, controllers: { omniauth_callbacks: "auth" })
 
   devise_scope(:user) do

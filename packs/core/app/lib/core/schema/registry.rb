@@ -32,6 +32,22 @@ module Core
         def to_mock_data
           all.map(&:to_mock_data)
         end
+
+        # Export schemas for OpenAPI components
+        def to_openapi_schemas
+          schemas = {}
+          all.each do |schema_class|
+            slug = schema_class.slug
+            json_schema = schema_class.new.to_json_schema
+
+            # Output schema (for responses)
+            schemas[slug] = json_schema
+
+            # Input schema (for create/update)
+            schemas["#{slug}Input"] = json_schema
+          end
+          schemas
+        end
       end
 
       class NotFoundError < StandardError; end
