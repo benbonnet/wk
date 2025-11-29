@@ -18,8 +18,8 @@ export interface TagsDisplayProps extends DisplayBaseProps {}
 ## Implementation
 
 ```tsx
-import { Badge } from "@ui-components/ui/badge";
-import { Label } from "@ui-components/ui/label";
+import { Badge } from "@ui-components/badge";
+import { Label } from "@ui-components/label";
 import { useShowData } from "../layouts/show";
 import type { TagsDisplayProps } from "@ui/registry";
 

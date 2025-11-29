@@ -22,8 +22,8 @@ export interface DisplayArrayProps extends BaseRendererProps {
 ## Implementation
 
 ```tsx
-import { Card, CardContent } from "@ui-components/ui/card";
-import { Separator } from "@ui-components/ui/separator";
+import { Card, CardContent } from "@ui-components/card";
+import { Separator } from "@ui-components/separator";
 import { useShowData } from "./show";
 import type { DisplayArrayProps } from "@ui/registry";
 
@@ -78,7 +78,7 @@ import {
   TableRow,
   TableHead,
   TableCell,
-} from "@ui-components/ui/table";
+} from "@ui-components/table";
 
 export function DisplayArrayTableAdapter({
   schema,

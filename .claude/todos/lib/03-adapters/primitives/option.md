@@ -21,7 +21,7 @@ export interface OptionProps extends BaseRendererProps {
 ## Implementation
 
 ```tsx
-import { DropdownMenuItem } from "@ui-components/ui/dropdown-menu";
+import { DropdownMenuItem } from "@ui-components/dropdown-menu";
 import * as Icons from "lucide-react";
 import { useDrawer } from "../layouts/view";
 import { useServices } from "@ui";
@@ -60,9 +60,10 @@ export function OptionAdapter({ schema, label, onClick, icon }: OptionProps) {
       }
 
       try {
-        const apiConfig = typeof schema.api === "string"
-          ? parseApiString(schema.api)
-          : schema.api;
+        const apiConfig =
+          typeof schema.api === "string"
+            ? parseApiString(schema.api)
+            : schema.api;
 
         await fetch(apiConfig.path, { method: apiConfig.method });
 
@@ -84,7 +85,7 @@ export function OptionAdapter({ schema, label, onClick, icon }: OptionProps) {
       onClick={handleClick}
       className={cn(
         isDestructive && "text-destructive focus:text-destructive",
-        schema.className
+        schema.className,
       )}
     >
       {IconComponent && <IconComponent className="mr-2 h-4 w-4" />}

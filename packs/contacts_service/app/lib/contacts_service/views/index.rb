@@ -124,13 +124,13 @@ module ContactsService
                 toggle_columns: true,
                 page_size: 10
               ) do |t|
-                t.column :first_name, kind: "DISPLAY_TEXT", label: "first_name", sortable: true
-                t.column :last_name, kind: "DISPLAY_TEXT", label: "last_name", sortable: true
-                t.column :email, kind: "DISPLAY_TEXT", label: "email", sortable: true
-                t.column :phone, kind: "DISPLAY_TEXT", label: "phone"
-                t.column :company, kind: "DISPLAY_TEXT", label: "company"
-                t.column :job_title, kind: "DISPLAY_TEXT", label: "job_title"
-                t.column :created_at, kind: "DISPLAY_DATE", label: "created_at"
+                t.column :first_name, type: "DISPLAY_TEXT", label: "first_name", sortable: true
+                t.column :last_name, type: "DISPLAY_TEXT", label: "last_name", sortable: true
+                t.column :email, type: "DISPLAY_TEXT", label: "email", sortable: true
+                t.column :phone, type: "DISPLAY_TEXT", label: "phone"
+                t.column :company, type: "DISPLAY_TEXT", label: "company"
+                t.column :job_title, type: "DISPLAY_TEXT", label: "job_title"
+                t.column :created_at, type: "DISPLAY_DATE", label: "created_at"
 
                 t.row_click opens: :view_drawer
 

@@ -46,10 +46,10 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@ui-components/ui/table";
-import { Input } from "@ui-components/ui/input";
-import { Button } from "@ui-components/ui/button";
-import { Checkbox } from "@ui-components/ui/checkbox";
+} from "@ui-components/table";
+import { Input } from "@ui-components/input";
+import { Button } from "@ui-components/button";
+import { Checkbox } from "@ui-components/checkbox";
 import { ArrowUpDown } from "lucide-react";
 import type { TableProps } from "@ui/registry";
 

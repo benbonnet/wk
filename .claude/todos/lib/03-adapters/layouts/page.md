@@ -21,7 +21,7 @@ export interface PageProps extends BaseRendererProps {
 ## Implementation
 
 ```tsx
-import { Separator } from "@ui-components/ui/separator";
+import { Separator } from "@ui-components/separator";
 import type { PageProps } from "@ui/registry";
 
 export function PageAdapter({ schema, title, description, actions, children }: PageProps) {

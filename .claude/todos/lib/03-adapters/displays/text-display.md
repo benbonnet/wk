@@ -17,7 +17,7 @@ export interface TextDisplayProps extends DisplayBaseProps {}
 ## Implementation
 
 ```tsx
-import { Label } from "@ui-components/ui/label";
+import { Label } from "@ui-components/label";
 import { useShowData } from "../layouts/show";
 import type { TextDisplayProps } from "@ui/registry";
 

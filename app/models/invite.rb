@@ -7,6 +7,7 @@ class Invite < ApplicationRecord
   belongs_to :invitee, class_name: "User"
   belongs_to :recipient_workspace, class_name: "Workspace", optional: true
   has_many :invite_items, dependent: :destroy
+  has_many :items, through: :invite_items
 
   validates :status, presence: true, inclusion: { in: STATUSES }
   validates :auth_link_hash, presence: true, uniqueness: true

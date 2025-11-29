@@ -1,0 +1,144 @@
+id: rib_check_create
+name: RIB Check Create
+version: "1.0"
+description: Create a RIB request with activity log and invites
+
+inputs:
+  workspace_id:
+    type: integer
+    required: true
+    description: Workspace ID
+  user_id:
+    type: integer
+    required: true
+    description: User performing the action
+  data:
+    type: object
+    required: true
+    description: RIB request data
+    properties:
+      comment:
+        type: string
+      message_body:
+        type: string
+      end_at:
+        type: string
+        format: date-time
+      notify_via_email:
+        type: boolean
+      notify_via_sms:
+        type: boolean
+      request_type:
+        type: string
+        enum: [individual, common]
+      status:
+        type: string
+        enum: [draft, pending, partial, completed, cancelled]
+      recipients_attributes:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: integer
+          required: [id]
+
+steps:
+  # Entry point. No logic, just routes to first real step.
+  - id: start
+    type: start
+    next: create_item
+
+  # Calls ItemsService::Tools::Create.execute(user_id:, workspace_id:, schema_slug:, tool_slug:, data:)
+  # Creates an Item record in DB with schema_slug="rib_request"
+  # Returns serialized item, stored in $item (e.g. {id: 123, data: {...}, ...})
+  - id: create_item
+    type: call
+    service: ItemsService::Tools::Create
+    method: execute
+    input:
+      user_id: "$input.user_id"
+      workspace_id: "$input.workspace_id"
+      schema_slug: "rib_request"
+      tool_slug: "create"
+      data: "$input.data"
+    output: item
+    next: create_activity
+
+  # Calls ActivitiesService::Tools::Create.execute(...)
+  # Creates an Activity record for audit trail
+  # Returns serialized activity, stored in $activity
+  - id: create_activity
+    type: call
+    service: ActivitiesService::Tools::Create
+    method: execute
+    input:
+      user_id: "$input.user_id"
+      workspace_id: "$input.workspace_id"
+      activity_type: "user_action"
+      category: "data_access"
+      level: "info"
+      message: "Created RIB request"
+      item_id: "$item.id"
+      schema_slug: "rib_request"
+      tool_slug: "create"
+    output: activity
+    next: init_invites
+
+  # Sets $invites = [] (empty array)
+  # Ensures $invites is always defined, even if loop is skipped
+  - id: init_invites
+    type: assign
+    set:
+      invites: []
+    next: check_recipients
+
+  # Conditional branch:
+  # - If input.data.recipients_attributes exists (non-nil, non-empty) -> go to create_invites
+  # - Otherwise -> go directly to end (skip invite creation)
+  - id: check_recipients
+    type: router
+    routes:
+      - when:
+          field: input.data.recipients_attributes
+          op: exists
+        then: create_invites
+    default: end
+
+  # Loops over each recipient in the array
+  # Each iteration: $recipient = {id: 1}, then {id: 2}, etc.
+  # Calls InvitesService::Tools::Create.execute(...) for each
+  # Creates an Invite + InviteItem record linking invite to the RIB request
+  # After all iterations, $invites = [{id: 101, ...}, {id: 102, ...}] (array of results)
+  - id: create_invites
+    type: loop
+    over: "$input.data.recipients_attributes"
+    as: recipient
+    do:
+      - id: create_invite
+        type: call
+        service: InvitesService::Tools::Create
+        method: execute
+        input:
+          user_id: "$input.user_id"
+          workspace_id: "$input.workspace_id"
+          inviter_id: "$input.user_id"
+          invitee_id: "$recipient.id"
+          recipient_workspace_id: "$input.workspace_id"
+          status: "pending"
+          item_ids:
+            - "$item.id"
+    output: invites
+    next: end
+
+  # Terminal step. Workflow completes.
+  # result becomes workflow.output accessible to caller:
+  # - item: The created RIB request item
+  # - activity: The audit activity
+  # - invites: [] if no recipients, or [{...}, {...}] if recipients existed
+  - id: end
+    type: end
+    result:
+      item: "$item"
+      activity: "$activity"
+      invites: "$invites"

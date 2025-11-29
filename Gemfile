@@ -87,9 +87,9 @@ gem "omniauth", "~> 2.1"
 gem "omniauth-rails_csrf_protection", "~> 2.0"
 gem "twilio-ruby", "~> 7.8"
 gem "repost", "~> 0.4.2"
-
 gem "omniauth-auth0", "~> 3.1"
-
 gem "ruby_llm", "~> 1.9"
-
 gem "ruby_llm-schema", "~> 0.2.5"
+
+# gems
+gem "durable_workflow", path: "../durable_workflow"

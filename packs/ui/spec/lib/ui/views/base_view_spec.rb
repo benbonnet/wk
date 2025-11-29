@@ -9,21 +9,19 @@ RSpec.describe Ui::Views::BaseView do
         include Ui::Views::BaseView
 
         view do
-          field :name, kind: "INPUT_TEXT", placeholder: "Enter name"
-          field :description, kind: "INPUT_TEXTAREA"
+          field :name, type: "INPUT_TEXT", placeholder: "Enter name"
+          field :description, type: "INPUT_TEXTAREA"
         end
       end
     end
 
     it "returns view config" do
       config = test_class.view_config
-      expect(config[:type]).to eq("VIEW")
-      expect(config[:elements].length).to eq(2)
+      expect(config).to include(type: "VIEW")
+      expect(config[:elements]).to have_attributes(length: 2)
     end
 
-    it "has_view? returns true when view defined" do
-      expect(test_class.has_view?).to be true
-    end
+    it { expect(test_class.has_view?).to be true }
 
     it "has_view? returns false when no view defined" do
       empty_class = Class.new { include Ui::Views::BaseView }
@@ -38,8 +36,8 @@ RSpec.describe Ui::Views::BaseView do
 
         view do
           group label: "Personal Info" do
-            field :first_name, kind: "INPUT_TEXT"
-            field :last_name, kind: "INPUT_TEXT"
+            field :first_name, type: "INPUT_TEXT"
+            field :last_name, type: "INPUT_TEXT"
           end
         end
       end
@@ -47,10 +45,13 @@ RSpec.describe Ui::Views::BaseView do
 
     it "creates nested group structure" do
       config = grouped_class.view_config
-      expect(config[:elements].length).to eq(1)
-      expect(config[:elements][0][:type]).to eq("GROUP")
-      expect(config[:elements][0][:label]).to eq("Personal Info")
-      expect(config[:elements][0][:elements].length).to eq(2)
+      expect(config[:elements]).to contain_exactly(
+        a_hash_including(
+          type: "GROUP",
+          label: "Personal Info",
+          elements: have_attributes(length: 2)
+        )
+      )
     end
   end
 
@@ -64,8 +65,8 @@ RSpec.describe Ui::Views::BaseView do
             c.title "page_title"
             c.body do
               table do |t|
-                t.column :name, kind: "DISPLAY_TEXT", label: "name"
-                t.column :email, kind: "DISPLAY_TEXT", label: "email"
+                t.column :name, type: "DISPLAY_TEXT", label: "name"
+                t.column :email, type: "DISPLAY_TEXT", label: "email"
               end
             end
           end
@@ -74,10 +75,9 @@ RSpec.describe Ui::Views::BaseView do
     end
 
     it "creates page with table" do
-      config = page_class.view_config
-      page = config[:elements].find { |e| e[:type] == "PAGE" }
-      expect(page).to be_present
-      expect(page[:title]).to eq("page_title")
+      expect(page_class.view_config[:elements]).to include(
+        a_hash_including(type: "PAGE", title: "page_title")
+      )
     end
   end
 
@@ -100,9 +100,10 @@ RSpec.describe Ui::Views::BaseView do
     end
 
     it "includes translations in config" do
-      config = translated_class.view_config
-      expect(config[:translations][:en][:page_title]).to eq("Test Page")
-      expect(config[:translations][:fr][:page_title]).to eq("Page Test")
+      expect(translated_class.view_config[:translations]).to include(
+        en: a_hash_including(page_title: "Test Page"),
+        fr: a_hash_including(page_title: "Page Test")
+      )
     end
   end
 

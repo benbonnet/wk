@@ -14,22 +14,18 @@ RSpec.describe Core::Schema::Relationships do
   end
 
   describe ".relationships" do
-    it "returns all defined relationships" do
-      expect(schema_class.relationships.length).to eq(3)
-    end
+    it { expect(schema_class.relationships).to have_attributes(length: 3) }
 
     it "stores has_one relationships correctly" do
-      spouse = schema_class.relationships.find { |r| r[:name] == :spouse }
-      expect(spouse[:cardinality]).to eq(:one)
-      expect(spouse[:target_schema]).to eq("contact")
-      expect(spouse[:inverse_name]).to eq(:spouse)
+      expect(schema_class.relationships).to include(
+        a_hash_including(name: :spouse, cardinality: :one, target_schema: "contact", inverse_name: :spouse)
+      )
     end
 
     it "stores has_many relationships correctly" do
-      addresses = schema_class.relationships.find { |r| r[:name] == :addresses }
-      expect(addresses[:cardinality]).to eq(:many)
-      expect(addresses[:target_schema]).to eq("address")
-      expect(addresses[:inverse_name]).to eq(:contact)
+      expect(schema_class.relationships).to include(
+        a_hash_including(name: :addresses, cardinality: :many, target_schema: "address", inverse_name: :contact)
+      )
     end
 
     it "returns empty array when no relationships defined" do
@@ -39,26 +35,17 @@ RSpec.describe Core::Schema::Relationships do
   end
 
   describe ".has_relationship?" do
-    it "returns true for defined relationships" do
-      expect(schema_class.has_relationship?(:spouse)).to be true
-      expect(schema_class.has_relationship?(:addresses)).to be true
-    end
-
-    it "returns false for undefined relationships" do
-      expect(schema_class.has_relationship?(:unknown)).to be false
-    end
+    it { expect(schema_class.has_relationship?(:spouse)).to be true }
+    it { expect(schema_class.has_relationship?(:addresses)).to be true }
+    it { expect(schema_class.has_relationship?(:unknown)).to be false }
   end
 
   describe ".find_relationship" do
     it "returns the relationship definition" do
-      rel = schema_class.find_relationship(:spouse)
-      expect(rel[:name]).to eq(:spouse)
-      expect(rel[:cardinality]).to eq(:one)
+      expect(schema_class.find_relationship(:spouse)).to include(name: :spouse, cardinality: :one)
     end
 
-    it "returns nil for undefined relationships" do
-      expect(schema_class.find_relationship(:unknown)).to be_nil
-    end
+    it { expect(schema_class.find_relationship(:unknown)).to be_nil }
   end
 
   describe "belongs_to" do
@@ -71,9 +58,7 @@ RSpec.describe Core::Schema::Relationships do
     end
 
     it "creates a has_one relationship" do
-      rel = address_schema.find_relationship(:contact)
-      expect(rel[:cardinality]).to eq(:one)
-      expect(rel[:inverse_name]).to eq(:addresses)
+      expect(address_schema.find_relationship(:contact)).to include(cardinality: :one, inverse_name: :addresses)
     end
   end
 end

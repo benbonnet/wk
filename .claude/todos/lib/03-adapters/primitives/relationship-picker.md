@@ -36,12 +36,12 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@ui-components/ui/dialog";
-import { Button } from "@ui-components/ui/button";
-import { Input } from "@ui-components/ui/input";
-import { Badge } from "@ui-components/ui/badge";
-import { Checkbox } from "@ui-components/ui/checkbox";
-import { ScrollArea } from "@ui-components/ui/scroll-area";
+} from "@ui-components/dialog";
+import { Button } from "@ui-components/button";
+import { Input } from "@ui-components/input";
+import { Badge } from "@ui-components/badge";
+import { Checkbox } from "@ui-components/checkbox";
+import { ScrollArea } from "@ui-components/scroll-area";
 import {
   Table,
   TableHeader,
@@ -49,7 +49,7 @@ import {
   TableRow,
   TableHead,
   TableCell,
-} from "@ui-components/ui/table";
+} from "@ui-components/table";
 import { X, Plus, Search } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import type { RelationshipPickerProps } from "@ui/registry";

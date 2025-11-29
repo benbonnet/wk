@@ -20,7 +20,7 @@ export interface ViewProps extends BaseRendererProps {
 ## Implementation
 
 ```tsx
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@ui-components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@ui-components/sheet";
 import { useState, createContext, useContext } from "react";
 import type { ViewProps } from "@ui/registry";
 import type { UISchemaInterface } from "@ui/types";

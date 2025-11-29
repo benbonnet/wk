@@ -5,14 +5,12 @@ require "rails_helper"
 RSpec.describe Core::Schema::Base do
   describe ".title" do
     it "allows setting custom title" do
-      schema = Class.new(Core::Schema::Base) do
-        title "Contact"
-      end
+      schema = Class.new(described_class) { title "Contact" }
       expect(schema.title).to eq("Contact")
     end
 
     it "infers title from class name" do
-      schema = Class.new(Core::Schema::Base)
+      schema = Class.new(described_class)
       allow(schema).to receive(:name).and_return("ContactsService::ContactSchema")
       expect(schema.title).to eq("Contact")
     end
@@ -20,23 +18,19 @@ RSpec.describe Core::Schema::Base do
 
   describe ".slug" do
     it "allows setting custom slug" do
-      schema = Class.new(Core::Schema::Base) do
-        slug "my-contact"
-      end
+      schema = Class.new(described_class) { slug "my-contact" }
       expect(schema.slug).to eq("my-contact")
     end
 
     it "infers slug from title" do
-      schema = Class.new(Core::Schema::Base) do
-        title "Contact Person"
-      end
+      schema = Class.new(described_class) { title "Contact Person" }
       expect(schema.slug).to eq("contact-person")
     end
   end
 
   describe "field helpers" do
     let(:schema) do
-      Class.new(Core::Schema::Base) do
+      Class.new(described_class) do
         title "Test"
         timestamps
         soft_delete
@@ -45,30 +39,21 @@ RSpec.describe Core::Schema::Base do
       end
     end
 
-    it "adds timestamp fields" do
-      props = schema.properties
-      expect(props).to have_key(:created_at)
-      expect(props).to have_key(:updated_at)
-    end
-
-    it "adds soft delete field" do
-      expect(schema.properties).to have_key(:deleted_at)
-    end
+    it { expect(schema.properties).to include(:created_at, :updated_at) }
+    it { expect(schema.properties).to have_key(:deleted_at) }
 
     it "adds slug field with pattern" do
-      prop = schema.properties[:identifier]
-      expect(prop[:pattern]).to eq("^[a-z0-9-]+$")
+      expect(schema.properties[:identifier]).to include(pattern: "^[a-z0-9-]+$")
     end
 
     it "adds status field with enum" do
-      prop = schema.properties[:state]
-      expect(prop[:enum]).to eq(%w[draft active archived])
+      expect(schema.properties[:state]).to include(enum: %w[draft active archived])
     end
   end
 
   describe ".to_full_schema" do
     let(:schema) do
-      Class.new(Core::Schema::Base) do
+      Class.new(described_class) do
         title "Contact"
         description "A contact"
         string :name
@@ -82,19 +67,20 @@ RSpec.describe Core::Schema::Base do
     end
 
     it "includes all schema components" do
-      full = schema.to_full_schema
-      expect(full[:slug]).to eq("contact")
-      expect(full[:title]).to eq("Contact")
-      expect(full[:description]).to eq("A contact")
-      expect(full[:json_schema]).to be_a(Hash)
-      expect(full[:relationships].length).to eq(1)
-      expect(full[:translations][:en][:name]).to eq("Name")
+      expect(schema.to_full_schema).to include(
+        slug: "contact",
+        title: "Contact",
+        description: "A contact"
+      )
+      expect(schema.to_full_schema[:json_schema]).to be_a(Hash)
+      expect(schema.to_full_schema[:relationships]).to have_attributes(length: 1)
+      expect(schema.to_full_schema[:translations][:en]).to include(name: "Name")
     end
   end
 
   describe ".to_mock_data" do
     let(:schema) do
-      Class.new(Core::Schema::Base) do
+      Class.new(described_class) do
         title "Contact"
         string :name
 
@@ -107,12 +93,9 @@ RSpec.describe Core::Schema::Base do
     end
 
     it "formats relationships for frontend" do
-      mock = schema.to_mock_data
-      rel = mock[:relationships].first
-      expect(rel[:name]).to eq(:addresses)
-      expect(rel[:cardinality]).to eq(:many)
-      expect(rel[:targetSchema]).to eq("address")
-      expect(rel[:inverseName]).to eq(:contact)
+      expect(schema.to_mock_data[:relationships]).to include(
+        a_hash_including(name: :addresses, cardinality: :many, targetSchema: "address", inverseName: :contact)
+      )
     end
   end
 end

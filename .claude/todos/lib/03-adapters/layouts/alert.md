@@ -22,7 +22,7 @@ export interface AlertProps extends BaseRendererProps {
 ## Implementation
 
 ```tsx
-import { Alert, AlertTitle, AlertDescription } from "@ui-components/ui/alert";
+import { Alert, AlertTitle, AlertDescription } from "@ui-components/alert";
 import {
   Info,
   AlertTriangle,

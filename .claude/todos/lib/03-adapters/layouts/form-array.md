@@ -25,8 +25,8 @@ export interface FormArrayProps extends BaseRendererProps {
 
 ```tsx
 import { FieldArray, useFormikContext } from "formik";
-import { Button } from "@ui-components/ui/button";
-import { Card, CardContent } from "@ui-components/ui/card";
+import { Button } from "@ui-components/button";
+import { Card, CardContent } from "@ui-components/card";
 import { Plus, Trash2 } from "lucide-react";
 import type { FormArrayProps } from "@ui/registry";
 

@@ -24,7 +24,7 @@ export interface LinkProps extends BaseRendererProps {
 
 ```tsx
 import { Link as RouterLink } from "react-router";
-import { Button } from "@ui-components/ui/button";
+import { Button } from "@ui-components/button";
 import * as Icons from "lucide-react";
 import { useDrawer } from "../layouts/view";
 import type { LinkProps } from "@ui/registry";

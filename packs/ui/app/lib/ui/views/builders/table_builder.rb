@@ -15,10 +15,10 @@ module Ui
           @bulk_actions_config = nil
         end
 
-        def column(name, kind:, **options)
+        def column(name, type:, **options)
           @columns << {
             name: name.to_s,
-            kind:,
+            type:,
             label: options[:label],
             sortable: options[:sortable],
             hideable: options[:hideable],

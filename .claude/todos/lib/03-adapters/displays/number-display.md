@@ -17,7 +17,7 @@ export interface NumberDisplayProps extends DisplayBaseProps {}
 ## Implementation
 
 ```tsx
-import { Label } from "@ui-components/ui/label";
+import { Label } from "@ui-components/label";
 import { useShowData } from "../layouts/show";
 import type { NumberDisplayProps } from "@ui/registry";
 

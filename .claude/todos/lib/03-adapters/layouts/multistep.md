@@ -23,8 +23,8 @@ export interface MultistepProps extends BaseRendererProps {
 
 ```tsx
 import { useState, createContext, useContext } from "react";
-import { Button } from "@ui-components/ui/button";
-import { Card, CardContent, CardFooter } from "@ui-components/ui/card";
+import { Button } from "@ui-components/button";
+import { Card, CardContent, CardFooter } from "@ui-components/card";
 import type { MultistepProps } from "@ui/registry";
 
 interface MultistepContextValue {
@@ -110,7 +110,7 @@ export function useMultistep() {
 ## With Tabs-style Navigation
 
 ```tsx
-import { Tabs, TabsList, TabsTrigger } from "@ui-components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@ui-components/tabs";
 
 // Step indicators as tabs
 <TabsList className="grid w-full grid-cols-3">

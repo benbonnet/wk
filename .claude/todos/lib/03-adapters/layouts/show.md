@@ -21,7 +21,7 @@ export interface ShowProps extends BaseRendererProps {
 ## Implementation
 
 ```tsx
-import { Card, CardHeader, CardTitle, CardContent } from "@ui-components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "@ui-components/card";
 import type { ShowProps } from "@ui/registry";
 
 interface ShowContextValue {

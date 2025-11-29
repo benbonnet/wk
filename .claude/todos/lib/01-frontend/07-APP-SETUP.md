@@ -129,7 +129,7 @@ export function AppUIProvider({
 import { BrowserRouter } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AppUIProvider } from "@/providers/ui-provider";
-import { Toaster } from "@ui-components/ui/sonner";
+import { Toaster } from "@ui-components/sonner";
 import { Routes } from "@/routes";
 
 const queryClient = new QueryClient();

@@ -23,7 +23,7 @@ export interface ButtonProps extends BaseRendererProps {
 ## Implementation
 
 ```tsx
-import { Button } from "@ui-components/ui/button";
+import { Button } from "@ui-components/button";
 import { Loader2 } from "lucide-react";
 import * as Icons from "lucide-react";
 import { useDrawer } from "../layouts/view";

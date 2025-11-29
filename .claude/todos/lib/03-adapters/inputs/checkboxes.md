@@ -21,8 +21,8 @@ export interface CheckboxesProps extends InputBaseProps {
 
 ```tsx
 import { useField } from "formik";
-import { Checkbox } from "@ui-components/ui/checkbox";
-import { Label } from "@ui-components/ui/label";
+import { Checkbox } from "@ui-components/checkbox";
+import { Label } from "@ui-components/label";
 import type { CheckboxesProps } from "@ui/registry";
 
 export function CheckboxesAdapter({

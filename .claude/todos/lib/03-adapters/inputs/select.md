@@ -30,8 +30,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@ui-components/ui/select";
-import { Label } from "@ui-components/ui/label";
+} from "@ui-components/select";
+import { Label } from "@ui-components/label";
 import type { SelectProps } from "@ui/registry";
 
 export function SelectAdapter({
@@ -85,7 +85,7 @@ export function SelectAdapter({
 import { useState } from "react";
 import { useField } from "formik";
 import { Check, ChevronsUpDown } from "lucide-react";
-import { Button } from "@ui-components/ui/button";
+import { Button } from "@ui-components/button";
 import {
   Command,
   CommandEmpty,
@@ -93,13 +93,13 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@ui-components/ui/command";
+} from "@ui-components/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@ui-components/ui/popover";
-import { Label } from "@ui-components/ui/label";
+} from "@ui-components/popover";
+import { Label } from "@ui-components/label";
 import { cn } from "@ui/utils";
 import type { SelectProps } from "@ui/registry";
 

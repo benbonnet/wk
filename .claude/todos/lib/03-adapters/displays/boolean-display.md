@@ -19,7 +19,7 @@ export interface BooleanDisplayProps extends DisplayBaseProps {}
 
 ```tsx
 import { Check, X } from "lucide-react";
-import { Label } from "@ui-components/ui/label";
+import { Label } from "@ui-components/label";
 import { useShowData } from "../layouts/show";
 import type { BooleanDisplayProps } from "@ui/registry";
 
@@ -73,7 +73,7 @@ export function BooleanIconAdapter({
 ## Badge Variant
 
 ```tsx
-import { Badge } from "@ui-components/ui/badge";
+import { Badge } from "@ui-components/badge";
 
 export function BooleanBadgeAdapter({
   name,

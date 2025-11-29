@@ -37,7 +37,7 @@ app/frontend/
 ### 1. app/frontend/adapters/primitives/button.tsx
 
 ```tsx
-import { Button as ShadcnButton } from "@ui-components/ui/button";
+import { Button as ShadcnButton } from "@ui-components/button";
 import type { ButtonProps } from "@ui/registry";
 
 export function ButtonAdapter({ schema, label, variant, onClick }: ButtonProps) {
@@ -63,8 +63,8 @@ export function ButtonAdapter({ schema, label, variant, onClick }: ButtonProps) 
 ### 2. app/frontend/adapters/inputs/text-input.tsx
 
 ```tsx
-import { Input } from "@ui-components/ui/input";
-import { Label } from "@ui-components/ui/label";
+import { Input } from "@ui-components/input";
+import { Label } from "@ui-components/label";
 import { useField } from "formik";
 import type { TextInputProps } from "@ui/registry";
 

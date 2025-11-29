@@ -3,18 +3,21 @@
 module ContactsService
   module Tools
     class Create < Core::Tools::Base
+      description "Create a new contact"
       route method: :post, scope: :collection
       schema "contact"
 
-      def execute(contact: {}, **_)
+      params ContactSchema
+
+      def execute(user_id:, workspace_id:, contact: {}, **_)
         validate!(contact)
 
         item = Item.create!(
           schema_slug: "contact",
           tool_slug: "create",
           data: contact,
-          created_by: current_user,
-          workspace: current_workspace
+          created_by_id: user_id,
+          workspace_id:
         )
 
         { data: Core::Serializers::ItemSerializer.new(item).to_h, meta: { created: true } }

@@ -19,7 +19,7 @@ export interface DateTimeDisplayProps extends DisplayBaseProps {}
 
 ```tsx
 import { format, parseISO } from "date-fns";
-import { Label } from "@ui-components/ui/label";
+import { Label } from "@ui-components/label";
 import { useShowData } from "../layouts/show";
 import type { DateTimeDisplayProps } from "@ui/registry";
 
@@ -55,7 +55,7 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@ui-components/ui/tooltip";
+} from "@ui-components/tooltip";
 
 export function DateTimeWithRelativeAdapter({
   name,

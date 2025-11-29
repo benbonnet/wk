@@ -36,8 +36,8 @@ import {
   SheetDescription,
   SheetFooter,
   SheetClose,
-} from "@ui-components/ui/sheet";
-import { Button } from "@ui-components/ui/button";
+} from "@ui-components/sheet";
+import { Button } from "@ui-components/button";
 import type { DrawerProps } from "@ui/registry";
 
 export function DrawerAdapter({

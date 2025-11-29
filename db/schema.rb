@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_24_043314) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_24_043400) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -236,6 +236,38 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_24_043314) do
     t.index ["login"], name: "index_users_on_login", unique: true
   end
 
+  create_table "workflow_entries", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "execution_id", null: false
+    t.string "step_id", null: false
+    t.string "step_type", null: false
+    t.string "action", null: false
+    t.integer "duration_ms"
+    t.jsonb "input"
+    t.jsonb "output"
+    t.text "error"
+    t.datetime "timestamp", null: false
+    t.index ["execution_id"], name: "index_workflow_entries_on_execution_id"
+    t.index ["step_id"], name: "index_workflow_entries_on_step_id"
+    t.index ["timestamp"], name: "index_workflow_entries_on_timestamp"
+  end
+
+  create_table "workflow_executions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "workflow_id", null: false
+    t.string "status", default: "running", null: false
+    t.jsonb "input", default: {}
+    t.jsonb "ctx", default: {}
+    t.string "current_step"
+    t.jsonb "result"
+    t.string "recover_to"
+    t.jsonb "halt_data"
+    t.text "error"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_workflow_executions_on_created_at"
+    t.index ["status"], name: "index_workflow_executions_on_status"
+    t.index ["workflow_id"], name: "index_workflow_executions_on_workflow_id"
+  end
+
   create_table "workspace_users", force: :cascade do |t|
     t.bigint "workspace_id", null: false
     t.bigint "user_id", null: false
@@ -289,6 +321,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_24_043314) do
   add_foreign_key "items", "users", column: "updated_by_id"
   add_foreign_key "items", "workspaces"
   add_foreign_key "schemas", "workspaces"
+  add_foreign_key "workflow_entries", "workflow_executions", column: "execution_id"
   add_foreign_key "workspace_users", "users"
   add_foreign_key "workspace_users", "workspaces"
 end

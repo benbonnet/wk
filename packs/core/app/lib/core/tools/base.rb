@@ -2,7 +2,7 @@
 
 module Core
   module Tools
-    class Base
+    class Base < RubyLLM::Tool
       include Routing
 
       class << self
@@ -20,15 +20,10 @@ module Core
           Schema::Registry.find(schema_slug)
         end
 
-        def call(context, params = {})
-          new(context).execute(**params.symbolize_keys)
+        # Entry point - called by controller and workflows
+        def execute(**params)
+          new.execute(**params)
         end
-      end
-
-      attr_reader :context
-
-      def initialize(context)
-        @context = context
       end
 
       def execute(**params)
@@ -36,14 +31,6 @@ module Core
       end
 
       protected
-
-        def current_user
-          context.respond_to?(:current_user) ? context.current_user : nil
-        end
-
-        def current_workspace
-          context.respond_to?(:current_workspace) ? context.current_workspace : nil
-        end
 
         def schema_class
           self.class.schema_class

@@ -6,13 +6,16 @@ module Ui
     # Pure DSL → JSON structure
     class ViewBuilder
       attr_reader :elements, :api_registry, :drawers_registry
+      attr_accessor :schema_class
 
-      def initialize
+      def initialize(schema_class: nil)
         @elements = []
         @api_registry = {}
         @drawers_registry = {}
         @translations_data = {}
         @url_value = nil
+        @schema_class = schema_class
+        @field_prefix = nil
       end
 
       # ============================================
@@ -241,20 +244,21 @@ module Ui
       # Field components
       # ============================================
 
-      def field(name, kind:, **options)
+      def field(name, type:, **options)
+        # Apply prefix if in relationship context (has_one)
+        field_name = @field_prefix ? "#{@field_prefix}.#{name}" : name.to_s
+
         @elements << {
-          type: "COMPONENT",
-          name: name.to_s,
-          kind:,
+          type:,
+          name: field_name,
           **options.compact
         }.compact
       end
 
-      def render(name, kind:, **options)
+      def render(name, type:, **options)
         @elements << {
-          type: "COMPONENT",
+          type:,
           name: name.to_s,
-          kind:,
           **options.compact
         }.compact
       end
@@ -315,6 +319,50 @@ module Ui
       # Relationship components
       # ============================================
 
+      # Unified relationship method - auto-detects cardinality from schema
+      # has_one -> GROUP with prefixed fields (spouse_attributes.first_name)
+      # has_many -> FORM_ARRAY with add/remove
+      def relationship(name, label: nil, add_label: nil, remove_label: nil, **options, &block)
+        raise ArgumentError, "relationship requires a block to define fields" unless block_given?
+
+        # Find relationship definition from schema
+        relationship_def = @schema_class&.relationships&.find { |r| r[:name] == name.to_sym }
+        raise ArgumentError, "Relationship :#{name} not found in schema" unless relationship_def
+
+        display_label = label || name.to_s
+        attributes_name = "#{name}_attributes"
+
+        case relationship_def[:cardinality]
+        when :one
+          # has_one -> GROUP with prefixed fields
+          fields = with_field_prefix(attributes_name) do
+            build_nested_elements(&block)
+          end
+
+          @elements << {
+            type: "GROUP",
+            name: attributes_name,
+            label: display_label,
+            elements: fields,
+            **options.compact
+          }.compact
+
+        when :many
+          # has_many -> FORM_ARRAY with template
+          fields = build_nested_elements(&block)
+
+          @elements << {
+            type: "FORM_ARRAY",
+            name: attributes_name,
+            label: display_label,
+            addLabel: add_label,
+            removeLabel: remove_label,
+            template: fields,
+            **options.compact
+          }.compact
+        end
+      end
+
       def relationship_picker(name, cardinality:, relation_schema:, **options, &block)
         builder = Builders::RelationshipPickerBuilder.new(self)
         yield(builder) if block_given?
@@ -350,11 +398,22 @@ module Ui
 
         def build_nested_elements(&block)
           old_elements = @elements
+          old_prefix = @field_prefix
           @elements = []
           instance_eval(&block)
           nested = @elements
           @elements = old_elements
+          @field_prefix = old_prefix
           nested
+        end
+
+        # Set field prefix context for relationship fields
+        def with_field_prefix(prefix)
+          old_prefix = @field_prefix
+          @field_prefix = prefix
+          result = yield
+          @field_prefix = old_prefix
+          result
         end
     end
   end

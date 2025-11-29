@@ -4,6 +4,7 @@ require "rails_helper"
 
 RSpec.describe "Contacts API", type: :request do
   let(:user) { create(:user) }
+  let(:workspace) { create(:workspace) }
 
   before do
     Core::Schema::Registry.clear!
@@ -74,7 +75,7 @@ RSpec.describe "Contacts API", type: :request do
     it "returns validation error for missing fields" do
       post "/api/v1/workspaces/contacts", params: { contact: {} }, headers: auth_headers(user)
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       body = JSON.parse(response.body)
       expect(body["error"]).to eq("Validation failed")
       expect(body["details"]).to have_key("first_name")
@@ -230,7 +231,7 @@ RSpec.describe "Contacts API", type: :request do
   private
 
     def auth_headers(user)
-      payload = { user_id: user.id }
+      payload = { user_id: user.id, workspace_id: workspace.id }
       token = Auth::JwtService.encode(payload)
       { "Authorization" => "Bearer #{token}" }
     end

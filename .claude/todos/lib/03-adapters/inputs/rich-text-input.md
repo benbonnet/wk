@@ -26,10 +26,10 @@ import { useField } from "formik";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
-import { Label } from "@ui-components/ui/label";
-import { Button } from "@ui-components/ui/button";
-import { Toggle } from "@ui-components/ui/toggle";
-import { Separator } from "@ui-components/ui/separator";
+import { Label } from "@ui-components/label";
+import { Button } from "@ui-components/button";
+import { Toggle } from "@ui-components/toggle";
+import { Separator } from "@ui-components/separator";
 import {
   Bold,
   Italic,

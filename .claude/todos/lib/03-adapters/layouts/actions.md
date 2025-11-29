@@ -42,7 +42,7 @@ export function ActionsAdapter({ schema, children }: ActionsProps) {
 ### With separator groups
 
 ```tsx
-import { Separator } from "@ui-components/ui/separator";
+import { Separator } from "@ui-components/separator";
 
 export function ActionsAdapter({ schema, children }: ActionsProps) {
   return (

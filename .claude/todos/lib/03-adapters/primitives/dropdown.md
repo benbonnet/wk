@@ -34,8 +34,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@ui-components/ui/dropdown-menu";
-import { Button } from "@ui-components/ui/button";
+} from "@ui-components/dropdown-menu";
+import { Button } from "@ui-components/button";
 import { ChevronDown, MoreHorizontal } from "lucide-react";
 import type { DropdownProps } from "@ui/registry";
 
@@ -82,8 +82,8 @@ export function DropdownAdapter({
 ## With Searchable Options
 
 ```tsx
-import { Command, CommandInput, CommandList, CommandEmpty, CommandItem } from "@ui-components/ui/command";
-import { Popover, PopoverTrigger, PopoverContent } from "@ui-components/ui/popover";
+import { Command, CommandInput, CommandList, CommandEmpty, CommandItem } from "@ui-components/command";
+import { Popover, PopoverTrigger, PopoverContent } from "@ui-components/popover";
 
 export function SearchableDropdownAdapter({
   schema,

@@ -18,7 +18,7 @@ export interface LongTextDisplayProps extends DisplayBaseProps {}
 ## Implementation
 
 ```tsx
-import { Label } from "@ui-components/ui/label";
+import { Label } from "@ui-components/label";
 import { useShowData } from "../layouts/show";
 import type { LongTextDisplayProps } from "@ui/registry";
 
@@ -47,7 +47,7 @@ export function LongTextDisplayAdapter({
 ## With Scroll Area
 
 ```tsx
-import { ScrollArea } from "@ui-components/ui/scroll-area";
+import { ScrollArea } from "@ui-components/scroll-area";
 
 export function ScrollableLongTextAdapter({
   name,

@@ -21,8 +21,8 @@ export interface TextInputProps extends InputBaseProps {
 
 ```tsx
 import { useField } from "formik";
-import { Input } from "@ui-components/ui/input";
-import { Label } from "@ui-components/ui/label";
+import { Input } from "@ui-components/input";
+import { Label } from "@ui-components/label";
 import type { TextInputProps } from "@ui/registry";
 
 export function TextInputAdapter({
@@ -63,8 +63,8 @@ export function TextInputAdapter({
 
 ```tsx
 import { useFormContext } from "react-hook-form";
-import { Input } from "@ui-components/ui/input";
-import { Label } from "@ui-components/ui/label";
+import { Input } from "@ui-components/input";
+import { Label } from "@ui-components/label";
 import type { TextInputProps } from "@ui/registry";
 
 export function TextInputAdapter({

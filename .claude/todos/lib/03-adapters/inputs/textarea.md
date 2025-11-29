@@ -21,8 +21,8 @@ export interface TextareaProps extends InputBaseProps {
 
 ```tsx
 import { useField } from "formik";
-import { Textarea } from "@ui-components/ui/textarea";
-import { Label } from "@ui-components/ui/label";
+import { Textarea } from "@ui-components/textarea";
+import { Label } from "@ui-components/label";
 import type { TextareaProps } from "@ui/registry";
 
 export function TextareaAdapter({

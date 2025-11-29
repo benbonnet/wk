@@ -26,14 +26,14 @@ import { useState } from "react";
 import { useField } from "formik";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
-import { Calendar } from "@ui-components/ui/calendar";
-import { Button } from "@ui-components/ui/button";
-import { Label } from "@ui-components/ui/label";
+import { Calendar } from "@ui-components/calendar";
+import { Button } from "@ui-components/button";
+import { Label } from "@ui-components/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@ui-components/ui/popover";
+} from "@ui-components/popover";
 import { cn } from "@ui/utils";
 import type { DateInputProps } from "@ui/registry";
 

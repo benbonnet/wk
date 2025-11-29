@@ -14,8 +14,8 @@ RSpec.describe Core::Schema::Translations do
 
   describe ".translations" do
     it "returns stored translations" do
-      expect(schema_class.translations[:en][:first_name]).to eq("First Name")
-      expect(schema_class.translations[:fr][:first_name]).to eq("Prénom")
+      expect(schema_class.translations[:en]).to include(first_name: "First Name")
+      expect(schema_class.translations[:fr]).to include(first_name: "Prénom")
     end
 
     it "returns empty hash when no translations defined" do
@@ -25,23 +25,13 @@ RSpec.describe Core::Schema::Translations do
   end
 
   describe ".t" do
-    it "returns translation for given locale" do
-      expect(schema_class.t(:first_name, locale: :en)).to eq("First Name")
-      expect(schema_class.t(:first_name, locale: :fr)).to eq("Prénom")
-    end
-
-    it "defaults to :en locale" do
-      expect(schema_class.t(:first_name)).to eq("First Name")
-    end
-
-    it "returns humanized key when translation missing" do
-      expect(schema_class.t(:unknown_key)).to eq("Unknown key")
-    end
+    it { expect(schema_class.t(:first_name, locale: :en)).to eq("First Name") }
+    it { expect(schema_class.t(:first_name, locale: :fr)).to eq("Prénom") }
+    it { expect(schema_class.t(:first_name)).to eq("First Name") }
+    it { expect(schema_class.t(:unknown_key)).to eq("Unknown key") }
   end
 
   describe ".translation_keys" do
-    it "returns unique keys across all locales" do
-      expect(schema_class.translation_keys).to contain_exactly(:first_name, :last_name)
-    end
+    it { expect(schema_class.translation_keys).to contain_exactly(:first_name, :last_name) }
   end
 end

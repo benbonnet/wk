@@ -24,9 +24,9 @@ export interface TagsInputProps extends InputBaseProps {
 ```tsx
 import { useState, useRef, KeyboardEvent } from "react";
 import { useField } from "formik";
-import { Input } from "@ui-components/ui/input";
-import { Badge } from "@ui-components/ui/badge";
-import { Label } from "@ui-components/ui/label";
+import { Input } from "@ui-components/input";
+import { Badge } from "@ui-components/badge";
+import { Label } from "@ui-components/label";
 import { X } from "lucide-react";
 import type { TagsInputProps } from "@ui/registry";
 

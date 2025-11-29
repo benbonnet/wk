@@ -21,7 +21,7 @@ export interface SubmitProps extends BaseRendererProps {
 
 ```tsx
 import { useFormikContext } from "formik";
-import { Button } from "@ui-components/ui/button";
+import { Button } from "@ui-components/button";
 import { Loader2 } from "lucide-react";
 import type { SubmitProps } from "@ui/registry";
 
@@ -54,7 +54,7 @@ export function SubmitAdapter({ schema, label, loadingLabel }: SubmitProps) {
 
 ```tsx
 import { useFormContext } from "react-hook-form";
-import { Button } from "@ui-components/ui/button";
+import { Button } from "@ui-components/button";
 import { Loader2 } from "lucide-react";
 import type { SubmitProps } from "@ui/registry";
 

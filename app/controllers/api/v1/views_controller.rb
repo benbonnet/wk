@@ -13,7 +13,7 @@ module Api
         end
 
         unless view_class.respond_to?(:view_config)
-          render json: { error: "Invalid view class" }, status: :unprocessable_entity
+          render json: { error: "Invalid view class" }, status: :unprocessable_content
           return
         end
 

@@ -22,7 +22,7 @@ export interface GroupProps extends BaseRendererProps {
 ## Implementation
 
 ```tsx
-import { Separator } from "@ui-components/ui/separator";
+import { Separator } from "@ui-components/separator";
 import type { GroupProps } from "@ui/registry";
 
 export function GroupAdapter({

@@ -57,10 +57,14 @@ module Core
         end
 
         def execute_tool
-          result = @tool_class.call(self, tool_params)
+          result = @tool_class.execute(
+            user_id: current_user.id,
+            workspace_id: current_workspace.id,
+            **tool_params
+          )
           render json: result
         rescue Core::Tools::ValidationError => e
-          render json: { error: e.message, details: e.details }, status: :unprocessable_entity
+          render json: { error: e.message, details: e.details }, status: :unprocessable_content
         rescue Core::Tools::NotFoundError => e
           render json: { error: e.message }, status: :not_found
         rescue Core::Tools::ForbiddenError => e

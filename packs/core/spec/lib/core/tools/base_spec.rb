@@ -18,13 +18,14 @@ RSpec.describe Core::Tools::Base do
       route method: :get, scope: :collection
       schema "contact"
 
-      def execute(page: 1, **_)
-        { page:, items: [] }
+      def execute(user_id:, workspace_id:, page: 1, **_)
+        { page:, items: [], user_id:, workspace_id: }
       end
     end
   end
 
-  let(:context) { double("controller", current_user: nil, current_workspace: nil) }
+  let(:user) { create(:user) }
+  let(:workspace) { create(:workspace) }
 
   before do
     Core::Schema::Registry.clear!
@@ -43,10 +44,12 @@ RSpec.describe Core::Tools::Base do
     end
   end
 
-  describe ".call" do
-    it "instantiates and executes tool" do
-      result = tool_class.call(context, page: 2)
+  describe ".execute" do
+    it "instantiates and executes tool with explicit params" do
+      result = tool_class.execute(user_id: user.id, workspace_id: workspace.id, page: 2)
       expect(result[:page]).to eq(2)
+      expect(result[:user_id]).to eq(user.id)
+      expect(result[:workspace_id]).to eq(workspace.id)
     end
   end
 
@@ -54,39 +57,21 @@ RSpec.describe Core::Tools::Base do
     it "must be implemented by subclass" do
       base_tool = Class.new(Core::Tools::Base)
 
-      expect { base_tool.call(context, {}) }
+      expect { base_tool.execute(user_id: user.id, workspace_id: workspace.id) }
         .to raise_error(NotImplementedError)
     end
   end
 
-  describe "#context" do
-    it "stores the controller context" do
-      tool = tool_class.new(context)
-      expect(tool.context).to eq(context)
-    end
-  end
-
-  describe "#current_user" do
-    it "delegates to context" do
-      user = double("user")
-      allow(context).to receive(:current_user).and_return(user)
-
-      tool = tool_class.new(context)
-      expect(tool.send(:current_user)).to eq(user)
-    end
-  end
-
   describe "#find_item!" do
-    let(:user) { create(:user) }
     let(:item) { create(:item, schema_slug: "contact", created_by: user) }
 
     it "returns item when found" do
-      tool = tool_class.new(context)
+      tool = tool_class.new
       expect(tool.send(:find_item!, item.id)).to eq(item)
     end
 
     it "raises NotFoundError when not found" do
-      tool = tool_class.new(context)
+      tool = tool_class.new
       expect { tool.send(:find_item!, 99999) }
         .to raise_error(Core::Tools::NotFoundError)
     end

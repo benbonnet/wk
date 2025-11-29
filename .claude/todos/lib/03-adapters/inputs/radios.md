@@ -22,8 +22,8 @@ export interface RadiosProps extends InputBaseProps {
 
 ```tsx
 import { useField } from "formik";
-import { RadioGroup, RadioGroupItem } from "@ui-components/ui/radio-group";
-import { Label } from "@ui-components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@ui-components/radio-group";
+import { Label } from "@ui-components/label";
 import type { RadiosProps } from "@ui/registry";
 
 export function RadiosAdapter({

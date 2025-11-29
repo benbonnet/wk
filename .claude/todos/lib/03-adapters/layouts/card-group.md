@@ -30,7 +30,7 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-} from "@ui-components/ui/card";
+} from "@ui-components/card";
 import type { CardGroupProps } from "@ui/registry";
 
 export function CardGroupAdapter({
@@ -69,7 +69,7 @@ import {
   CardDescription,
   CardAction,
   CardContent,
-} from "@ui-components/ui/card";
+} from "@ui-components/card";
 
 export function CardGroupAdapter({
   schema,

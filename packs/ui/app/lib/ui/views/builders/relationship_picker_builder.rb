@@ -13,10 +13,10 @@ module Ui
           @options = {}
         end
 
-        def column(name, kind:, **opts)
+        def column(name, type:, **opts)
           @columns << {
             name: name.to_s,
-            kind:,
+            type:,
             label: opts[:label]
           }.compact
         end
@@ -32,7 +32,7 @@ module Ui
           display_elements.each do |el|
             @columns << {
               name: el[:name],
-              kind: el[:kind]
+              type: el[:type]
             }.compact
           end
         end

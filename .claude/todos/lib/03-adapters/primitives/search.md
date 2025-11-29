@@ -21,9 +21,9 @@ export interface SearchProps extends BaseRendererProps {
 ## Implementation
 
 ```tsx
-import { Input } from "@ui-components/ui/input";
+import { Input } from "@ui-components/input";
 import { Search, X } from "lucide-react";
-import { Button } from "@ui-components/ui/button";
+import { Button } from "@ui-components/button";
 import type { SearchProps } from "@ui/registry";
 
 export function SearchAdapter({
