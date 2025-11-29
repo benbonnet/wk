@@ -7,10 +7,10 @@ import {
   SheetTitle,
   SheetDescription,
   SheetFooter,
-} from "@ui-components/sheet";
-import { Button } from "@ui-components/button";
-import { Input } from "@ui-components/input";
-import { Checkbox } from "@ui-components/checkbox";
+} from "@ui/components/sheet";
+import { Button } from "@ui/components/button";
+import { Input } from "@ui/components/input";
+import { Checkbox } from "@ui/components/checkbox";
 import {
   Table,
   TableHeader,
@@ -18,12 +18,12 @@ import {
   TableRow,
   TableHead,
   TableCell,
-} from "@ui-components/table";
-import { ScrollArea } from "@ui-components/scroll-area";
+} from "@ui/components/table";
+import { ScrollArea } from "@ui/components/scroll-area";
 import { Plus, Check, Search } from "lucide-react";
-import { useServices, useTranslate } from "@ui/provider";
+import { useServices, useTranslate } from "@ui/lib/ui-renderer/provider";
 import { RelationshipCreateDrawer } from "./create-drawer";
-import type { UISchema } from "@ui/types";
+import type { UISchema } from "@ui/lib/ui-renderer/types";
 
 interface AttributePayload {
   id?: number;

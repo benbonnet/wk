@@ -15,7 +15,7 @@ describe("AppUIProvider", () => {
         <AppUIProvider>
           <div>Test Content</div>
         </AppUIProvider>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(screen.getByText("Test Content")).toBeInTheDocument();
@@ -29,7 +29,7 @@ describe("AppUIProvider", () => {
         <AppUIProvider translations={translations}>
           <div>With Translations</div>
         </AppUIProvider>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(screen.getByText("With Translations")).toBeInTheDocument();
@@ -41,7 +41,7 @@ describe("AppUIProvider", () => {
         <AppUIProvider locale="fr">
           <div>French Locale</div>
         </AppUIProvider>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(screen.getByText("French Locale")).toBeInTheDocument();

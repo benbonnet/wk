@@ -4,9 +4,9 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-} from "@ui-components/card";
-import { useTranslate } from "@ui/provider";
-import type { CardGroupProps } from "@ui/registry";
+} from "@ui/components/card";
+import { useTranslate } from "@ui/lib/ui-renderer/provider";
+import type { CardGroupProps } from "@ui/lib/ui-renderer/registry";
 
 interface ExtendedCardGroupProps extends CardGroupProps {
   subtitle?: string;

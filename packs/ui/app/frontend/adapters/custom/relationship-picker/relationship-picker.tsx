@@ -1,7 +1,7 @@
-import { cn } from "@ui/utils";
+import { cn } from "@ui/lib/utils";
 import { useField } from "../form";
 import { RelationshipPickerField } from "./field";
-import type { RelationshipPickerProps } from "@ui/registry";
+import type { RelationshipPickerProps } from "@ui/lib/ui-renderer/registry";
 
 interface ExtendedRelationshipPickerProps extends RelationshipPickerProps {
   basePath?: string;

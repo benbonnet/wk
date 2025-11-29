@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { resolveRules } from "@ui/resolver";
-import type { Rule } from "@ui/types";
+import { resolveRules } from "@ui/lib/ui-renderer/resolver";
+import type { Rule } from "@ui/lib/ui-renderer/types";
 
 describe("Phase 1: Resolver - Pure Functions", () => {
   describe("1.1 Basic Operators", () => {

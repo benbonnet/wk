@@ -11,9 +11,9 @@ beforeAll(() => {
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { UIProvider } from "@ui/provider";
-import { TooltipProvider } from "@ui-components/tooltip";
-import { DynamicRenderer } from "@ui/renderer";
+import { UIProvider } from "@ui/lib/ui-renderer/provider";
+import { TooltipProvider } from "@ui/components/tooltip";
+import { DynamicRenderer } from "@ui/lib/ui-renderer/renderer";
 import {
   VIEW,
   FORM,
@@ -42,7 +42,7 @@ import {
   DROPDOWN,
   RELATIONSHIP_PICKER,
 } from "@ui/adapters";
-import type { AdapterRegistry, UIServices } from "@ui/registry";
+import type { AdapterRegistry, UIServices } from "@ui/lib/ui-renderer/registry";
 import type { ReactNode } from "react";
 
 // Import mock data and schema

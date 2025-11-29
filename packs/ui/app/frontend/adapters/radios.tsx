@@ -1,8 +1,8 @@
-import { RadioGroup, RadioGroupItem } from "@ui-components/radio-group";
-import { Label } from "@ui-components/label";
-import { useTranslate } from "@ui/provider";
+import { RadioGroup, RadioGroupItem } from "@ui/components/radio-group";
+import { Label } from "@ui/components/label";
+import { useTranslate } from "@ui/lib/ui-renderer/provider";
 import { useField } from "./custom/form";
-import type { InputProps } from "@ui/registry";
+import type { InputProps } from "@ui/lib/ui-renderer/registry";
 
 export function Radios({
   name,

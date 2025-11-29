@@ -1,5 +1,5 @@
-import { cn } from "@ui/utils";
-import type { ActionsProps } from "@ui/registry";
+import { cn } from "@ui/lib/utils";
+import type { ActionsProps } from "@ui/lib/ui-renderer/registry";
 
 export function Actions({ className, children }: ActionsProps) {
   return (

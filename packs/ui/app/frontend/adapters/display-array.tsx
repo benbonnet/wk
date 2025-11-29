@@ -1,9 +1,9 @@
-import { Card, CardContent } from "@ui-components/card";
-import { cn } from "@ui/utils";
-import { useTranslate } from "@ui/provider";
-import type { DisplayArrayProps } from "@ui/registry";
-import type { UISchema } from "@ui/types";
-import { DynamicRenderer } from "@ui/renderer";
+import { Card, CardContent } from "@ui/components/card";
+import { cn } from "@ui/lib/utils";
+import { useTranslate } from "@ui/lib/ui-renderer/provider";
+import type { DisplayArrayProps } from "@ui/lib/ui-renderer/registry";
+import type { UISchema } from "@ui/lib/ui-renderer/types";
+import { DynamicRenderer } from "@ui/lib/ui-renderer/renderer";
 import { ShowContext, useShowData } from "./show";
 
 interface ExtendedDisplayArrayProps extends DisplayArrayProps {

@@ -1,5 +1,5 @@
 import axios from "axios";
-import type User from "@/types/api/User";
+import type User from "../types/api/User";
 
 type UserData = User["user"];
 

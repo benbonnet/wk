@@ -1,7 +1,7 @@
-import { Button as ButtonUI } from "@ui-components/button";
+import { Button as ButtonUI } from "@ui/components/button";
 import * as Icons from "lucide-react";
-import { useTranslate } from "@ui/provider";
-import type { ButtonProps } from "@ui/registry";
+import { useTranslate } from "@ui/lib/ui-renderer/provider";
+import type { ButtonProps } from "@ui/lib/ui-renderer/registry";
 
 const variantMap = {
   primary: "default",

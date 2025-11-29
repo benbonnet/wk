@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { withForm } from "@storybook-decorators";
 import { Page, CardGroup, TextInput, Select, Checkbox } from "@ui/adapters";
-import { Button } from "@ui-components/button";
+import { Button } from "@ui/components/button";
 
 const meta: Meta<typeof Page> = {
   title: "Layouts/Page",

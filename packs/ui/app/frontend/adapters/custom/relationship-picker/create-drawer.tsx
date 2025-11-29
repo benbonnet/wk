@@ -5,11 +5,11 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
-} from "@ui-components/sheet";
-import { Button } from "@ui-components/button";
-import { useServices, useTranslate } from "@ui/provider";
-import { DynamicRenderer } from "@ui/renderer";
-import type { UISchema } from "@ui/types";
+} from "@ui/components/sheet";
+import { Button } from "@ui/components/button";
+import { useServices, useTranslate } from "@ui/lib/ui-renderer/provider";
+import { DynamicRenderer } from "@ui/lib/ui-renderer/renderer";
+import type { UISchema } from "@ui/lib/ui-renderer/types";
 import { FormContext } from "../form";
 
 interface RelationshipCreateDrawerProps {

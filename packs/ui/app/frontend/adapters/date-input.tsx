@@ -1,18 +1,18 @@
 import { useState } from "react";
 import { format, parseISO } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
-import { Calendar } from "@ui-components/calendar";
-import { Button } from "@ui-components/button";
-import { Label } from "@ui-components/label";
+import { Calendar } from "@ui/components/calendar";
+import { Button } from "@ui/components/button";
+import { Label } from "@ui/components/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@ui-components/popover";
-import { cn } from "@ui/utils";
-import { useTranslate } from "@ui/provider";
+} from "@ui/components/popover";
+import { cn } from "@ui/lib/utils";
+import { useTranslate } from "@ui/lib/ui-renderer/provider";
 import { useField } from "./custom/form";
-import type { InputProps } from "@ui/registry";
+import type { InputProps } from "@ui/lib/ui-renderer/registry";
 
 export function DateInput({
   name,

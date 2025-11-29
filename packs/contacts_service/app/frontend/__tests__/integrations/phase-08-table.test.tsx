@@ -2,11 +2,11 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { UIProvider } from "@ui/provider";
-import { DynamicRenderer } from "@ui/renderer";
-import { TooltipProvider } from "@ui-components/tooltip";
-import type { UIServices } from "@ui/registry";
-import type { UISchema } from "@ui/types";
+import { UIProvider } from "@ui/lib/ui-renderer/provider";
+import { DynamicRenderer } from "@ui/lib/ui-renderer/renderer";
+import { TooltipProvider } from "@ui/components/tooltip";
+import type { UIServices } from "@ui/lib/ui-renderer/registry";
+import type { UISchema } from "@ui/lib/ui-renderer/types";
 import type { ReactNode } from "react";
 
 const mockData = [

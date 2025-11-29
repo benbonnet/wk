@@ -6,12 +6,12 @@ import {
   SheetHeader,
   SheetTitle,
   SheetDescription,
-} from "@ui-components/sheet";
-import { cn } from "@ui/utils";
-import { useTranslate, useServices } from "@ui/provider";
-import type { ViewProps } from "@ui/registry";
-import type { UISchema } from "@ui/types";
-import { DynamicRenderer } from "@ui/renderer";
+} from "@ui/components/sheet";
+import { cn } from "@ui/lib/utils";
+import { useTranslate, useServices } from "@ui/lib/ui-renderer/provider";
+import type { ViewProps } from "@ui/lib/ui-renderer/registry";
+import type { UISchema } from "@ui/lib/ui-renderer/types";
+import { DynamicRenderer } from "@ui/lib/ui-renderer/renderer";
 
 interface DrawerContextValue {
   openDrawer: (name: string, data?: Record<string, unknown>) => void;

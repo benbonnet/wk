@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { UIProvider } from "../provider";
 import { DynamicRenderer } from "../renderer";
-import { TooltipProvider } from "@ui-components/tooltip";
+import { TooltipProvider } from "@ui/components/tooltip";
 import type { UIServices } from "../registry";
 import type { UISchema } from "../types";
 

@@ -2,11 +2,11 @@ import {
   Alert as AlertUI,
   AlertTitle,
   AlertDescription,
-} from "@ui-components/alert";
+} from "@ui/components/alert";
 import { AlertCircle, CheckCircle, Info, AlertTriangle } from "lucide-react";
-import { cn } from "@ui/utils";
-import { useTranslate } from "@ui/provider";
-import type { AlertProps } from "@ui/registry";
+import { cn } from "@ui/lib/utils";
+import { useTranslate } from "@ui/lib/ui-renderer/provider";
+import type { AlertProps } from "@ui/lib/ui-renderer/registry";
 
 const colorVariants = {
   default: { containerClass: "", Icon: Info },

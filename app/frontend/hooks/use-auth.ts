@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { getCurrentUser } from "@/api/auth";
-import type User from "@/types/api/User";
+import { getCurrentUser } from "../api/auth";
+import type User from "../types/api/User";
 
 type UserData = User["user"];
 

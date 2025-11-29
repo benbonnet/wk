@@ -23,7 +23,7 @@ import type {
   SearchProps,
   SubmitProps,
   RelationshipPickerProps,
-} from "@ui/registry";
+} from "@ui/lib/ui-renderer/registry";
 
 // Inputs
 import { TextInput } from "./text-input";

@@ -6,10 +6,10 @@ import {
   useEffect,
   useMemo,
 } from "react";
-import { cn } from "@ui/utils";
-import { useTranslate } from "@ui/provider";
-import type { FormProps } from "@ui/registry";
-import type { UISchema } from "@ui/types";
+import { cn } from "@ui/lib/utils";
+import { useTranslate } from "@ui/lib/ui-renderer/provider";
+import type { FormProps } from "@ui/lib/ui-renderer/registry";
+import type { UISchema } from "@ui/lib/ui-renderer/types";
 import { useViewConfig, useDrawer } from "../view";
 
 interface FormContextValue {

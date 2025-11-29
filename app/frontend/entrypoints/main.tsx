@@ -3,9 +3,9 @@ import { createRoot } from "react-dom/client";
 import { Routes, Route, BrowserRouter } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-import Layout from "@/views/layout";
-import { AppUIProvider } from "@/providers/ui-provider";
-import ActivitiesIndex from "@packs/activities_service/app/frontend/views/index";
+import Layout from "../views/layout";
+import { AppUIProvider } from "../providers/ui-provider";
+import ActivitiesIndex from "../../../packs/activities_service/app/frontend/views/index";
 
 const queryClient = new QueryClient({
   defaultOptions: {

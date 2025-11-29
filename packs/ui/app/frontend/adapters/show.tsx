@@ -1,8 +1,8 @@
 import { createContext, useContext } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@ui-components/card";
-import { cn } from "@ui/utils";
-import { useTranslate } from "@ui/provider";
-import type { ShowProps } from "@ui/registry";
+import { Card, CardHeader, CardTitle, CardContent } from "@ui/components/card";
+import { cn } from "@ui/lib/utils";
+import { useTranslate } from "@ui/lib/ui-renderer/provider";
+import type { ShowProps } from "@ui/lib/ui-renderer/registry";
 
 interface ShowContextValue {
   data: Record<string, unknown>;

@@ -2,11 +2,11 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from "@ui-components/dropdown-menu";
-import { Button } from "@ui-components/button";
+} from "@ui/components/dropdown-menu";
+import { Button } from "@ui/components/button";
 import { MoreVertical, ChevronDown } from "lucide-react";
-import { useTranslate } from "@ui/provider";
-import type { DropdownProps } from "@ui/registry";
+import { useTranslate } from "@ui/lib/ui-renderer/provider";
+import type { DropdownProps } from "@ui/lib/ui-renderer/registry";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function Dropdown({ label, icon, children, className }: DropdownProps) {

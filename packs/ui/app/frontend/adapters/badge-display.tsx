@@ -1,8 +1,8 @@
-import { Badge } from "@ui-components/badge";
-import { Label } from "@ui-components/label";
-import { useTranslate } from "@ui/provider";
+import { Badge } from "@ui/components/badge";
+import { Label } from "@ui/components/label";
+import { useTranslate } from "@ui/lib/ui-renderer/provider";
 import { useShowData } from "./show";
-import type { DisplayProps } from "@ui/registry";
+import type { DisplayProps } from "@ui/lib/ui-renderer/registry";
 
 const statusColors: Record<string, string> = {
   active: "bg-green-100 text-green-800 border-green-200",

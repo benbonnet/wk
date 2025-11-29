@@ -1,8 +1,8 @@
-import { Button } from "@ui-components/button";
+import { Button } from "@ui/components/button";
 import * as Icons from "lucide-react";
-import { useTranslate, useServices } from "@ui/provider";
+import { useTranslate, useServices } from "@ui/lib/ui-renderer/provider";
 import { useDrawer } from "./custom/view";
-import type { LinkProps } from "@ui/registry";
+import type { LinkProps } from "@ui/lib/ui-renderer/registry";
 
 const variantMap = {
   primary: "default",

@@ -1,8 +1,8 @@
-import { Checkbox as CheckboxUI } from "@ui-components/checkbox";
-import { Label } from "@ui-components/label";
-import { useTranslate } from "@ui/provider";
+import { Checkbox as CheckboxUI } from "@ui/components/checkbox";
+import { Label } from "@ui/components/label";
+import { useTranslate } from "@ui/lib/ui-renderer/provider";
 import { useField } from "./custom/form";
-import type { InputProps } from "@ui/registry";
+import type { InputProps } from "@ui/lib/ui-renderer/registry";
 
 export function Checkbox({ name, label, disabled, helperText }: InputProps) {
   const t = useTranslate();

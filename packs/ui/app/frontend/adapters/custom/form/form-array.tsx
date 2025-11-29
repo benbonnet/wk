@@ -1,11 +1,11 @@
-import { Button } from "@ui-components/button";
-import { Card, CardContent } from "@ui-components/card";
+import { Button } from "@ui/components/button";
+import { Card, CardContent } from "@ui/components/card";
 import { Plus, Trash2 } from "lucide-react";
-import { cn } from "@ui/utils";
-import { useTranslate } from "@ui/provider";
-import type { FormArrayProps } from "@ui/registry";
-import type { UISchema } from "@ui/types";
-import { DynamicRenderer } from "@ui/renderer";
+import { cn } from "@ui/lib/utils";
+import { useTranslate } from "@ui/lib/ui-renderer/provider";
+import type { FormArrayProps } from "@ui/lib/ui-renderer/registry";
+import type { UISchema } from "@ui/lib/ui-renderer/types";
+import { DynamicRenderer } from "@ui/lib/ui-renderer/renderer";
 import { useFormContext } from "./form";
 
 export function FormArray({

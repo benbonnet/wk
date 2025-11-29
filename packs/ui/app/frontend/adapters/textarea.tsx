@@ -1,9 +1,9 @@
-import { Textarea as TextareaUI } from "@ui-components/textarea";
-import { Label } from "@ui-components/label";
-import { cn } from "@ui/utils";
-import { useTranslate } from "@ui/provider";
+import { Textarea as TextareaUI } from "@ui/components/textarea";
+import { Label } from "@ui/components/label";
+import { cn } from "@ui/lib/utils";
+import { useTranslate } from "@ui/lib/ui-renderer/provider";
 import { useField } from "./custom/form";
-import type { InputProps } from "@ui/registry";
+import type { InputProps } from "@ui/lib/ui-renderer/registry";
 
 export function Textarea({
   name,

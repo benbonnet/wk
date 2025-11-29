@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Drawer, TextInput, Select, Textarea } from "@ui/adapters";
-import { Button } from "@ui-components/button";
+import { Button } from "@ui/components/button";
 
 const meta: Meta<typeof Drawer> = {
   title: "Layouts/Drawer",

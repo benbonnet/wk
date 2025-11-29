@@ -1,13 +1,13 @@
 import { ReactNode } from "react";
 import { render, RenderOptions } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { UIProvider } from "@ui/provider";
-import { TooltipProvider } from "@ui-components/tooltip";
-import type { UIServices } from "@ui/registry";
+import { UIProvider } from "@ui/lib/ui-renderer/provider";
+import { TooltipProvider } from "@ui/components/tooltip";
+import type { UIServices } from "@ui/lib/ui-renderer/registry";
 import { DrawerContext } from "@ui/adapters";
 import viewSchema from "../mocks/views/contacts_index.json";
 import mockData from "../mocks/data.json";
-import type { UISchema } from "@ui/types";
+import type { UISchema } from "@ui/lib/ui-renderer/types";
 
 // Mock services
 export const mockServices: UIServices = {

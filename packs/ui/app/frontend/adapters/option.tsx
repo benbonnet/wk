@@ -1,9 +1,9 @@
-import { DropdownMenuItem } from "@ui-components/dropdown-menu";
+import { DropdownMenuItem } from "@ui/components/dropdown-menu";
 import * as Icons from "lucide-react";
-import { cn } from "@ui/utils";
-import { useTranslate, useServices } from "@ui/provider";
+import { cn } from "@ui/lib/utils";
+import { useTranslate, useServices } from "@ui/lib/ui-renderer/provider";
 import { useDrawer } from "./custom/view";
-import type { OptionProps } from "@ui/registry";
+import type { OptionProps } from "@ui/lib/ui-renderer/registry";
 
 export function Option({
   label,

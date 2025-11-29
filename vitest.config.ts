@@ -10,17 +10,9 @@ const dirname =
     ? __dirname
     : path.dirname(fileURLToPath(import.meta.url));
 
-const uiRoot = path.resolve(dirname, "./packs/ui/app/frontend");
-
-// Order matters: more specific paths must come before less specific
 const aliases: Record<string, string> = {
-  "@packs/": `${path.resolve(dirname, "./packs/")}/`,
-  "@/": `${path.resolve(dirname, "./app/frontend/")}/`,
-  "@ui-components/": `${uiRoot}/components/`,
-  "@ui/adapters/": `${uiRoot}/adapters/`,
-  "@ui/adapters": `${uiRoot}/adapters/index.ts`,
-  "@ui/": `${uiRoot}/lib/`,
-  "@ui": `${uiRoot}/lib/index.ts`,
+  "@ui/": `${path.resolve(dirname, "./packs/ui/app/frontend/")}/`,
+  "packs/ui/app/frontend/": `${path.resolve(dirname, "./packs/ui/app/frontend/")}/`,
   "@storybook-decorators": `${path.resolve(dirname, ".storybook/decorators.tsx")}`,
 };
 

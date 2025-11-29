@@ -1,12 +1,12 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { UIProvider } from "@ui/provider";
-import { TooltipProvider } from "@ui-components/tooltip";
-import { DynamicRenderer } from "@ui/renderer";
+import { UIProvider } from "@ui/lib/ui-renderer/provider";
+import { TooltipProvider } from "@ui/components/tooltip";
+import { DynamicRenderer } from "@ui/lib/ui-renderer/renderer";
 import { VIEW, PAGE } from "@ui/adapters";
 import { LINK, DROPDOWN, OPTION } from "@ui/adapters";
-import type { AdapterRegistry, UIServices } from "@ui/registry";
+import type { AdapterRegistry, UIServices } from "@ui/lib/ui-renderer/registry";
 import type { ReactNode } from "react";
 
 const mockServices: UIServices = {

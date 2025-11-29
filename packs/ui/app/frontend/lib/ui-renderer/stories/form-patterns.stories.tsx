@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { DynamicRenderer } from "@ui/renderer";
-import type { UISchema } from "@ui/types";
+import { DynamicRenderer } from "@ui/lib/ui-renderer/renderer";
+import type { UISchema } from "@ui/lib/ui-renderer/types";
 
 const meta: Meta<typeof DynamicRenderer> = {
   title: "Compositions/Form Patterns",

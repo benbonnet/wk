@@ -17,16 +17,16 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@ui-components/table";
-import { Input } from "@ui-components/input";
-import { Button } from "@ui-components/button";
-import { Checkbox } from "@ui-components/checkbox";
+} from "@ui/components/table";
+import { Input } from "@ui/components/input";
+import { Button } from "@ui/components/button";
+import { Checkbox } from "@ui/components/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@ui-components/dropdown-menu";
+} from "@ui/components/dropdown-menu";
 import {
   ArrowUpDown,
   MoreHorizontal,
@@ -34,10 +34,10 @@ import {
   ChevronRight,
   Search,
 } from "lucide-react";
-import { cn } from "@ui/utils";
-import { useTranslate, useServices } from "@ui/provider";
-import type { TableProps } from "@ui/registry";
-import type { UISchema, UISchemaColumn } from "@ui/types";
+import { cn } from "@ui/lib/utils";
+import { useTranslate, useServices } from "@ui/lib/ui-renderer/provider";
+import type { TableProps } from "@ui/lib/ui-renderer/registry";
+import type { UISchema, UISchemaColumn } from "@ui/lib/ui-renderer/types";
 import { useDrawer, useViewConfig } from "../view";
 
 interface DataTableRow {

@@ -6,11 +6,11 @@ import {
   SheetDescription,
   SheetFooter,
   SheetClose,
-} from "@ui-components/sheet";
-import { Button } from "@ui-components/button";
-import { cn } from "@ui/utils";
-import { useTranslate } from "@ui/provider";
-import type { DrawerProps } from "@ui/registry";
+} from "@ui/components/sheet";
+import { Button } from "@ui/components/button";
+import { cn } from "@ui/lib/utils";
+import { useTranslate } from "@ui/lib/ui-renderer/provider";
+import type { DrawerProps } from "@ui/lib/ui-renderer/registry";
 
 export function Drawer({
   title,

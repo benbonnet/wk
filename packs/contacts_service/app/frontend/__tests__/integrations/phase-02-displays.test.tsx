@@ -1,11 +1,11 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { UIProvider } from "@ui/provider";
-import { DynamicRenderer } from "@ui/renderer";
-import { TooltipProvider } from "@ui-components/tooltip";
+import { UIProvider } from "@ui/lib/ui-renderer/provider";
+import { DynamicRenderer } from "@ui/lib/ui-renderer/renderer";
+import { TooltipProvider } from "@ui/components/tooltip";
 import { ShowContext } from "@ui/adapters";
-import type { UIServices } from "@ui/registry";
-import type { UISchema } from "@ui/types";
+import type { UIServices } from "@ui/lib/ui-renderer/registry";
+import type { UISchema } from "@ui/lib/ui-renderer/types";
 import type { ReactNode } from "react";
 
 // Minimal mock services

@@ -1,6 +1,6 @@
-import { cn } from "@ui/utils";
-import { useTranslate } from "@ui/provider";
-import type { GroupProps } from "@ui/registry";
+import { cn } from "@ui/lib/utils";
+import { useTranslate } from "@ui/lib/ui-renderer/provider";
+import type { GroupProps } from "@ui/lib/ui-renderer/registry";
 
 interface ExtendedGroupProps extends GroupProps {
   subtitle?: string;

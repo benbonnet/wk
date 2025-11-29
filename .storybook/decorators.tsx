@@ -1,9 +1,9 @@
 import React from "react";
 import type { Decorator } from "@storybook/react-vite";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { UIProvider } from "@ui/provider";
-import { TooltipProvider } from "@ui-components/tooltip";
-import type { UIServices } from "@ui/registry";
+import { UIProvider } from "@ui/lib/ui-renderer/provider";
+import { TooltipProvider } from "@ui/components/tooltip";
+import type { UIServices } from "@ui/lib/ui-renderer/registry";
 import { DrawerContext, Form, View } from "@ui/adapters";
 
 const queryClient = new QueryClient({

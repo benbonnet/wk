@@ -1,5 +1,5 @@
-import { UIProvider } from "@ui";
-import type { UIServices } from "@ui";
+import { UIProvider } from "@ui/lib";
+import type { UIServices } from "@ui/lib";
 import { useNavigate } from "react-router";
 import axios from "axios";
 

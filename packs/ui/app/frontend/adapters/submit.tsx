@@ -1,8 +1,8 @@
-import { Button } from "@ui-components/button";
+import { Button } from "@ui/components/button";
 import { Loader2 } from "lucide-react";
-import { useTranslate } from "@ui/provider";
+import { useTranslate } from "@ui/lib/ui-renderer/provider";
 import { useFormContext } from "./custom/form";
-import type { SubmitProps } from "@ui/registry";
+import type { SubmitProps } from "@ui/lib/ui-renderer/registry";
 
 export function Submit({
   label = "Submit",

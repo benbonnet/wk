@@ -1,13 +1,13 @@
 import { format, parseISO, formatDistanceToNow } from "date-fns";
-import { Label } from "@ui-components/label";
+import { Label } from "@ui/components/label";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@ui-components/tooltip";
-import { useTranslate } from "@ui/provider";
+} from "@ui/components/tooltip";
+import { useTranslate } from "@ui/lib/ui-renderer/provider";
 import { useShowData } from "./show";
-import type { DisplayProps } from "@ui/registry";
+import type { DisplayProps } from "@ui/lib/ui-renderer/registry";
 
 export function DateDisplay({ name, label, data }: DisplayProps) {
   const t = useTranslate();

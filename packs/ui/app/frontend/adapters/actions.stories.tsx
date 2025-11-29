@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Actions } from "@ui/adapters";
-import { Button } from "@ui-components/button";
+import { Button } from "@ui/components/button";
 
 const meta: Meta<typeof Actions> = {
   title: "Layouts/Actions",

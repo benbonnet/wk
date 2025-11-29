@@ -1,12 +1,12 @@
 import { useState, useRef, KeyboardEvent } from "react";
-import { Input } from "@ui-components/input";
-import { Badge } from "@ui-components/badge";
-import { Label } from "@ui-components/label";
+import { Input } from "@ui/components/input";
+import { Badge } from "@ui/components/badge";
+import { Label } from "@ui/components/label";
 import { X } from "lucide-react";
-import { cn } from "@ui/utils";
-import { useTranslate } from "@ui/provider";
+import { cn } from "@ui/lib/utils";
+import { useTranslate } from "@ui/lib/ui-renderer/provider";
 import { useField } from "./custom/form";
-import type { InputProps } from "@ui/registry";
+import type { InputProps } from "@ui/lib/ui-renderer/registry";
 
 export function TagsInput({
   name,

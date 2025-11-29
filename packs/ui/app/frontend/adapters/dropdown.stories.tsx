@@ -3,7 +3,7 @@ import { Dropdown } from "@ui/adapters";
 import {
   DropdownMenuItem,
   DropdownMenuSeparator,
-} from "@ui-components/dropdown-menu";
+} from "@ui/components/dropdown-menu";
 
 const meta: Meta<typeof Dropdown> = {
   title: "Primitives/Dropdown",

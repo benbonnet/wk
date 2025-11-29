@@ -1,9 +1,9 @@
 import { useState, type FC } from "react";
-import { Button } from "@ui-components/button";
+import { Button } from "@ui/components/button";
 import { Plus, X } from "lucide-react";
-import { useTranslate } from "@ui/provider";
+import { useTranslate } from "@ui/lib/ui-renderer/provider";
 import { RelationshipPickerDrawer } from "./picker-drawer";
-import type { UISchema } from "@ui/types";
+import type { UISchema } from "@ui/lib/ui-renderer/types";
 
 interface AttributePayload {
   id?: number;

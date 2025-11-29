@@ -1,6 +1,6 @@
-import { Label } from "@ui-components/label";
-import { Button } from "@ui-components/button";
-import { Separator } from "@ui-components/separator";
+import { Label } from "@ui/components/label";
+import { Button } from "@ui/components/button";
+import { Separator } from "@ui/components/separator";
 import {
   Bold,
   Italic,
@@ -9,10 +9,10 @@ import {
   Heading2,
   Sparkles,
 } from "lucide-react";
-import { cn } from "@ui/utils";
-import { useTranslate } from "@ui/provider";
+import { cn } from "@ui/lib/utils";
+import { useTranslate } from "@ui/lib/ui-renderer/provider";
 import { useField } from "./custom/form";
-import type { InputProps } from "@ui/registry";
+import type { InputProps } from "@ui/lib/ui-renderer/registry";
 
 /**
  * Rich text input with AI assistance.
