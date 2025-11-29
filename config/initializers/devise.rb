@@ -273,16 +273,16 @@ Devise.setup do |config|
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
 
+  auth0 = Rails.application.credentials.auth0 || {}
   config.omniauth(
     :auth0,
-    AUTH0_CREDS&.dig(:client_id),
-    AUTH0_CREDS&.dig(:client_secret),
-    AUTH0_CREDS&.dig(:domain),
-    # callback_path: '/auth/callback',
+    auth0[:client_id],
+    auth0[:client_secret],
+    auth0[:domain],
     authorize_params: {
       scope: "openid",
       max_age: 3600,
-      audience: AUTH0_CREDS&.dig(:audience)
+      audience: auth0[:audience]
     }
   )
 

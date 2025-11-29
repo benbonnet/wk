@@ -19,7 +19,10 @@ module Auth
             @current_workspace_id = payload["workspace_id"] if user
             user
           end
-        # Session auth
+        # Devise/Warden session auth
+        elsif warden&.user(:user)
+          warden.user(:user)
+        # Legacy session auth (fallback)
         elsif session["user_id"]
           User.find_by(id: session["user_id"])
         end

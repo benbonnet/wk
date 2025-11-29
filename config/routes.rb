@@ -1,11 +1,10 @@
 Rails.application.routes.draw do
-  # Devise with Auth0
-  devise_for :users, controllers: {
-    omniauth_callbacks: "users/omniauth_callbacks"
-  }
+  devise_for(:users, module: :devise, controllers: { omniauth_callbacks: "auth" })
 
-  # Custom logout that also logs out of Auth0
-  delete "/logout", to: "sessions#destroy", as: :logout
+  devise_scope(:user) do
+    get(:logout, to: "auth#logout")
+    get(:authenticate, to: "auth#authenticate")
+  end
 
   # Health check
   get "up" => "rails/health#show", :as => :rails_health_check

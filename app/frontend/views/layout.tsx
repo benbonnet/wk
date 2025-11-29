@@ -1,15 +1,8 @@
-import { useEffect } from "react";
 import { Outlet } from "react-router";
 import { useAuth } from "@/hooks/use-auth";
 
 export default function Layout() {
-  const { user, isLoading, isAuthenticated } = useAuth();
-
-  useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      window.location.href = "/users/auth/auth0";
-    }
-  }, [isLoading, isAuthenticated]);
+  const { user, isLoading } = useAuth();
 
   if (isLoading) {
     return (
@@ -17,11 +10,6 @@ export default function Layout() {
         <div>Loading...</div>
       </div>
     );
-  }
-
-  if (!isAuthenticated) {
-    // Will redirect via effect
-    return null;
   }
 
   return (
