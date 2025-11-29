@@ -25,4 +25,24 @@ export default tseslint.config(
       ],
     },
   },
+  // Adapters and lib files intentionally export contexts and helpers alongside components
+  {
+    files: [
+      "**/adapters/**/*.{ts,tsx}",
+      "**/lib/provider.tsx",
+      "**/components/badge.tsx",
+      "**/components/button.tsx",
+      "**/components/form.tsx",
+    ],
+    rules: {
+      "react-refresh/only-export-components": "off",
+    },
+  },
+  // TanStack Table returns functions that can't be memoized - this is expected
+  {
+    files: ["**/table.tsx"],
+    rules: {
+      "react-hooks/incompatible-library": "off",
+    },
+  },
 );

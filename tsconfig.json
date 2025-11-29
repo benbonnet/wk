@@ -8,6 +8,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./app/frontend/*"],
+      "@packs/*": ["./packs/*"],
       "@ui": ["./packs/ui/app/frontend/lib/index.ts"],
       "@ui/*": ["./packs/ui/app/frontend/lib/*"],
       "@ui-components/*": ["./packs/ui/app/frontend/components/*"],

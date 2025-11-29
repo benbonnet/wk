@@ -21,10 +21,11 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./app/frontend/*"],
+      "@packs/*": ["./packs/*"],
       "@ui": ["./packs/ui/app/frontend/lib/index.ts"],
       "@ui/*": ["./packs/ui/app/frontend/lib/*"],
       "@ui-components/*": ["./packs/ui/app/frontend/components/*"]
     }
   },
-  "include": ["app/frontend", "packs/ui/app/frontend"]
+  "include": ["app/frontend", "packs/ui/app/frontend", "packs/activities_service/app/frontend"]
 }
