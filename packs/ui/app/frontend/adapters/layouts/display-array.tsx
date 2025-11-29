@@ -1,8 +1,8 @@
-import { Card, CardContent } from "@ui-components/ui/card";
-import { cn } from "@ui/utils";
-import { useTranslate } from "@ui/provider";
-import type { DisplayArrayProps } from "@ui/registry";
-import { DynamicRenderer } from "@ui/renderer";
+import { Card, CardContent } from "@ui/components/ui/card";
+import { cn } from "@ui/lib/utils";
+import { useTranslate } from "@ui/lib/provider";
+import type { DisplayArrayProps } from "@ui/lib/registry";
+import { DynamicRenderer } from "@ui/lib/renderer";
 import { ShowContext, useShowData } from "./show";
 
 export function DISPLAY_ARRAY({
@@ -21,7 +21,10 @@ export function DISPLAY_ARRAY({
 
   if (items.length === 0) {
     return (
-      <div data-ui="display-array" className={cn("space-y-4", schema.className)}>
+      <div
+        data-ui="display-array"
+        className={cn("space-y-4", schema.className)}
+      >
         {schema.label && (
           <h3 className="text-sm font-medium">{t(schema.label)}</h3>
         )}

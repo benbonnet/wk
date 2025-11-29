@@ -1,31 +1,14 @@
 // Layout adapters
-export {
-  VIEW,
-  DrawerContext,
-  useDrawer,
-} from "./layouts/view";
+export { VIEW, DrawerContext, useDrawer } from "./layouts/view";
 export { PAGE } from "./layouts/page";
 export { DRAWER } from "./layouts/drawer";
-export {
-  FORM,
-  FormContext,
-  useFormContext,
-  useField,
-} from "./layouts/form";
+export { FORM, FormContext, useFormContext, useField } from "./layouts/form";
 export { TABLE } from "./layouts/table";
-export {
-  SHOW,
-  ShowContext,
-  useShowData,
-} from "./layouts/show";
+export { SHOW, ShowContext, useShowData } from "./layouts/show";
 export { ACTIONS } from "./layouts/actions";
 export { GROUP } from "./layouts/group";
 export { CARD_GROUP } from "./layouts/card-group";
-export {
-  MULTISTEP,
-  MultistepContext,
-  useMultistep,
-} from "./layouts/multistep";
+export { MULTISTEP, MultistepContext, useMultistep } from "./layouts/multistep";
 export { STEP } from "./layouts/step";
 export { FORM_ARRAY } from "./layouts/form-array";
 export { DISPLAY_ARRAY } from "./layouts/display-array";

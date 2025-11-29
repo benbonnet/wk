@@ -15,9 +15,9 @@ class ItemRelationship < ApplicationRecord
 
   private
 
-  def prevent_self_relationship
-    if source_item_id == target_item_id
-      errors.add(:target_item_id, "cannot be the same as source_item_id")
+    def prevent_self_relationship
+      if source_item_id == target_item_id
+        errors.add(:target_item_id, "cannot be the same as source_item_id")
+      end
     end
-  end
 end

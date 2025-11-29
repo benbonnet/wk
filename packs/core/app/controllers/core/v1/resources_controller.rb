@@ -1,0 +1,79 @@
+# frozen_string_literal: true
+
+module Core
+  module V1
+    class ResourcesController < ApplicationController
+      before_action :resolve_feature
+      before_action :resolve_tool
+
+      def index
+        execute_tool
+      end
+
+      def create
+        execute_tool
+      end
+
+      def show
+        execute_tool
+      end
+
+      def update
+        execute_tool
+      end
+
+      def destroy
+        execute_tool
+      end
+
+      def collection_action
+        execute_tool
+      end
+
+      def member_action
+        execute_tool
+      end
+
+      private
+
+        def resolve_feature
+          @feature = Features::Registry.find(params[:namespace], params[:feature])
+          head :not_found unless @feature
+        end
+
+        def resolve_tool
+          scope = params[:id].present? ? :member : :collection
+          action = params[:action_name]
+
+          @tool_class = Features::Registry.find_tool(
+            params[:namespace],
+            params[:feature],
+            http_method: request.method.downcase.to_sym,
+            scope:,
+            action:
+          )
+
+          head :not_found unless @tool_class
+        end
+
+        def execute_tool
+          result = @tool_class.call(self, tool_params)
+          render json: result
+        rescue Core::Tools::ValidationError => e
+          render json: { error: e.message, details: e.details }, status: :unprocessable_entity
+        rescue Core::Tools::NotFoundError => e
+          render json: { error: e.message }, status: :not_found
+        rescue Core::Tools::ForbiddenError => e
+          render json: { error: e.message }, status: :forbidden
+        rescue StandardError => e
+          render json: { error: e.class.name, message: e.message }, status: :internal_server_error
+        end
+
+        def tool_params
+          params.permit!.to_h.symbolize_keys.except(
+            :namespace, :feature, :action_name, :controller, :action, :format
+          )
+        end
+    end
+  end
+end

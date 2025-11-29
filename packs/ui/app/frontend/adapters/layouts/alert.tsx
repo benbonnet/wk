@@ -1,17 +1,8 @@
-import {
-  Alert,
-  AlertTitle,
-  AlertDescription,
-} from "@ui-components/ui/alert";
-import {
-  AlertCircle,
-  CheckCircle,
-  Info,
-  AlertTriangle,
-} from "lucide-react";
-import { cn } from "@ui/utils";
-import { useTranslate } from "@ui/provider";
-import type { AlertProps } from "@ui/registry";
+import { Alert, AlertTitle, AlertDescription } from "@ui/components/ui/alert";
+import { AlertCircle, CheckCircle, Info, AlertTriangle } from "lucide-react";
+import { cn } from "@ui/lib/utils";
+import { useTranslate } from "@ui/lib/provider";
+import type { AlertProps } from "@ui/lib/registry";
 
 const colorVariants = {
   default: {
@@ -35,7 +26,8 @@ const colorVariants = {
     Icon: Info,
   },
   yellow: {
-    containerClass: "border-yellow-500/50 text-yellow-600 [&>svg]:text-yellow-600",
+    containerClass:
+      "border-yellow-500/50 text-yellow-600 [&>svg]:text-yellow-600",
     iconClass: "text-yellow-600",
     Icon: AlertTriangle,
   },

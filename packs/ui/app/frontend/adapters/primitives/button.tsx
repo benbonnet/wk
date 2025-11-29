@@ -1,8 +1,8 @@
-import { Button } from "@ui-components/ui/button";
+import { Button } from "@ui/components/ui/button";
 import * as Icons from "lucide-react";
-import { cn } from "@ui/utils";
-import { useTranslate } from "@ui/provider";
-import type { ButtonProps } from "@ui/registry";
+import { cn } from "@ui/lib/utils";
+import { useTranslate } from "@ui/lib/provider";
+import type { ButtonProps } from "@ui/lib/registry";
 
 const variantMap = {
   primary: "default",
@@ -11,13 +11,7 @@ const variantMap = {
   destructive: "destructive",
 } as const;
 
-export function BUTTON({
-  schema,
-  label,
-  variant,
-  icon,
-  onClick,
-}: ButtonProps) {
+export function BUTTON({ schema, label, variant, icon, onClick }: ButtonProps) {
   const t = useTranslate();
 
   const buttonLabel = label || schema.label!;

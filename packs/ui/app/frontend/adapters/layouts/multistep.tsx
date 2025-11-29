@@ -1,9 +1,16 @@
-import { useState, createContext, useContext, Children, isValidElement, cloneElement } from "react";
-import { Button } from "@ui-components/ui/button";
-import { Card, CardContent, CardFooter } from "@ui-components/ui/card";
-import { cn } from "@ui/utils";
-import { useTranslate } from "@ui/provider";
-import type { MultistepProps } from "@ui/registry";
+import {
+  useState,
+  createContext,
+  useContext,
+  Children,
+  isValidElement,
+  cloneElement,
+} from "react";
+import { Button } from "@ui/components/ui/button";
+import { Card, CardContent, CardFooter } from "@ui/components/ui/card";
+import { cn } from "@ui/lib/utils";
+import { useTranslate } from "@ui/lib/provider";
+import type { MultistepProps } from "@ui/lib/registry";
 
 interface MultistepContextValue {
   currentStep: number;
@@ -15,11 +22,14 @@ interface MultistepContextValue {
   isLastStep: boolean;
 }
 
-export const MultistepContext = createContext<MultistepContextValue | null>(null);
+export const MultistepContext = createContext<MultistepContextValue | null>(
+  null,
+);
 
 export function useMultistep() {
   const ctx = useContext(MultistepContext);
-  if (!ctx) throw new Error("useMultistep must be used within MultistepAdapter");
+  if (!ctx)
+    throw new Error("useMultistep must be used within MultistepAdapter");
   return ctx;
 }
 
@@ -49,7 +59,8 @@ export function MULTISTEP({
     totalSteps,
     nextStep: () => handleStepChange(Math.min(currentStep + 1, totalSteps - 1)),
     prevStep: () => handleStepChange(Math.max(currentStep - 1, 0)),
-    goToStep: (step) => handleStepChange(Math.max(0, Math.min(step, totalSteps - 1))),
+    goToStep: (step) =>
+      handleStepChange(Math.max(0, Math.min(step, totalSteps - 1))),
     isFirstStep: currentStep === 0,
     isLastStep: currentStep === totalSteps - 1,
   };
@@ -75,7 +86,9 @@ export function MULTISTEP({
               disabled={index > currentStep}
               className={cn(
                 "flex items-center gap-2",
-                index <= currentStep ? "cursor-pointer" : "cursor-not-allowed opacity-50"
+                index <= currentStep
+                  ? "cursor-pointer"
+                  : "cursor-not-allowed opacity-50",
               )}
             >
               <div
@@ -84,8 +97,8 @@ export function MULTISTEP({
                   index === currentStep
                     ? "border-primary bg-primary text-primary-foreground"
                     : index < currentStep
-                    ? "border-primary bg-primary/10 text-primary"
-                    : "border-muted text-muted-foreground"
+                      ? "border-primary bg-primary/10 text-primary"
+                      : "border-muted text-muted-foreground",
                 )}
               >
                 {index + 1}
@@ -96,7 +109,7 @@ export function MULTISTEP({
                     "hidden text-sm sm:inline",
                     index === currentStep
                       ? "font-medium text-foreground"
-                      : "text-muted-foreground"
+                      : "text-muted-foreground",
                   )}
                 >
                   {t(stepLabels[index]!)}
@@ -106,7 +119,7 @@ export function MULTISTEP({
                 <div
                   className={cn(
                     "mx-2 h-0.5 w-8 transition-colors",
-                    index < currentStep ? "bg-primary" : "bg-muted"
+                    index < currentStep ? "bg-primary" : "bg-muted",
                   )}
                 />
               )}
@@ -119,10 +132,13 @@ export function MULTISTEP({
           {steps.map((step, index) => {
             if (index === currentStep) {
               if (isValidElement(step)) {
-                return cloneElement(step as React.ReactElement<{ active?: boolean }>, {
-                  key: index,
-                  active: true,
-                });
+                return cloneElement(
+                  step as React.ReactElement<{ active?: boolean }>,
+                  {
+                    key: index,
+                    active: true,
+                  },
+                );
               }
               return step;
             }

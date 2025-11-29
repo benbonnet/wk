@@ -26,7 +26,7 @@ describe("Layout Adapters", () => {
       renderWithProviders(
         <VIEW schema={{ type: "VIEW" }}>
           <div>View Content</div>
-        </VIEW>
+        </VIEW>,
       );
 
       expect(screen.getByText("View Content")).toBeInTheDocument();
@@ -36,7 +36,7 @@ describe("Layout Adapters", () => {
       const { container } = renderWithProviders(
         <VIEW schema={{ type: "VIEW" }}>
           <div>Content</div>
-        </VIEW>
+        </VIEW>,
       );
 
       const viewElement = container.querySelector('[data-ui="view"]');
@@ -51,7 +51,7 @@ describe("Layout Adapters", () => {
           schema={{ type: "PAGE", title: "Users", description: "Manage users" }}
         >
           <div>Page content</div>
-        </PAGE>
+        </PAGE>,
       );
 
       expect(screen.getByText("Users")).toBeInTheDocument();
@@ -62,7 +62,7 @@ describe("Layout Adapters", () => {
       renderWithProviders(
         <PAGE schema={{ type: "PAGE" }}>
           <div>Page content</div>
-        </PAGE>
+        </PAGE>,
       );
 
       expect(screen.getByText("Page content")).toBeInTheDocument();
@@ -76,10 +76,10 @@ describe("Layout Adapters", () => {
           <FORM schema={{ type: "FORM" }}>
             <div>Form content</div>
           </FORM>
-        </VIEW>
+        </VIEW>,
       );
 
-      const formElement = container.querySelector('form');
+      const formElement = container.querySelector("form");
       expect(formElement).toBeInTheDocument();
     });
 
@@ -92,7 +92,7 @@ describe("Layout Adapters", () => {
           <FORM schema={{ type: "FORM" }} onSubmit={onSubmit}>
             <button type="submit">Submit</button>
           </FORM>
-        </VIEW>
+        </VIEW>,
       );
 
       await user.click(screen.getByText("Submit"));
@@ -106,11 +106,15 @@ describe("Layout Adapters", () => {
 
       renderWithProviders(
         <VIEW schema={{ type: "VIEW" }}>
-          <FORM schema={{ type: "FORM" }} onSubmit={onSubmit} defaultValues={{ email: "" }}>
+          <FORM
+            schema={{ type: "FORM" }}
+            onSubmit={onSubmit}
+            defaultValues={{ email: "" }}
+          >
             <INPUT_TEXT name="email" label="Email" />
             <button type="submit">Submit</button>
           </FORM>
-        </VIEW>
+        </VIEW>,
       );
 
       const input = screen.getByLabelText("Email");
@@ -131,7 +135,7 @@ describe("Layout Adapters", () => {
             <DISPLAY_TEXT name="name" label="Name" />
             <DISPLAY_TEXT name="email" label="Email" />
           </SHOW>
-        </VIEW>
+        </VIEW>,
       );
 
       expect(screen.getByText("John Doe")).toBeInTheDocument();
@@ -142,7 +146,7 @@ describe("Layout Adapters", () => {
       renderWithProviders(
         <SHOW schema={{ type: "SHOW", title: "User Details" }} record={{}}>
           <div>Content</div>
-        </SHOW>
+        </SHOW>,
       );
 
       expect(screen.getByText("User Details")).toBeInTheDocument();
@@ -156,7 +160,7 @@ describe("Layout Adapters", () => {
           <GROUP schema={{ type: "GROUP", label: "Personal Info" }}>
             <div>Group content</div>
           </GROUP>
-        </VIEW>
+        </VIEW>,
       );
 
       expect(screen.getByText("Personal Info")).toBeInTheDocument();
@@ -168,7 +172,7 @@ describe("Layout Adapters", () => {
           <GROUP schema={{ type: "GROUP" }}>
             <div>Group content</div>
           </GROUP>
-        </VIEW>
+        </VIEW>,
       );
 
       expect(screen.getByText("Group content")).toBeInTheDocument();
@@ -180,7 +184,7 @@ describe("Layout Adapters", () => {
       renderWithProviders(
         <CARD_GROUP schema={{ type: "CARD_GROUP", label: "Settings" }}>
           <div>Card content</div>
-        </CARD_GROUP>
+        </CARD_GROUP>,
       );
 
       expect(screen.getByText("Settings")).toBeInTheDocument();
@@ -194,9 +198,12 @@ describe("Layout Adapters", () => {
         <VIEW schema={{ type: "VIEW" }}>
           <ACTIONS schema={{ type: "ACTIONS" }}>
             <BUTTON schema={{ type: "BUTTON", label: "Save" }} label="Save" />
-            <BUTTON schema={{ type: "BUTTON", label: "Cancel" }} label="Cancel" />
+            <BUTTON
+              schema={{ type: "BUTTON", label: "Cancel" }}
+              label="Cancel"
+            />
           </ACTIONS>
-        </VIEW>
+        </VIEW>,
       );
 
       expect(screen.getByText("Save")).toBeInTheDocument();
@@ -207,7 +214,7 @@ describe("Layout Adapters", () => {
   describe("ALERT", () => {
     it("renders alert with label", () => {
       renderWithProviders(
-        <ALERT schema={{ type: "ALERT" }} label="Warning message" />
+        <ALERT schema={{ type: "ALERT" }} label="Warning message" />,
       );
 
       expect(screen.getByText("Warning message")).toBeInTheDocument();
@@ -215,7 +222,7 @@ describe("Layout Adapters", () => {
 
     it("applies color variant", () => {
       renderWithProviders(
-        <ALERT schema={{ type: "ALERT" }} label="Error" color="red" />
+        <ALERT schema={{ type: "ALERT" }} label="Error" color="red" />,
       );
 
       const alert = screen.getByRole("alert");

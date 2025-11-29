@@ -21,7 +21,7 @@ describe("Display Adapters", () => {
   describe("DISPLAY_TEXT", () => {
     it("displays value with label", () => {
       renderWithProviders(
-        <DISPLAY_TEXT name="email" label="Email" value="test@example.com" />
+        <DISPLAY_TEXT name="email" label="Email" value="test@example.com" />,
       );
 
       expect(screen.getByText("Email")).toBeInTheDocument();
@@ -32,7 +32,7 @@ describe("Display Adapters", () => {
       renderWithProviders(
         <VIEW schema={{ type: "VIEW" }}>
           <DISPLAY_TEXT name="email" label="Email" value={null} />
-        </VIEW>
+        </VIEW>,
       );
 
       expect(screen.getByText("—")).toBeInTheDocument();
@@ -41,10 +41,12 @@ describe("Display Adapters", () => {
     it("gets value from ShowContext", () => {
       renderWithProviders(
         <VIEW schema={{ type: "VIEW" }}>
-          <ShowContext.Provider value={{ data: { email: "context@example.com" } }}>
+          <ShowContext.Provider
+            value={{ data: { email: "context@example.com" } }}
+          >
             <DISPLAY_TEXT name="email" label="Email" />
           </ShowContext.Provider>
-        </VIEW>
+        </VIEW>,
       );
 
       expect(screen.getByText("context@example.com")).toBeInTheDocument();
@@ -56,7 +58,7 @@ describe("Display Adapters", () => {
       const multilineText = "Line 1\nLine 2\nLine 3";
 
       renderWithProviders(
-        <DISPLAY_LONGTEXT name="description" value={multilineText} />
+        <DISPLAY_LONGTEXT name="description" value={multilineText} />,
       );
 
       const textElement = screen.getByText((content, element) => {
@@ -68,9 +70,7 @@ describe("Display Adapters", () => {
 
   describe("DISPLAY_NUMBER", () => {
     it("formats number with locale", () => {
-      renderWithProviders(
-        <DISPLAY_NUMBER name="amount" value={1234567.89} />
-      );
+      renderWithProviders(<DISPLAY_NUMBER name="amount" value={1234567.89} />);
 
       // Check for formatted number (locale-dependent)
       expect(screen.getByText(/1,234,567/)).toBeInTheDocument();
@@ -80,7 +80,7 @@ describe("Display Adapters", () => {
       renderWithProviders(
         <VIEW schema={{ type: "VIEW" }}>
           <DISPLAY_NUMBER name="amount" value={null} />
-        </VIEW>
+        </VIEW>,
       );
 
       expect(screen.getByText("—")).toBeInTheDocument();
@@ -89,9 +89,7 @@ describe("Display Adapters", () => {
 
   describe("DISPLAY_BADGE", () => {
     it("displays value as badge", () => {
-      renderWithProviders(
-        <DISPLAY_BADGE name="status" value="active" />
-      );
+      renderWithProviders(<DISPLAY_BADGE name="status" value="active" />);
 
       expect(screen.getByText("active")).toBeInTheDocument();
     });
@@ -103,7 +101,7 @@ describe("Display Adapters", () => {
       ];
 
       renderWithProviders(
-        <DISPLAY_BADGE name="status" value="active" options={options} />
+        <DISPLAY_BADGE name="status" value="active" options={options} />,
       );
 
       expect(screen.getByText("Active User")).toBeInTheDocument();
@@ -113,7 +111,7 @@ describe("Display Adapters", () => {
       renderWithProviders(
         <VIEW schema={{ type: "VIEW" }}>
           <DISPLAY_BADGE name="status" value="active" />
-        </VIEW>
+        </VIEW>,
       );
 
       const badge = screen.getByText("active");
@@ -124,7 +122,7 @@ describe("Display Adapters", () => {
   describe("DISPLAY_TAGS", () => {
     it("displays array of tags", () => {
       renderWithProviders(
-        <DISPLAY_TAGS name="tags" value={["react", "typescript", "node"]} />
+        <DISPLAY_TAGS name="tags" value={["react", "typescript", "node"]} />,
       );
 
       expect(screen.getByText("react")).toBeInTheDocument();
@@ -136,7 +134,7 @@ describe("Display Adapters", () => {
       renderWithProviders(
         <VIEW schema={{ type: "VIEW" }}>
           <DISPLAY_TAGS name="tags" value={[]} />
-        </VIEW>
+        </VIEW>,
       );
 
       expect(screen.getByText("—")).toBeInTheDocument();
@@ -145,25 +143,19 @@ describe("Display Adapters", () => {
 
   describe("DISPLAY_BOOLEAN", () => {
     it("displays Yes for true value", () => {
-      renderWithProviders(
-        <DISPLAY_BOOLEAN name="verified" value={true} />
-      );
+      renderWithProviders(<DISPLAY_BOOLEAN name="verified" value={true} />);
 
       expect(screen.getByText("Yes")).toBeInTheDocument();
     });
 
     it("displays No for false value", () => {
-      renderWithProviders(
-        <DISPLAY_BOOLEAN name="verified" value={false} />
-      );
+      renderWithProviders(<DISPLAY_BOOLEAN name="verified" value={false} />);
 
       expect(screen.getByText("No")).toBeInTheDocument();
     });
 
     it("treats truthy values as true", () => {
-      renderWithProviders(
-        <DISPLAY_BOOLEAN name="verified" value="yes" />
-      );
+      renderWithProviders(<DISPLAY_BOOLEAN name="verified" value="yes" />);
 
       expect(screen.getByText("Yes")).toBeInTheDocument();
     });
@@ -177,7 +169,7 @@ describe("Display Adapters", () => {
 
     it("displays option label for value", () => {
       renderWithProviders(
-        <DISPLAY_SELECT name="country" value="us" options={options} />
+        <DISPLAY_SELECT name="country" value="us" options={options} />,
       );
 
       expect(screen.getByText("United States")).toBeInTheDocument();
@@ -185,7 +177,7 @@ describe("Display Adapters", () => {
 
     it("displays raw value if option not found", () => {
       renderWithProviders(
-        <DISPLAY_SELECT name="country" value="ca" options={options} />
+        <DISPLAY_SELECT name="country" value="ca" options={options} />,
       );
 
       expect(screen.getByText("ca")).toBeInTheDocument();
@@ -195,7 +187,7 @@ describe("Display Adapters", () => {
       renderWithProviders(
         <VIEW schema={{ type: "VIEW" }}>
           <DISPLAY_SELECT name="country" value={null} options={options} />
-        </VIEW>
+        </VIEW>,
       );
 
       expect(screen.getByText("—")).toBeInTheDocument();
@@ -221,7 +213,7 @@ describe("Display Adapters", () => {
             <DISPLAY_BOOLEAN name="verified" label="Verified" />
             <DISPLAY_TAGS name="tags" label="Tags" />
           </SHOW>
-        </VIEW>
+        </VIEW>,
       );
 
       expect(screen.getByText("John Doe")).toBeInTheDocument();

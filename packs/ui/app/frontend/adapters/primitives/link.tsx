@@ -1,8 +1,8 @@
-import { Button } from "@ui-components/ui/button";
+import { Button } from "@ui/components/ui/button";
 import * as Icons from "lucide-react";
-import { useTranslate, useServices } from "@ui/provider";
+import { useTranslate, useServices } from "@ui/lib/provider";
 import { useDrawer } from "../layouts/view";
-import type { LinkProps } from "@ui/registry";
+import type { LinkProps } from "@ui/lib/registry";
 
 const variantMap = {
   primary: "default",
@@ -51,9 +51,8 @@ export function LINK({
       openDrawer(linkOpens, data);
     } else if (linkHref) {
       // Replace path parameters with data values
-      const resolvedHref = linkHref.replace(
-        /:(\w+)/g,
-        (_, key) => String((data as Record<string, unknown>)?.[key] ?? "")
+      const resolvedHref = linkHref.replace(/:(\w+)/g, (_, key) =>
+        String((data as Record<string, unknown>)?.[key] ?? ""),
       );
       services.navigate(resolvedHref);
     } else if (linkApi) {
@@ -77,9 +76,8 @@ export function LINK({
         }
 
         // Replace path parameters
-        path = path.replace(
-          /:(\w+)/g,
-          (_, key) => String((data as Record<string, unknown>)?.[key] ?? "")
+        path = path.replace(/:(\w+)/g, (_, key) =>
+          String((data as Record<string, unknown>)?.[key] ?? ""),
         );
 
         await services.fetch(path, { method });
@@ -95,9 +93,12 @@ export function LINK({
     }
   };
 
+  const testId = linkOpens ? `link-opens-${linkOpens}` : undefined;
+
   return (
     <Button
       data-ui="link"
+      data-testid={testId}
       type="button"
       variant={variantMap[linkVariant]}
       onClick={handleClick}

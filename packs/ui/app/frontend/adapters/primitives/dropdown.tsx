@@ -2,18 +2,13 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from "@ui-components/ui/dropdown-menu";
-import { Button } from "@ui-components/ui/button";
+} from "@ui/components/ui/dropdown-menu";
+import { Button } from "@ui/components/ui/button";
 import { MoreVertical, ChevronDown } from "lucide-react";
-import { useTranslate } from "@ui/provider";
-import type { DropdownProps } from "@ui/registry";
+import { useTranslate } from "@ui/lib/provider";
+import type { DropdownProps } from "@ui/lib/registry";
 
-export function DROPDOWN({
-  schema,
-  label,
-  icon,
-  children,
-}: DropdownProps) {
+export function DROPDOWN({ schema, label, icon, children }: DropdownProps) {
   const t = useTranslate();
 
   const dropdownLabel = label || schema.label;
@@ -43,9 +38,7 @@ export function DROPDOWN({
           </Button>
         )}
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        {children}
-      </DropdownMenuContent>
+      <DropdownMenuContent align="end">{children}</DropdownMenuContent>
     </DropdownMenu>
   );
 }

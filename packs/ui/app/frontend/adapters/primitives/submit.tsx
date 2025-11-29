@@ -1,8 +1,8 @@
-import { Button } from "@ui-components/ui/button";
+import { Button } from "@ui/components/ui/button";
 import { Loader2 } from "lucide-react";
-import { useTranslate } from "@ui/provider";
+import { useTranslate } from "@ui/lib/provider";
 import { useFormContext } from "../layouts/form";
-import type { SubmitProps } from "@ui/registry";
+import type { SubmitProps } from "@ui/lib/registry";
 
 export function SUBMIT({ schema, label }: SubmitProps) {
   const t = useTranslate();

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
-  devise :omniauthable, omniauth_providers: [:auth0]
+  devise :omniauthable, omniauth_providers: [ :auth0 ]
 
   has_many :workspace_users, dependent: :destroy
   has_many :workspaces, through: :workspace_users

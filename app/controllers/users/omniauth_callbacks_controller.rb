@@ -19,21 +19,21 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   protected
 
-  def after_sign_in_path_for(resource)
-    spa_root_path
-  end
+    def after_sign_in_path_for(resource)
+      spa_root_path
+    end
 
-  def after_sign_out_path_for(resource_or_scope)
-    auth0_logout_url
-  end
+    def after_sign_out_path_for(resource_or_scope)
+      auth0_logout_url
+    end
 
   private
 
-  def auth0_logout_url
-    domain = AUTH0_CREDS[:domain]
-    client_id = AUTH0_CREDS[:client_id]
-    return_to = root_url
+    def auth0_logout_url
+      domain = AUTH0_CREDS[:domain]
+      client_id = AUTH0_CREDS[:client_id]
+      return_to = root_url
 
-    "https://#{domain}/v2/logout?client_id=#{client_id}&returnTo=#{CGI.escape(return_to)}"
-  end
+      "https://#{domain}/v2/logout?client_id=#{client_id}&returnTo=#{CGI.escape(return_to)}"
+    end
 end

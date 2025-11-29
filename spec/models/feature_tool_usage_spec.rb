@@ -20,8 +20,8 @@ RSpec.describe FeatureToolUsage, type: :model do
     let(:workspace) { create(:workspace) }
     let(:user) { create(:user) }
     let(:feature_tool) { create(:feature_tool) }
-    let!(:usage1) { create(:feature_tool_usage, workspace: workspace, user: user, feature_tool: feature_tool, status: "success") }
-    let!(:usage2) { create(:feature_tool_usage, workspace: workspace, status: "error") }
+    let!(:usage1) { create(:feature_tool_usage, workspace:, user:, feature_tool:, status: "success") }
+    let!(:usage2) { create(:feature_tool_usage, workspace:, status: "error") }
 
     it ".for_workspace filters by workspace" do
       expect(described_class.for_workspace(workspace.id)).to include(usage1, usage2)

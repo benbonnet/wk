@@ -1,9 +1,9 @@
-import { Badge } from "@ui-components/ui/badge";
-import { Label } from "@ui-components/ui/label";
-import { cn } from "@ui/utils";
-import { useTranslate } from "@ui/provider";
+import { Badge } from "@ui/components/ui/badge";
+import { Label } from "@ui/components/ui/label";
+import { cn } from "@ui/lib/utils";
+import { useTranslate } from "@ui/lib/provider";
 import { useShowData } from "../layouts/show";
-import type { DisplayProps } from "@ui/registry";
+import type { DisplayProps } from "@ui/lib/registry";
 
 // Color mapping for common status values
 const statusColors: Record<string, string> = {

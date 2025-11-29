@@ -1,13 +1,14 @@
 import { ReactNode } from "react";
 import { render, RenderOptions } from "@testing-library/react";
-import { UIProvider } from "@ui/provider";
-import { TooltipProvider } from "@ui-components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { UIProvider } from "@ui/lib/provider";
+import { TooltipProvider } from "@ui/components/ui/tooltip";
 import type {
   ComponentRegistry,
   InputRegistry,
   DisplayRegistry,
   UIServices,
-} from "@ui/registry";
+} from "@ui/lib/registry";
 import * as LayoutAdapters from "../layouts";
 import * as PrimitiveAdapters from "../primitives";
 import * as InputAdapters from "../inputs";
@@ -91,22 +92,30 @@ const mockDrawerContext = {
 };
 
 export function createWrapper() {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: { retry: false },
+    },
+  });
+
   return function Wrapper({ children }: WrapperProps) {
     return (
-      <UIProvider
-        components={mockComponents}
-        inputs={mockInputs}
-        displays={mockDisplays}
-        services={mockServices}
-        translations={mockTranslations}
-        locale="en"
-      >
-        <DrawerContext.Provider value={mockDrawerContext}>
-          <TooltipProvider>
-            {children}
-          </TooltipProvider>
-        </DrawerContext.Provider>
-      </UIProvider>
+      <QueryClientProvider client={queryClient}>
+        <UIProvider
+          components={mockComponents}
+          inputs={mockInputs}
+          displays={mockDisplays}
+          services={mockServices}
+          translations={mockTranslations}
+          locale="en"
+        >
+          <DrawerContext.Provider value={mockDrawerContext}>
+            <TooltipProvider>
+              {children}
+            </TooltipProvider>
+          </DrawerContext.Provider>
+        </UIProvider>
+      </QueryClientProvider>
     );
   };
 }

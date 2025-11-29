@@ -1,6 +1,6 @@
-import { cn } from "@ui/utils";
-import { useTranslate } from "@ui/provider";
-import type { StepProps } from "@ui/registry";
+import { cn } from "@ui/lib/utils";
+import { useTranslate } from "@ui/lib/provider";
+import type { StepProps } from "@ui/lib/registry";
 
 export function STEP({ schema, label, active, children }: StepProps) {
   const t = useTranslate();

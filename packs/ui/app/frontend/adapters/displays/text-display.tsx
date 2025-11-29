@@ -1,14 +1,10 @@
-import { Label } from "@ui-components/ui/label";
-import { cn } from "@ui/utils";
-import { useTranslate } from "@ui/provider";
+import { Label } from "@ui/components/ui/label";
+import { cn } from "@ui/lib/utils";
+import { useTranslate } from "@ui/lib/provider";
 import { useShowData } from "../layouts/show";
-import type { DisplayProps } from "@ui/registry";
+import type { DisplayProps } from "@ui/lib/registry";
 
-export function DISPLAY_TEXT({
-  name,
-  label,
-  value,
-}: DisplayProps) {
+export function DISPLAY_TEXT({ name, label, value }: DisplayProps) {
   const t = useTranslate();
   const showData = useShowData();
 

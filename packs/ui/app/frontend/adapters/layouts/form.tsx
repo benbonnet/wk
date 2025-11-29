@@ -1,6 +1,9 @@
-import { createContext, useContext, useState, useCallback } from "react";
-import { cn } from "@ui/utils";
-import type { FormProps } from "@ui/registry";
+import { createContext, useContext, useState, useCallback, useEffect } from "react";
+import { cn } from "@ui/lib/utils";
+import { useTranslate } from "@ui/lib/provider";
+import type { FormProps } from "@ui/lib/registry";
+import type { UISchema } from "@ui/lib/types";
+import { useViewConfig, useDrawer } from "./view";
 
 interface FormContextValue {
   values: Record<string, unknown>;
@@ -36,6 +39,23 @@ export function useField(name: string) {
   };
 }
 
+// Helper to collect required fields from schema elements
+function collectRequiredFields(elements: UISchema[] | undefined): string[] {
+  if (!elements) return [];
+  const required: string[] = [];
+
+  for (const el of elements) {
+    if (el.required && el.name) {
+      required.push(el.name);
+    }
+    if (el.elements) {
+      required.push(...collectRequiredFields(el.elements as UISchema[]));
+    }
+  }
+
+  return required;
+}
+
 export function FORM({
   schema,
   action,
@@ -43,11 +63,27 @@ export function FORM({
   defaultValues = {},
   children,
 }: FormProps) {
-  const [values, setValues] = useState<Record<string, unknown>>(defaultValues);
+  const t = useTranslate();
+  const { executeApi } = useViewConfig();
+  const { drawerData } = useDrawer();
+
+  // Use drawerData as initial values if use_record is true
+  const useRecord = schema.use_record as boolean | undefined;
+  const initialData = useRecord && drawerData ? drawerData : defaultValues;
+
+  const [values, setValues] = useState<Record<string, unknown>>(initialData);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [touched, setTouchedState] = useState<Record<string, boolean>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [initialValues] = useState(defaultValues);
+  const [initialValues, setInitialValues] = useState(initialData);
+
+  // Update values when drawerData changes (for edit forms)
+  useEffect(() => {
+    if (useRecord && drawerData) {
+      setValues(drawerData);
+      setInitialValues(drawerData);
+    }
+  }, [drawerData, useRecord]);
 
   const isDirty = JSON.stringify(values) !== JSON.stringify(initialValues);
 
@@ -73,13 +109,58 @@ export function FORM({
 
   const getError = useCallback((name: string) => errors[name], [errors]);
 
-  const isTouched = useCallback((name: string) => touched[name] || false, [touched]);
+  const isTouched = useCallback(
+    (name: string) => touched[name] || false,
+    [touched],
+  );
+
+  // Validate required fields
+  const validateForm = useCallback((): boolean => {
+    const requiredFields = collectRequiredFields(schema.elements as UISchema[] | undefined);
+    const newErrors: Record<string, string> = {};
+
+    for (const fieldName of requiredFields) {
+      const value = values[fieldName];
+      if (value === undefined || value === null || value === "") {
+        newErrors[fieldName] = t("required") || "Required";
+      }
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      // Mark all errored fields as touched
+      const newTouched: Record<string, boolean> = {};
+      for (const fieldName of Object.keys(newErrors)) {
+        newTouched[fieldName] = true;
+      }
+      setTouchedState((prev) => ({ ...prev, ...newTouched }));
+      return false;
+    }
+
+    return true;
+  }, [schema.elements, values, t]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Validate before submitting
+    if (!validateForm()) {
+      return;
+    }
+
     setIsSubmitting(true);
     try {
+      // Get action and notification from schema
+      const formAction = (schema.action as string) || action || "save";
+      const notification = schema.notification as { success?: string; error?: string } | undefined;
+
+      // Determine the item (for path interpolation)
+      const item = useRecord && drawerData ? drawerData : values;
+
+      // Call executeApi
+      await executeApi(formAction, item as Record<string, unknown>, { data: values }, notification);
+
+      // Also call onSubmit if provided
       if (onSubmit) {
         await onSubmit(values);
       }
@@ -108,6 +189,7 @@ export function FORM({
     <FormContext.Provider value={contextValue}>
       <form
         data-ui="form"
+        data-testid="form-renderer"
         onSubmit={handleSubmit}
         className={cn("space-y-6", schema.className)}
       >

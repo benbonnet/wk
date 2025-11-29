@@ -1,10 +1,10 @@
-import { Button } from "@ui-components/ui/button";
-import { Card, CardContent } from "@ui-components/ui/card";
+import { Button } from "@ui/components/ui/button";
+import { Card, CardContent } from "@ui/components/ui/card";
 import { Plus, Trash2 } from "lucide-react";
-import { cn } from "@ui/utils";
-import { useTranslate } from "@ui/provider";
-import type { FormArrayProps } from "@ui/registry";
-import { DynamicRenderer } from "@ui/renderer";
+import { cn } from "@ui/lib/utils";
+import { useTranslate } from "@ui/lib/provider";
+import type { FormArrayProps } from "@ui/lib/registry";
+import { DynamicRenderer } from "@ui/lib/renderer";
 import { useFormContext } from "./form";
 
 export function FORM_ARRAY({
@@ -39,7 +39,7 @@ export function FORM_ARRAY({
   const handleRemove = (index: number) => {
     form.setValue(
       fieldName,
-      items.filter((_, i) => i !== index)
+      items.filter((_, i) => i !== index),
     );
   };
 
@@ -87,7 +87,11 @@ export function FORM_ARRAY({
       {/* Add Button */}
       <Button type="button" variant="outline" onClick={handleAdd}>
         <Plus className="mr-2 h-4 w-4" />
-        {addLabel ? t(addLabel) : schema.addLabel ? t(schema.addLabel) : t("Add Item")}
+        {addLabel
+          ? t(addLabel)
+          : schema.addLabel
+            ? t(schema.addLabel)
+            : t("Add Item")}
       </Button>
     </div>
   );

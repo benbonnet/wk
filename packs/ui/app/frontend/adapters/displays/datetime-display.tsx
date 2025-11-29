@@ -1,19 +1,15 @@
 import { format, parseISO, formatDistanceToNow } from "date-fns";
-import { Label } from "@ui-components/ui/label";
+import { Label } from "@ui/components/ui/label";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@ui-components/ui/tooltip";
-import { useTranslate } from "@ui/provider";
+} from "@ui/components/ui/tooltip";
+import { useTranslate } from "@ui/lib/provider";
 import { useShowData } from "../layouts/show";
-import type { DisplayProps } from "@ui/registry";
+import type { DisplayProps } from "@ui/lib/registry";
 
-export function DISPLAY_DATETIME({
-  name,
-  label,
-  value,
-}: DisplayProps) {
+export function DISPLAY_DATETIME({ name, label, value }: DisplayProps) {
   const t = useTranslate();
   const showData = useShowData();
 

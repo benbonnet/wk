@@ -34,8 +34,13 @@ export function DynamicRenderer({ schema, data = {} }: DynamicRendererProps) {
     );
   }
 
-  // For COMPONENT type, route to input or display
+  // For COMPONENT type, use the COMPONENT adapter which handles FormContext
   if (schema.type === "COMPONENT" && schema.kind) {
+    const ComponentAdapter = components["COMPONENT" as keyof typeof components];
+    if (ComponentAdapter) {
+      return <ComponentAdapter schema={schema} data={data} />;
+    }
+    // Fallback to ComponentRouter if COMPONENT adapter not registered
     return <ComponentRouter schema={schema} data={data} disabled={!enabled} />;
   }
 

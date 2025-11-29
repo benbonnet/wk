@@ -1,16 +1,12 @@
 import { useState, useCallback } from "react";
-import { Input } from "@ui-components/ui/input";
-import { Button } from "@ui-components/ui/button";
+import { Input } from "@ui/components/ui/input";
+import { Button } from "@ui/components/ui/button";
 import { Search as SearchIcon, X } from "lucide-react";
-import { cn } from "@ui/utils";
-import { useTranslate } from "@ui/provider";
-import type { SearchProps } from "@ui/registry";
+import { cn } from "@ui/lib/utils";
+import { useTranslate } from "@ui/lib/provider";
+import type { SearchProps } from "@ui/lib/registry";
 
-export function SEARCH({
-  schema,
-  placeholder,
-  onSearch,
-}: SearchProps) {
+export function SEARCH({ schema, placeholder, onSearch }: SearchProps) {
   const t = useTranslate();
   const [value, setValue] = useState("");
 
@@ -22,7 +18,7 @@ export function SEARCH({
       setValue(newValue);
       onSearch?.(newValue);
     },
-    [onSearch]
+    [onSearch],
   );
 
   const handleClear = useCallback(() => {

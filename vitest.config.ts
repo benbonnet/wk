@@ -1,25 +1,84 @@
 import { defineConfig } from "vitest/config";
+import path from "path";
 import react from "@vitejs/plugin-react";
-import { resolve } from "path";
+import { fileURLToPath } from "node:url";
+import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
+import { playwright } from "@vitest/browser-playwright";
+
+const dirname =
+  typeof __dirname !== "undefined"
+    ? __dirname
+    : path.dirname(fileURLToPath(import.meta.url));
+
+const aliases = {
+  "@": path.resolve(dirname, "./app/frontend"),
+  "@ui": path.resolve(dirname, "./packs/ui/app/frontend"),
+};
 
 export default defineConfig({
   plugins: [react()],
+  resolve: {
+    alias: aliases,
+  },
   test: {
+    globals: true,
     environment: "jsdom",
     setupFiles: ["./vitest.setup.ts"],
-    globals: true,
-  },
-  resolve: {
-    alias: [
-      { find: "@", replacement: resolve(__dirname, "./app/frontend") },
-      { find: "@ui-components", replacement: resolve(__dirname, "./packs/ui/app/frontend/components") },
-      { find: "@ui/utils", replacement: resolve(__dirname, "./packs/ui/app/frontend/lib/utils.ts") },
-      { find: "@ui/provider", replacement: resolve(__dirname, "./packs/ui/app/frontend/lib/provider.tsx") },
-      { find: "@ui/registry", replacement: resolve(__dirname, "./packs/ui/app/frontend/lib/registry.ts") },
-      { find: "@ui/types", replacement: resolve(__dirname, "./packs/ui/app/frontend/lib/types.ts") },
-      { find: "@ui/renderer", replacement: resolve(__dirname, "./packs/ui/app/frontend/lib/renderer.tsx") },
-      { find: "@ui/resolver", replacement: resolve(__dirname, "./packs/ui/app/frontend/lib/resolver.ts") },
-      { find: "@ui", replacement: resolve(__dirname, "./packs/ui/app/frontend/lib/index.ts") },
+    exclude: [
+      "**/node_modules/**",
+      "**/public/**",
+      "**/tmp/**",
+      ".claude/**",
+      "**/*.stories.tsx",
+    ],
+    projects: [
+      {
+        extends: false,
+        plugins: [react()],
+        resolve: {
+          alias: aliases,
+        },
+        test: {
+          name: "unit",
+          globals: true,
+          environment: "jsdom",
+          setupFiles: ["./vitest.setup.ts"],
+          include: [
+            "packs/ui/app/frontend/**/*.test.{ts,tsx}",
+            "packs/contacts_service/app/frontend/**/*.test.{ts,tsx}",
+            "app/frontend/**/*.test.{ts,tsx}",
+          ],
+          exclude: [
+            "**/node_modules/**",
+            "**/public/**",
+            "**/tmp/**",
+            ".claude/**",
+            "**/*.stories.tsx",
+          ],
+        },
+      },
+      {
+        extends: false,
+        plugins: [
+          react(),
+          storybookTest({
+            configDir: path.join(dirname, ".storybook"),
+          }),
+        ],
+        resolve: {
+          alias: aliases,
+        },
+        test: {
+          name: "storybook",
+          browser: {
+            enabled: true,
+            headless: true,
+            provider: playwright({}),
+            instances: [{ browser: "chromium" }],
+          },
+          setupFiles: [".storybook/vitest.setup.ts"],
+        },
+      },
     ],
   },
 });

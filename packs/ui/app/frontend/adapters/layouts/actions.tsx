@@ -1,5 +1,5 @@
-import { cn } from "@ui/utils";
-import type { BaseComponentProps } from "@ui/registry";
+import { cn } from "@ui/lib/utils";
+import type { BaseComponentProps } from "@ui/lib/registry";
 
 export function ACTIONS({ schema, children }: BaseComponentProps) {
   return (

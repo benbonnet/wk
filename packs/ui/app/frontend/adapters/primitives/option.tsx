@@ -1,9 +1,9 @@
-import { DropdownMenuItem } from "@ui-components/ui/dropdown-menu";
+import { DropdownMenuItem } from "@ui/components/ui/dropdown-menu";
 import * as Icons from "lucide-react";
-import { cn } from "@ui/utils";
-import { useTranslate, useServices } from "@ui/provider";
+import { cn } from "@ui/lib/utils";
+import { useTranslate, useServices } from "@ui/lib/provider";
 import { useDrawer } from "../layouts/view";
-import type { OptionProps } from "@ui/registry";
+import type { OptionProps } from "@ui/lib/registry";
 
 export function OPTION({
   schema,
@@ -44,9 +44,8 @@ export function OPTION({
     if (optionOpens) {
       openDrawer(optionOpens, data);
     } else if (optionHref) {
-      const resolvedHref = optionHref.replace(
-        /:(\w+)/g,
-        (_, key) => String((data as Record<string, unknown>)?.[key] ?? "")
+      const resolvedHref = optionHref.replace(/:(\w+)/g, (_, key) =>
+        String((data as Record<string, unknown>)?.[key] ?? ""),
       );
       services.navigate(resolvedHref);
     } else if (optionApi) {
@@ -64,9 +63,8 @@ export function OPTION({
           }
         }
 
-        path = path.replace(
-          /:(\w+)/g,
-          (_, key) => String((data as Record<string, unknown>)?.[key] ?? "")
+        path = path.replace(/:(\w+)/g, (_, key) =>
+          String((data as Record<string, unknown>)?.[key] ?? ""),
         );
 
         await services.fetch(path, { method });
@@ -87,8 +85,9 @@ export function OPTION({
       data-ui="option"
       onClick={handleClick}
       className={cn(
-        optionVariant === "destructive" && "text-destructive focus:text-destructive",
-        schema.className
+        optionVariant === "destructive" &&
+          "text-destructive focus:text-destructive",
+        schema.className,
       )}
     >
       {IconComponent && <IconComponent className="mr-2 h-4 w-4" />}

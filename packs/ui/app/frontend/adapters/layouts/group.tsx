@@ -1,12 +1,8 @@
-import { cn } from "@ui/utils";
-import { useTranslate } from "@ui/provider";
-import type { GroupProps } from "@ui/registry";
+import { cn } from "@ui/lib/utils";
+import { useTranslate } from "@ui/lib/provider";
+import type { GroupProps } from "@ui/lib/registry";
 
-export function GROUP({
-  schema,
-  label,
-  children,
-}: GroupProps) {
+export function GROUP({ schema, label, children }: GroupProps) {
   const t = useTranslate();
 
   const groupLabel = label || schema.label;
@@ -20,7 +16,9 @@ export function GROUP({
       {(groupLabel || groupSubtitle) && (
         <div className="space-y-1">
           {groupLabel && (
-            <h3 className="text-sm font-medium leading-none">{t(groupLabel)}</h3>
+            <h3 className="text-sm font-medium leading-none">
+              {t(groupLabel)}
+            </h3>
           )}
           {groupSubtitle && (
             <p className="text-sm text-muted-foreground">{t(groupSubtitle)}</p>
@@ -31,7 +29,7 @@ export function GROUP({
       {/* Group Content */}
       <div
         className={cn(
-          isHorizontal ? "flex flex-wrap items-start gap-4" : "grid gap-4"
+          isHorizontal ? "flex flex-wrap items-start gap-4" : "grid gap-4",
         )}
       >
         {children}

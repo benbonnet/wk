@@ -5,7 +5,7 @@ import type { Rule, Condition, RuleEffect } from "./types";
  */
 function evaluateCondition(
   condition: Condition,
-  data: Record<string, unknown>
+  data: Record<string, unknown>,
 ): boolean {
   const fieldValue = data[condition.field];
   const { operator, values } = condition;
@@ -16,13 +16,21 @@ function evaluateCondition(
     case "NEQ":
       return !values.includes(fieldValue as string | number | boolean | null);
     case "LT":
-      return typeof fieldValue === "number" && fieldValue < (values[0] as number);
+      return (
+        typeof fieldValue === "number" && fieldValue < (values[0] as number)
+      );
     case "LTE":
-      return typeof fieldValue === "number" && fieldValue <= (values[0] as number);
+      return (
+        typeof fieldValue === "number" && fieldValue <= (values[0] as number)
+      );
     case "GT":
-      return typeof fieldValue === "number" && fieldValue > (values[0] as number);
+      return (
+        typeof fieldValue === "number" && fieldValue > (values[0] as number)
+      );
     case "GTE":
-      return typeof fieldValue === "number" && fieldValue >= (values[0] as number);
+      return (
+        typeof fieldValue === "number" && fieldValue >= (values[0] as number)
+      );
     case "IN":
       return values.includes(fieldValue as string | number | boolean | null);
     case "NIN":
@@ -59,7 +67,9 @@ function evaluateCondition(
  * Evaluates all conditions in a rule (AND logic)
  */
 function evaluateRule(rule: Rule, data: Record<string, unknown>): boolean {
-  return rule.conditions.every((condition) => evaluateCondition(condition, data));
+  return rule.conditions.every((condition) =>
+    evaluateCondition(condition, data),
+  );
 }
 
 /**
@@ -72,7 +82,7 @@ export interface ResolvedState {
 
 export function resolveRules(
   rules: Rule[] | undefined,
-  data: Record<string, unknown>
+  data: Record<string, unknown>,
 ): ResolvedState {
   const state: ResolvedState = {
     visible: true,
@@ -110,7 +120,7 @@ export function resolveRules(
  */
 export function useResolvedState(
   rules: Rule[] | undefined,
-  data: Record<string, unknown>
+  data: Record<string, unknown>,
 ): ResolvedState {
   return resolveRules(rules, data);
 }

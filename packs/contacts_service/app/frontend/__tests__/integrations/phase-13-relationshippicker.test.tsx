@@ -2,9 +2,9 @@ import { describe, it, expect, vi, beforeEach, beforeAll } from "vitest";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { UIProvider } from "@ui/provider";
-import { TooltipProvider } from "@ui-components/ui/tooltip";
-import { DynamicRenderer } from "@ui/renderer";
+import { UIProvider } from "@ui/lib/provider";
+import { TooltipProvider } from "@ui/components/ui/tooltip";
+import { DynamicRenderer } from "@ui/lib/renderer";
 import {
   VIEW,
   FORM,
@@ -33,7 +33,7 @@ import {
   DROPDOWN,
   RELATIONSHIP_PICKER,
 } from "@ui/adapters/primitives";
-import type { UIServices, ComponentRegistry, InputRegistry, DisplayRegistry } from "@ui/registry";
+import type { UIServices, ComponentRegistry, InputRegistry, DisplayRegistry } from "@ui/lib/registry";
 import type { ReactNode } from "react";
 
 // Import the full schema
@@ -684,6 +684,147 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       // Create drawer should open
       await waitFor(() => {
         expect(screen.getByTestId("relationship-create-drawer-children_attributes")).toBeInTheDocument();
+      });
+    });
+
+    it("Create drawer allows typing in form fields", async () => {
+      const user = userEvent.setup();
+      const services = createMockServices();
+
+      render(
+        <TestWrapper services={services}>
+          <DynamicRenderer schema={contactsIndexSchema as never} />
+        </TestWrapper>
+      );
+
+      await waitFor(() => {
+        expect(screen.getByRole("button", { name: "New Contact" })).toBeInTheDocument();
+      });
+
+      await user.click(screen.getByRole("button", { name: "New Contact" }));
+
+      await waitFor(() => {
+        expect(screen.getByTestId("drawer-new_drawer")).toBeInTheDocument();
+      });
+
+      const drawer = screen.getByTestId("drawer-new_drawer");
+      await user.click(within(drawer).getByRole("button", { name: /add/i }));
+
+      await waitFor(() => {
+        expect(screen.getByTestId("relationship-picker-drawer-children_attributes")).toBeInTheDocument();
+      });
+
+      const pickerDrawer = screen.getByTestId("relationship-picker-drawer-children_attributes");
+      await user.click(within(pickerDrawer).getByRole("button", { name: /create.*new/i }));
+
+      await waitFor(() => {
+        expect(screen.getByTestId("relationship-create-drawer-children_attributes")).toBeInTheDocument();
+      });
+
+      const createDrawer = screen.getByTestId("relationship-create-drawer-children_attributes");
+
+      // Find inputs by name attribute within the create drawer form
+      const inputs = within(createDrawer).getAllByRole("textbox");
+      const firstNameInput = inputs.find(input => input.getAttribute("name") === "first_name")!;
+      const lastNameInput = inputs.find(input => input.getAttribute("name") === "last_name")!;
+
+      await user.type(firstNameInput, "David");
+      expect(firstNameInput).toHaveValue("David");
+
+      await user.type(lastNameInput, "Miller");
+      expect(lastNameInput).toHaveValue("Miller");
+    });
+
+    it("Submitting create form adds new item to picker", async () => {
+      const user = userEvent.setup();
+      const mockFetch = vi.fn().mockImplementation((url: string, options?: RequestInit) => {
+        // Table data
+        if (url.includes("/api/v1/workspaces/contacts") && !options?.method) {
+          return Promise.resolve({ data: mockData.items });
+        }
+        // Relationship picker data
+        if (url.includes("/api/v1/contacts") && (!options?.method || options.method === "GET")) {
+          return Promise.resolve(mockRelatedContacts);
+        }
+        // POST to create new item
+        if (url.includes("/api/v1/contacts") && options?.method === "POST") {
+          const body = JSON.parse(options.body as string);
+          return Promise.resolve({
+            id: 999,
+            data: body.data,
+          });
+        }
+        return Promise.resolve({ data: [] });
+      });
+      const services = createMockServices({ fetch: mockFetch });
+
+      render(
+        <TestWrapper services={services}>
+          <DynamicRenderer schema={contactsIndexSchema as never} />
+        </TestWrapper>
+      );
+
+      await waitFor(() => {
+        expect(screen.getByRole("button", { name: "New Contact" })).toBeInTheDocument();
+      });
+
+      await user.click(screen.getByRole("button", { name: "New Contact" }));
+
+      await waitFor(() => {
+        expect(screen.getByTestId("drawer-new_drawer")).toBeInTheDocument();
+      });
+
+      const drawer = screen.getByTestId("drawer-new_drawer");
+      await user.click(within(drawer).getByRole("button", { name: /add/i }));
+
+      await waitFor(() => {
+        expect(screen.getByTestId("relationship-picker-drawer-children_attributes")).toBeInTheDocument();
+      });
+
+      const pickerDrawer = screen.getByTestId("relationship-picker-drawer-children_attributes");
+      await user.click(within(pickerDrawer).getByRole("button", { name: /create.*new/i }));
+
+      await waitFor(() => {
+        expect(screen.getByTestId("relationship-create-drawer-children_attributes")).toBeInTheDocument();
+      });
+
+      const createDrawer = screen.getByTestId("relationship-create-drawer-children_attributes");
+
+      // Fill the form - find inputs by name attribute
+      const inputs = within(createDrawer).getAllByRole("textbox");
+      const firstNameInput = inputs.find(input => input.getAttribute("name") === "first_name")!;
+      const lastNameInput = inputs.find(input => input.getAttribute("name") === "last_name")!;
+      await user.type(firstNameInput, "David");
+      await user.type(lastNameInput, "Miller");
+
+      // Submit the form
+      const submitButton = within(createDrawer).getByRole("button", { name: /add/i });
+      await user.click(submitButton);
+
+      // Create drawer should close, back to picker drawer
+      await waitFor(() => {
+        expect(screen.queryByTestId("relationship-create-drawer-children_attributes")).not.toBeInTheDocument();
+      });
+
+      // The item is auto-selected in picker drawer, confirm button should show (1)
+      const pickerDrawerAfterCreate = screen.getByTestId("relationship-picker-drawer-children_attributes");
+      await waitFor(() => {
+        expect(within(pickerDrawerAfterCreate).getByRole("button", { name: /confirm.*\(1\)/i })).toBeInTheDocument();
+      });
+
+      // Click confirm to add to picker field
+      await user.click(within(pickerDrawerAfterCreate).getByRole("button", { name: /confirm/i }));
+
+      // Picker drawer should close
+      await waitFor(() => {
+        expect(screen.queryByTestId("relationship-picker-drawer-children_attributes")).not.toBeInTheDocument();
+      });
+
+      // New item should appear in picker field
+      const picker = within(drawer).getByTestId("relationship-picker-children_attributes");
+      await waitFor(() => {
+        expect(within(picker).getByText(/David/)).toBeInTheDocument();
+        expect(within(picker).getByText(/Miller/)).toBeInTheDocument();
       });
     });
   });

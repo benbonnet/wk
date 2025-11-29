@@ -1,8 +1,8 @@
-import { Input } from "@ui-components/ui/input";
-import { Label } from "@ui-components/ui/label";
-import { cn } from "@ui/utils";
-import { useTranslate } from "@ui/provider";
-import type { InputProps } from "@ui/registry";
+import { Input } from "@ui/components/ui/input";
+import { Label } from "@ui/components/ui/label";
+import { cn } from "@ui/lib/utils";
+import { useTranslate } from "@ui/lib/provider";
+import type { InputProps } from "@ui/lib/registry";
 
 export function INPUT_TEXT({
   name,

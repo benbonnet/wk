@@ -14,8 +14,8 @@ RSpec.describe FeatureView, type: :model do
 
     it "validates uniqueness of slug scoped to feature_id" do
       feature = create(:feature)
-      create(:feature_view, feature: feature, title: "Test View")
-      duplicate = build(:feature_view, feature: feature, title: "Test View")
+      create(:feature_view, feature:, title: "Test View")
+      duplicate = build(:feature_view, feature:, title: "Test View")
       expect(duplicate).not_to be_valid
       expect(duplicate.errors[:slug]).to include("has already been taken")
     end

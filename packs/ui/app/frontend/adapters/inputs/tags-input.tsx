@@ -1,11 +1,11 @@
 import { useState, useRef, KeyboardEvent } from "react";
-import { Input } from "@ui-components/ui/input";
-import { Badge } from "@ui-components/ui/badge";
-import { Label } from "@ui-components/ui/label";
+import { Input } from "@ui/components/ui/input";
+import { Badge } from "@ui/components/ui/badge";
+import { Label } from "@ui/components/ui/label";
 import { X } from "lucide-react";
-import { cn } from "@ui/utils";
-import { useTranslate } from "@ui/provider";
-import type { InputProps } from "@ui/registry";
+import { cn } from "@ui/lib/utils";
+import { useTranslate } from "@ui/lib/provider";
+import type { InputProps } from "@ui/lib/registry";
 
 export function INPUT_TAGS({
   name,
@@ -52,7 +52,7 @@ export function INPUT_TAGS({
         className={cn(
           "flex flex-wrap gap-2 rounded-md border p-2 focus-within:ring-2 focus-within:ring-ring",
           error && "border-destructive",
-          disabled && "opacity-50 cursor-not-allowed"
+          disabled && "opacity-50 cursor-not-allowed",
         )}
         onClick={() => inputRef.current?.focus()}
       >

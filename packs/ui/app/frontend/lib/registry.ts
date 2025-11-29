@@ -1,5 +1,11 @@
 import type { ComponentType, ReactNode } from "react";
-import type { UISchema, UISchemaColumn, Option, Rule, TranslationsMap } from "./types";
+import type {
+  UISchema,
+  UISchemaColumn,
+  Option,
+  Rule,
+  TranslationsMap,
+} from "./types";
 
 // ============================================
 // COMPONENT PROPS CONTRACTS

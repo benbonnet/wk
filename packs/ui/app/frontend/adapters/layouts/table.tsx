@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   useReactTable,
   getCoreRowModel,
@@ -16,22 +17,28 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@ui-components/ui/table";
-import { Input } from "@ui-components/ui/input";
-import { Button } from "@ui-components/ui/button";
-import { Checkbox } from "@ui-components/ui/checkbox";
+} from "@ui/components/ui/table";
+import { Input } from "@ui/components/ui/input";
+import { Button } from "@ui/components/ui/button";
+import { Checkbox } from "@ui/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@ui-components/ui/dropdown-menu";
-import { ArrowUpDown, MoreHorizontal, ChevronLeft, ChevronRight, Search } from "lucide-react";
-import { cn } from "@ui/utils";
-import { useTranslate, useServices } from "@ui/provider";
-import type { TableProps } from "@ui/registry";
-import type { UISchema, UISchemaColumn } from "@ui/types";
-import { useDrawer } from "./view";
+} from "@ui/components/ui/dropdown-menu";
+import {
+  ArrowUpDown,
+  MoreHorizontal,
+  ChevronLeft,
+  ChevronRight,
+  Search,
+} from "lucide-react";
+import { cn } from "@ui/lib/utils";
+import { useTranslate, useServices } from "@ui/lib/provider";
+import type { TableProps } from "@ui/lib/registry";
+import type { UISchema, UISchemaColumn } from "@ui/lib/types";
+import { useDrawer, useViewConfig } from "./view";
 
 interface TableRow {
   id: string | number;
@@ -40,8 +47,8 @@ interface TableRow {
 
 export function TABLE({
   schema,
-  columns: schemaColumns,
-  data = [],
+  columns: columnsProp,
+  data: dataProp = [],
   searchable,
   selectable,
   pageSize = 10,
@@ -53,10 +60,31 @@ export function TABLE({
   const t = useTranslate();
   const services = useServices();
   const { openDrawer } = useDrawer();
+  const viewConfig = useViewConfig();
 
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
   const [rowSelection, setRowSelection] = useState({});
+
+  // Fetch data using React Query
+  const { data: fetchedData } = useQuery({
+    queryKey: ["table", viewConfig.url],
+    queryFn: async () => {
+      const apiConfig = viewConfig.api?.index;
+      if (!apiConfig || !viewConfig.url) return { data: [] };
+
+      const url = `${viewConfig.url}${apiConfig.path ? `/${apiConfig.path}` : ""}`;
+      const result = await services.fetch(url, { method: apiConfig.method });
+      return result;
+    },
+    enabled: !!viewConfig.url && !!viewConfig.api?.index,
+  });
+
+  // Use fetched data or passed data prop
+  const data = (fetchedData?.data as TableRow[]) ?? dataProp;
+
+  // Use columns from prop or schema
+  const schemaColumns = columnsProp ?? schema.columns ?? [];
 
   const isSearchable = searchable ?? schema.searchable;
   const isSelectable = selectable ?? schema.selectable;
@@ -79,7 +107,9 @@ export function TABLE({
               table.getIsAllPageRowsSelected() ||
               (table.getIsSomePageRowsSelected() && "indeterminate")
             }
-            onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+            onCheckedChange={(value) =>
+              table.toggleAllPageRowsSelected(!!value)
+            }
             aria-label="Select all"
           />
         ),
@@ -107,7 +137,9 @@ export function TABLE({
               variant="ghost"
               size="sm"
               className="-ml-3"
-              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+              onClick={() =>
+                column.toggleSorting(column.getIsSorted() === "asc")
+              }
             >
               {t(col.label || col.name)}
               <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -118,7 +150,8 @@ export function TABLE({
         cell: ({ getValue }) => {
           const value = getValue();
           // Simple display - in real implementation would use display adapters
-          if (value == null) return <span className="text-muted-foreground">—</span>;
+          if (value == null)
+            return <span className="text-muted-foreground">—</span>;
           if (typeof value === "boolean") return value ? "Yes" : "No";
           if (value instanceof Date) return value.toLocaleDateString();
           return String(value);
@@ -164,7 +197,9 @@ export function TABLE({
     } else if (tableRowClick?.opens) {
       openDrawer(tableRowClick.opens, row as Record<string, unknown>);
     } else if (tableRowHref) {
-      const href = tableRowHref.replace(/:(\w+)/g, (_, key) => String(row[key] ?? ""));
+      const href = tableRowHref.replace(/:(\w+)/g, (_, key) =>
+        String(row[key] ?? ""),
+      );
       services.navigate(href);
     }
   };
@@ -172,13 +207,13 @@ export function TABLE({
   const isClickable = !!(onRowClick || tableRowClick?.opens || tableRowHref);
 
   return (
-    <div data-ui="table" className={cn("space-y-4", schema.className)}>
+    <div data-ui="table" data-testid="table-renderer" className={cn("space-y-4", schema.className)}>
       {/* Search */}
       {isSearchable && (
         <div className="relative max-w-sm">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder={t("Search...")}
+            placeholder={t(schema.search_placeholder as string) || t("Search...")}
             value={globalFilter}
             onChange={(e) => setGlobalFilter(e.target.value)}
             className="pl-9"
@@ -198,7 +233,7 @@ export function TABLE({
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                   </TableHead>
                 ))}
@@ -216,14 +251,20 @@ export function TABLE({
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
                   {t("No results.")}
                 </TableCell>
               </TableRow>
@@ -282,6 +323,8 @@ function RowActionsDropdown({
   const t = useTranslate();
   const services = useServices();
   const { openDrawer } = useDrawer();
+  const viewConfig = useViewConfig();
+  const queryClient = useQueryClient();
 
   const handleAction = async (action: UISchema, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -294,23 +337,42 @@ function RowActionsDropdown({
     if (action.opens) {
       openDrawer(action.opens, row as Record<string, unknown>);
     } else if (action.href) {
-      const href = action.href.replace(/:(\w+)/g, (_, key) => String(row[key] ?? ""));
+      const href = action.href.replace(/:(\w+)/g, (_, key) =>
+        String(row[key] ?? ""),
+      );
       services.navigate(href);
     } else if (action.api) {
       try {
-        const apiConfig =
-          typeof action.api === "string"
-            ? parseApiString(action.api, row)
-            : action.api;
+        // Handle api as string (action name) or object
+        let apiConfig: { method: string; path: string };
+
+        if (typeof action.api === "string") {
+          // It's an action name like "destroy" - look it up in the registry
+          const endpoint = viewConfig.api[action.api];
+          if (endpoint) {
+            let path = endpoint.path;
+            // Interpolate path with row data
+            path = path.replace(/:(\w+)/g, (_, key) => String(row[key] ?? ""));
+            apiConfig = { method: endpoint.method, path: `${viewConfig.url}/${path}` };
+          } else {
+            // Fallback to parsing as "METHOD path" format
+            apiConfig = parseApiString(action.api, row);
+          }
+        } else {
+          apiConfig = action.api as { method: string; path: string };
+        }
 
         await services.fetch(apiConfig.path, { method: apiConfig.method });
 
+        // Invalidate table queries after successful action
+        await queryClient.invalidateQueries({ queryKey: ["table", viewConfig.url] });
+
         if (action.notification?.success) {
-          services.toast(t(action.notification.success), "success");
+          services.toast({ type: "success", message: t(action.notification.success) });
         }
       } catch {
         if (action.notification?.error) {
-          services.toast(t(action.notification.error), "error");
+          services.toast({ type: "error", message: t(action.notification.error) });
         }
       }
     }
@@ -330,7 +392,8 @@ function RowActionsDropdown({
             key={index}
             onClick={(e) => handleAction(action, e)}
             className={cn(
-              action.variant === "destructive" && "text-destructive focus:text-destructive"
+              action.variant === "destructive" &&
+                "text-destructive focus:text-destructive",
             )}
           >
             {t(action.label || "")}
@@ -343,7 +406,7 @@ function RowActionsDropdown({
 
 function parseApiString(
   api: string,
-  row: TableRow
+  row: TableRow,
 ): { method: string; path: string } {
   const [method, ...pathParts] = api.split(" ");
   let path = pathParts.join(" ");

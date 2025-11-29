@@ -4,15 +4,11 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-} from "@ui-components/ui/card";
-import { useTranslate } from "@ui/provider";
-import type { CardGroupProps } from "@ui/registry";
+} from "@ui/components/ui/card";
+import { useTranslate } from "@ui/lib/provider";
+import type { CardGroupProps } from "@ui/lib/registry";
 
-export function CARD_GROUP({
-  schema,
-  label,
-  children,
-}: CardGroupProps) {
+export function CARD_GROUP({ schema, label, children }: CardGroupProps) {
   const t = useTranslate();
 
   const cardTitle = label || schema.label;

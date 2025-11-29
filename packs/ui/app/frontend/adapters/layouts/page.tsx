@@ -1,15 +1,10 @@
-import { Separator } from "@ui-components/ui/separator";
-import { cn } from "@ui/utils";
-import { useTranslate } from "@ui/provider";
-import type { PageProps } from "@ui/registry";
-import { DynamicRenderer } from "@ui/renderer";
+import { Separator } from "@ui/components/ui/separator";
+import { cn } from "@ui/lib/utils";
+import { useTranslate } from "@ui/lib/provider";
+import type { PageProps } from "@ui/lib/registry";
+import { DynamicRenderer } from "@ui/lib/renderer";
 
-export function PAGE({
-  schema,
-  title,
-  description,
-  children,
-}: PageProps) {
+export function PAGE({ schema, title, description, children }: PageProps) {
   const t = useTranslate();
 
   const pageTitle = title || schema.title;

@@ -1,9 +1,4 @@
-import {
-  createContext,
-  useContext,
-  useMemo,
-  type ReactNode,
-} from "react";
+import { createContext, useContext, useMemo, type ReactNode } from "react";
 import type {
   ComponentRegistry,
   InputRegistry,
@@ -68,7 +63,7 @@ export function UIProvider({
       locale,
       t,
     }),
-    [components, inputs, displays, services, translations, locale, t]
+    [components, inputs, displays, services, translations, locale, t],
   );
 
   return <UIContext.Provider value={value}>{children}</UIContext.Provider>;

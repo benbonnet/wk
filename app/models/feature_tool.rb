@@ -25,7 +25,7 @@ class FeatureTool < ApplicationRecord
 
   private
 
-  def generate_slug
-    self.slug = title.to_s.downcase.strip.gsub(/\s+/, "-").gsub(/[^\w-]/, "").gsub(/-+/, "-")
-  end
+    def generate_slug
+      self.slug = title.to_s.downcase.strip.gsub(/\s+/, "-").gsub(/[^\w-]/, "").gsub(/-+/, "-")
+    end
 end

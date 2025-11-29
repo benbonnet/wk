@@ -1,6 +1,6 @@
-import { Label } from "@ui-components/ui/label";
-import { Button } from "@ui-components/ui/button";
-import { Separator } from "@ui-components/ui/separator";
+import { Label } from "@ui/components/ui/label";
+import { Button } from "@ui/components/ui/button";
+import { Separator } from "@ui/components/ui/separator";
 import {
   Bold,
   Italic,
@@ -9,9 +9,9 @@ import {
   Heading2,
   Sparkles,
 } from "lucide-react";
-import { cn } from "@ui/utils";
-import { useTranslate } from "@ui/provider";
-import type { InputProps } from "@ui/registry";
+import { cn } from "@ui/lib/utils";
+import { useTranslate } from "@ui/lib/provider";
+import type { InputProps } from "@ui/lib/registry";
 
 /**
  * Rich text input with AI assistance.
@@ -124,7 +124,7 @@ export function INPUT_AI_RICH_TEXT({
         onChange={(e) => onChange?.(e.target.value)}
         className={cn(
           "w-full rounded-b-md border border-t-0 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring",
-          error && "border-destructive"
+          error && "border-destructive",
         )}
       />
 

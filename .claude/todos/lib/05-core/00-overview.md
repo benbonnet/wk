@@ -3,19 +3,59 @@
 ## Overview
 
 Self-contained pack extending `ruby_llm-schema` with:
+
 - Schema DSL (relationships, translations, registry)
 - Relationship management (registry, service, auto-inverse)
 - Tool abstraction (base, routing DSL, registry)
 - Feature registry (discovery, routing integration)
+- Dynamic routing via `packs-rails` auto-loaded routes
+- Rake tasks for per-pack frontend mock generation
+
+## Key Insight
+
+`packs-rails` automatically loads `config/routes.rb` from each pack:
+
+- No manual route registration in main `config/routes.rb`
+- `packs/core/config/routes.rb` defines dynamic resource routing
+- Each feature pack can optionally define additional routes
+
+## Per-Pack Frontend Mocks
+
+Each pack owns its frontend test mocks:
+
+```bash
+bin/rails core:export_mocks[contacts_service]
+```
+
+Output:
+```
+packs/contacts_service/
+└── app/frontend/
+    ├── __tests__/mocks/
+    │   ├── schemas.json
+    │   ├── relationships.json
+    │   ├── features.json
+    │   └── views/
+    └── types/generated/
+        └── schemas.ts
+```
 
 ## Directory Structure
 
 ```
 packs/core/
 ├── package.yml
+├── config/
+│   └── routes.rb
 ├── lib/
-│   └── core.rb
+│   ├── core.rb
+│   └── tasks/
+│       └── core.rake
 ├── app/
+│   ├── controllers/core/
+│   │   └── resources_controller.rb
+│   ├── models/concerns/core/
+│   │   └── has_relationships.rb
 │   └── lib/core/
 │       ├── schema/
 │       │   ├── base.rb
@@ -27,38 +67,16 @@ packs/core/
 │       │   └── service.rb
 │       ├── tools/
 │       │   ├── base.rb
-│       │   ├── routing.rb
-│       │   └── registry.rb
+│       │   └── routing.rb
 │       └── features/
 │           └── registry.rb
-├── app/models/core/concerns/
-│   └── has_relationships.rb
-├── app/controllers/core/
-│   └── resources_controller.rb
 └── spec/
-    ├── spec_helper.rb
-    ├── lib/core/
-    │   ├── schema/
-    │   │   ├── base_spec.rb
-    │   │   ├── relationships_spec.rb
-    │   │   ├── translations_spec.rb
-    │   │   └── registry_spec.rb
-    │   ├── relationships/
-    │   │   ├── registry_spec.rb
-    │   │   └── service_spec.rb
-    │   ├── tools/
-    │   │   ├── base_spec.rb
-    │   │   ├── routing_spec.rb
-    │   │   └── registry_spec.rb
-    │   └── features/
-    │       └── registry_spec.rb
-    └── models/core/concerns/
-        └── has_relationships_spec.rb
+    └── ...
 ```
 
 ## Execution Order
 
-1. `01-package-setup.md` - Package configuration
+1. `01-package-setup.md` - Package configuration + directory structure
 2. `02-schema-translations.md` - Translations module
 3. `03-schema-relationships.md` - Relationships DSL
 4. `04-schema-base.md` - Extended Schema base class
@@ -67,14 +85,16 @@ packs/core/
 7. `07-relationships-service.md` - Relationship CRUD service
 8. `08-tools-routing.md` - Tool routing DSL
 9. `09-tools-base.md` - Base tool class
-10. `10-tools-registry.md` - Tool discovery/registry
-11. `11-features-registry.md` - Feature registry
-12. `12-has-relationships-concern.md` - Model concern
-13. `13-resources-controller.md` - Dynamic controller
-14. `14-entrypoint.md` - Main lib/core.rb
-15. `15-integration.md` - Rails integration (routes, initializer)
+10. `10-features-registry.md` - Feature registry
+11. `11-has-relationships-concern.md` - Model concern
+12. `12-resources-controller.md` - Dynamic controller
+13. `13-routes.md` - Pack routes (auto-loaded)
+14. `14-rake-tasks.md` - Per-pack mock generation
+15. `15-example-usage.md` - contacts_service example
+16. `16-spec-helper.md` - Shared examples, factories
 
-## Dependencies
+## Notes
 
-- `ruby_llm-schema` gem (already in Gemfile)
-- `ui` pack (for view integration)
+- Rails autoloading handles all requires
+- Schemas auto-register on inheritance
+- Mocks output to each pack's own `app/frontend/__tests__/mocks/`

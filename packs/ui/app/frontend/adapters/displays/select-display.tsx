@@ -1,7 +1,7 @@
-import { Label } from "@ui-components/ui/label";
-import { useTranslate } from "@ui/provider";
+import { Label } from "@ui/components/ui/label";
+import { useTranslate } from "@ui/lib/provider";
 import { useShowData } from "../layouts/show";
-import type { DisplayProps } from "@ui/registry";
+import type { DisplayProps } from "@ui/lib/registry";
 
 export function DISPLAY_SELECT({
   name,
@@ -19,8 +19,8 @@ export function DISPLAY_SELECT({
   const displayValue = selectedOption?.label
     ? t(selectedOption.label)
     : rawValue
-    ? String(rawValue)
-    : "—";
+      ? String(rawValue)
+      : "—";
 
   return (
     <div className="space-y-1">

@@ -1,7 +1,7 @@
-import { useInputs, useDisplays } from "@ui/provider";
+import { useInputs, useDisplays } from "@ui/lib/provider";
 import { useField } from "../layouts/form";
 import { useShowData } from "../layouts/show";
-import type { ComponentProps } from "@ui/registry";
+import type { ComponentProps } from "@ui/lib/registry";
 
 /**
  * COMPONENT adapter routes to the appropriate input or display
@@ -68,7 +68,8 @@ export function COMPONENT({
     }
 
     // Get value from ShowContext or passed data
-    const value = (data as Record<string, unknown>)?.[fieldName] ?? showData[fieldName];
+    const value =
+      (data as Record<string, unknown>)?.[fieldName] ?? showData[fieldName];
 
     return (
       <DisplayComponent

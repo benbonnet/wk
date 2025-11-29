@@ -4,11 +4,11 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@ui-components/ui/select";
-import { Label } from "@ui-components/ui/label";
-import { cn } from "@ui/utils";
-import { useTranslate } from "@ui/provider";
-import type { InputProps } from "@ui/registry";
+} from "@ui/components/ui/select";
+import { Label } from "@ui/components/ui/label";
+import { cn } from "@ui/lib/utils";
+import { useTranslate } from "@ui/lib/provider";
+import type { InputProps } from "@ui/lib/registry";
 
 export function INPUT_SELECT({
   name,
@@ -31,10 +31,7 @@ export function INPUT_SELECT({
         onValueChange={(val) => onChange?.(val)}
         disabled={disabled}
       >
-        <SelectTrigger
-          id={name}
-          className={cn(error && "border-destructive")}
-        >
+        <SelectTrigger id={name} className={cn(error && "border-destructive")}>
           <SelectValue placeholder={placeholder ? t(placeholder) : undefined} />
         </SelectTrigger>
         <SelectContent>

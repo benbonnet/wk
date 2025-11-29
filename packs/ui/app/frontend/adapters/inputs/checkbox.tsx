@@ -1,7 +1,7 @@
-import { Checkbox } from "@ui-components/ui/checkbox";
-import { Label } from "@ui-components/ui/label";
-import { useTranslate } from "@ui/provider";
-import type { InputProps } from "@ui/registry";
+import { Checkbox } from "@ui/components/ui/checkbox";
+import { Label } from "@ui/components/ui/label";
+import { useTranslate } from "@ui/lib/provider";
+import type { InputProps } from "@ui/lib/registry";
 
 export function INPUT_CHECKBOX({
   name,

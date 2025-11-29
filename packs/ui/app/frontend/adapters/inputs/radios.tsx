@@ -1,7 +1,7 @@
-import { RadioGroup, RadioGroupItem } from "@ui-components/ui/radio-group";
-import { Label } from "@ui-components/ui/label";
-import { useTranslate } from "@ui/provider";
-import type { InputProps } from "@ui/registry";
+import { RadioGroup, RadioGroupItem } from "@ui/components/ui/radio-group";
+import { Label } from "@ui/components/ui/label";
+import { useTranslate } from "@ui/lib/provider";
+import type { InputProps } from "@ui/lib/registry";
 
 export function INPUT_RADIOS({
   name,

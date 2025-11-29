@@ -6,11 +6,11 @@ import {
   SheetDescription,
   SheetFooter,
   SheetClose,
-} from "@ui-components/ui/sheet";
-import { Button } from "@ui-components/ui/button";
-import { cn } from "@ui/utils";
-import { useTranslate } from "@ui/provider";
-import type { DrawerProps } from "@ui/registry";
+} from "@ui/components/ui/sheet";
+import { Button } from "@ui/components/ui/button";
+import { cn } from "@ui/lib/utils";
+import { useTranslate } from "@ui/lib/provider";
+import type { DrawerProps } from "@ui/lib/registry";
 
 export function DRAWER({
   schema,
@@ -27,7 +27,9 @@ export function DRAWER({
 
   return (
     <Sheet open={open} onOpenChange={(isOpen) => !isOpen && onClose?.()}>
-      <SheetContent className={cn("flex flex-col sm:max-w-lg", schema.className)}>
+      <SheetContent
+        className={cn("flex flex-col sm:max-w-lg", schema.className)}
+      >
         <SheetHeader>
           {drawerTitle && <SheetTitle>{t(drawerTitle)}</SheetTitle>}
           {drawerDescription && (

@@ -15,7 +15,7 @@ class Invite < ApplicationRecord
 
   private
 
-  def generate_auth_link_hash
-    self.auth_link_hash ||= SecureRandom.hex(8).upcase
-  end
+    def generate_auth_link_hash
+      self.auth_link_hash ||= SecureRandom.hex(8).upcase
+    end
 end

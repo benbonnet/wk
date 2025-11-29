@@ -1,22 +1,16 @@
-import { Label } from "@ui-components/ui/label";
-import { useTranslate } from "@ui/provider";
+import { Label } from "@ui/components/ui/label";
+import { useTranslate } from "@ui/lib/provider";
 import { useShowData } from "../layouts/show";
-import type { DisplayProps } from "@ui/registry";
+import type { DisplayProps } from "@ui/lib/registry";
 
-export function DISPLAY_NUMBER({
-  name,
-  label,
-  value,
-}: DisplayProps) {
+export function DISPLAY_NUMBER({ name, label, value }: DisplayProps) {
   const t = useTranslate();
   const showData = useShowData();
 
   const rawValue = value ?? (name ? showData[name] : undefined);
 
   const formattedValue =
-    rawValue != null
-      ? new Intl.NumberFormat().format(Number(rawValue))
-      : "—";
+    rawValue != null ? new Intl.NumberFormat().format(Number(rawValue)) : "—";
 
   return (
     <div className="space-y-1">

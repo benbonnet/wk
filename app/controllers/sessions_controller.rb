@@ -8,11 +8,11 @@ class SessionsController < ApplicationController
 
   private
 
-  def auth0_logout_url
-    domain = AUTH0_CREDS[:domain]
-    client_id = AUTH0_CREDS[:client_id]
-    return_to = root_url
+    def auth0_logout_url
+      domain = AUTH0_CREDS[:domain]
+      client_id = AUTH0_CREDS[:client_id]
+      return_to = root_url
 
-    "https://#{domain}/v2/logout?client_id=#{client_id}&returnTo=#{CGI.escape(return_to)}"
-  end
+      "https://#{domain}/v2/logout?client_id=#{client_id}&returnTo=#{CGI.escape(return_to)}"
+    end
 end

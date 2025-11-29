@@ -4,10 +4,10 @@ import {
   CardHeader,
   CardTitle,
   CardContent,
-} from "@ui-components/ui/card";
-import { cn } from "@ui/utils";
-import { useTranslate } from "@ui/provider";
-import type { ShowProps } from "@ui/registry";
+} from "@ui/components/ui/card";
+import { cn } from "@ui/lib/utils";
+import { useTranslate } from "@ui/lib/provider";
+import type { ShowProps } from "@ui/lib/registry";
 
 interface ShowContextValue {
   data: Record<string, unknown>;

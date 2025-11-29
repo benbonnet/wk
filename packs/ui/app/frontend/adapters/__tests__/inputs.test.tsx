@@ -19,16 +19,14 @@ describe("Input Adapters", () => {
 
   describe("INPUT_TEXT", () => {
     it("renders with label", () => {
-      renderWithProviders(
-        <INPUT_TEXT name="email" label="Email Address" />
-      );
+      renderWithProviders(<INPUT_TEXT name="email" label="Email Address" />);
 
       expect(screen.getByLabelText("Email Address")).toBeInTheDocument();
     });
 
     it("renders with placeholder", () => {
       renderWithProviders(
-        <INPUT_TEXT name="email" placeholder="Enter email" />
+        <INPUT_TEXT name="email" placeholder="Enter email" />,
       );
 
       expect(screen.getByPlaceholderText("Enter email")).toBeInTheDocument();
@@ -38,9 +36,7 @@ describe("Input Adapters", () => {
       const onChange = vi.fn();
       const user = userEvent.setup();
 
-      renderWithProviders(
-        <INPUT_TEXT name="email" onChange={onChange} />
-      );
+      renderWithProviders(<INPUT_TEXT name="email" onChange={onChange} />);
 
       const input = screen.getByRole("textbox");
       await user.type(input, "test@example.com");
@@ -49,25 +45,23 @@ describe("Input Adapters", () => {
     });
 
     it("displays error message", () => {
-      renderWithProviders(
-        <INPUT_TEXT name="email" error="Invalid email" />
-      );
+      renderWithProviders(<INPUT_TEXT name="email" error="Invalid email" />);
 
       expect(screen.getByText("Invalid email")).toBeInTheDocument();
     });
 
     it("displays helper text", () => {
       renderWithProviders(
-        <INPUT_TEXT name="email" helperText="We'll never share your email" />
+        <INPUT_TEXT name="email" helperText="We'll never share your email" />,
       );
 
-      expect(screen.getByText("We'll never share your email")).toBeInTheDocument();
+      expect(
+        screen.getByText("We'll never share your email"),
+      ).toBeInTheDocument();
     });
 
     it("can be disabled", () => {
-      renderWithProviders(
-        <INPUT_TEXT name="email" disabled />
-      );
+      renderWithProviders(<INPUT_TEXT name="email" disabled />);
 
       expect(screen.getByRole("textbox")).toBeDisabled();
     });
@@ -75,9 +69,7 @@ describe("Input Adapters", () => {
 
   describe("INPUT_TEXTAREA", () => {
     it("renders with correct rows", () => {
-      renderWithProviders(
-        <INPUT_TEXTAREA name="description" rows={5} />
-      );
+      renderWithProviders(<INPUT_TEXTAREA name="description" rows={5} />);
 
       const textarea = screen.getByRole("textbox");
       expect(textarea).toHaveAttribute("rows", "5");
@@ -85,7 +77,7 @@ describe("Input Adapters", () => {
 
     it("displays value", () => {
       renderWithProviders(
-        <INPUT_TEXTAREA name="description" value="Test content" />
+        <INPUT_TEXTAREA name="description" value="Test content" />,
       );
 
       expect(screen.getByDisplayValue("Test content")).toBeInTheDocument();
@@ -101,7 +93,11 @@ describe("Input Adapters", () => {
 
     it("renders with placeholder", () => {
       renderWithProviders(
-        <INPUT_SELECT name="country" placeholder="Select country" options={options} />
+        <INPUT_SELECT
+          name="country"
+          placeholder="Select country"
+          options={options}
+        />,
       );
 
       expect(screen.getByRole("combobox")).toBeInTheDocument();
@@ -110,9 +106,7 @@ describe("Input Adapters", () => {
     it("renders all options", async () => {
       const user = userEvent.setup();
 
-      renderWithProviders(
-        <INPUT_SELECT name="country" options={options} />
-      );
+      renderWithProviders(<INPUT_SELECT name="country" options={options} />);
 
       await user.click(screen.getByRole("combobox"));
 
@@ -125,7 +119,7 @@ describe("Input Adapters", () => {
   describe("INPUT_CHECKBOX", () => {
     it("renders with label", () => {
       renderWithProviders(
-        <INPUT_CHECKBOX name="agree" label="I agree to terms" />
+        <INPUT_CHECKBOX name="agree" label="I agree to terms" />,
       );
 
       expect(screen.getByText("I agree to terms")).toBeInTheDocument();
@@ -136,7 +130,7 @@ describe("Input Adapters", () => {
       const user = userEvent.setup();
 
       renderWithProviders(
-        <INPUT_CHECKBOX name="agree" label="I agree" onChange={onChange} />
+        <INPUT_CHECKBOX name="agree" label="I agree" onChange={onChange} />,
       );
 
       await user.click(screen.getByRole("checkbox"));
@@ -145,9 +139,7 @@ describe("Input Adapters", () => {
     });
 
     it("respects initial value", () => {
-      renderWithProviders(
-        <INPUT_CHECKBOX name="agree" value={true} />
-      );
+      renderWithProviders(<INPUT_CHECKBOX name="agree" value={true} />);
 
       expect(screen.getByRole("checkbox")).toBeChecked();
     });
@@ -162,7 +154,7 @@ describe("Input Adapters", () => {
 
     it("renders all options", () => {
       renderWithProviders(
-        <INPUT_CHECKBOXES name="notifications" options={options} />
+        <INPUT_CHECKBOXES name="notifications" options={options} />,
       );
 
       expect(screen.getByText("Email")).toBeInTheDocument();
@@ -176,7 +168,7 @@ describe("Input Adapters", () => {
           name="notifications"
           options={options}
           value={["email", "push"]}
-        />
+        />,
       );
 
       const checkboxes = screen.getAllByRole("checkbox");
@@ -195,7 +187,7 @@ describe("Input Adapters", () => {
           options={options}
           value={["email"]}
           onChange={onChange}
-        />
+        />,
       );
 
       await user.click(screen.getByText("SMS"));
@@ -212,9 +204,7 @@ describe("Input Adapters", () => {
     ];
 
     it("renders all options", () => {
-      renderWithProviders(
-        <INPUT_RADIOS name="plan" options={options} />
-      );
+      renderWithProviders(<INPUT_RADIOS name="plan" options={options} />);
 
       expect(screen.getByText("Free Plan")).toBeInTheDocument();
       expect(screen.getByText("Pro Plan")).toBeInTheDocument();
@@ -223,7 +213,7 @@ describe("Input Adapters", () => {
 
     it("shows selected value", () => {
       renderWithProviders(
-        <INPUT_RADIOS name="plan" options={options} value="pro" />
+        <INPUT_RADIOS name="plan" options={options} value="pro" />,
       );
 
       const radios = screen.getAllByRole("radio");
@@ -237,7 +227,7 @@ describe("Input Adapters", () => {
       const user = userEvent.setup();
 
       renderWithProviders(
-        <INPUT_RADIOS name="plan" options={options} onChange={onChange} />
+        <INPUT_RADIOS name="plan" options={options} onChange={onChange} />,
       );
 
       await user.click(screen.getByText("Enterprise"));
@@ -249,7 +239,7 @@ describe("Input Adapters", () => {
   describe("INPUT_TAGS", () => {
     it("displays existing tags", () => {
       renderWithProviders(
-        <INPUT_TAGS name="skills" value={["React", "TypeScript"]} />
+        <INPUT_TAGS name="skills" value={["React", "TypeScript"]} />,
       );
 
       expect(screen.getByText("React")).toBeInTheDocument();
@@ -261,7 +251,7 @@ describe("Input Adapters", () => {
       const user = userEvent.setup();
 
       renderWithProviders(
-        <INPUT_TAGS name="skills" value={[]} onChange={onChange} />
+        <INPUT_TAGS name="skills" value={[]} onChange={onChange} />,
       );
 
       const input = screen.getByRole("textbox");
@@ -275,7 +265,11 @@ describe("Input Adapters", () => {
       const user = userEvent.setup();
 
       renderWithProviders(
-        <INPUT_TAGS name="skills" value={["React", "Vue"]} onChange={onChange} />
+        <INPUT_TAGS
+          name="skills"
+          value={["React", "Vue"]}
+          onChange={onChange}
+        />,
       );
 
       const removeButtons = screen.getAllByRole("button");
@@ -289,7 +283,7 @@ describe("Input Adapters", () => {
       const user = userEvent.setup();
 
       renderWithProviders(
-        <INPUT_TAGS name="skills" value={["React"]} onChange={onChange} />
+        <INPUT_TAGS name="skills" value={["React"]} onChange={onChange} />,
       );
 
       const input = screen.getByRole("textbox");
