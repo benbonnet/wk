@@ -14,6 +14,7 @@ const uiRoot = path.resolve(dirname, "./packs/ui/app/frontend");
 
 // Order matters: more specific paths must come before less specific
 const aliases: Record<string, string> = {
+  "@packs/": `${path.resolve(dirname, "./packs/")}/`,
   "@/": `${path.resolve(dirname, "./app/frontend/")}/`,
   "@ui-components/": `${uiRoot}/components/`,
   "@ui/adapters/": `${uiRoot}/adapters/`,
@@ -54,6 +55,7 @@ export default defineConfig({
           include: [
             "packs/ui/app/frontend/**/*.test.{ts,tsx}",
             "packs/contacts_service/app/frontend/**/*.test.{ts,tsx}",
+            "packs/activities_service/app/frontend/**/*.test.{ts,tsx}",
             "app/frontend/**/*.test.{ts,tsx}",
           ],
           exclude: [

@@ -8,6 +8,7 @@ export default defineConfig({
   plugins: [react(), tailwindcss(), RubyPlugin()],
   resolve: {
     alias: {
+      "@packs/": `${path.resolve(__dirname, "./packs/")}/`,
       "@ui-hooks/": `${path.resolve(__dirname, "./packs/ui/app/frontend/hooks/")}/`,
       "@/": `${path.resolve(__dirname, "./app/frontend/")}/`,
       "@ui/form": path.resolve(__dirname, "./packs/ui/app/frontend/lib/form/index.ts"),
