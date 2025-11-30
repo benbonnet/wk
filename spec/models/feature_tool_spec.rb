@@ -15,8 +15,8 @@ RSpec.describe FeatureTool, type: :model do
 
     it "validates uniqueness of slug scoped to feature_id" do
       feature = create(:feature)
-      create(:feature_tool, feature: feature, title: "Test Tool")
-      duplicate = build(:feature_tool, feature: feature, title: "Test Tool")
+      create(:feature_tool, feature:, title: "Test Tool")
+      duplicate = build(:feature_tool, feature:, title: "Test Tool")
       expect(duplicate).not_to be_valid
       expect(duplicate.errors[:slug]).to include("has already been taken")
     end

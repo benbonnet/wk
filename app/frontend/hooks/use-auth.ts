@@ -1,22 +1,35 @@
-import { useQuery } from "@tanstack/react-query";
-import { getCurrentUser } from "@/api/auth";
+import { useState, useEffect } from "react";
+import { getCurrentUser } from "../api/auth";
+import type User from "../types/api/User";
 
-export function useAuth() {
-  const {
-    data: user,
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ["currentUser"],
-    queryFn: getCurrentUser,
-    retry: false,
-    staleTime: 5 * 60 * 1000,
-  });
+type UserData = User["user"];
+
+interface UseAuthReturn {
+  user: UserData | null;
+  isLoading: boolean;
+  isAuthenticated: boolean;
+}
+
+export function useAuth(): UseAuthReturn {
+  const [user, setUser] = useState<UserData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    getCurrentUser()
+      .then((userData) => {
+        setUser(userData);
+      })
+      .catch(() => {
+        setUser(null);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, []);
 
   return {
     user,
     isLoading,
-    isAuthenticated: !!user,
-    error,
+    isAuthenticated: user !== null,
   };
 }

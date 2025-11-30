@@ -1,0 +1,158 @@
+{
+  "type": "VIEW",
+  "translations": {
+    "en": {
+      "basic_info": "Basic Information",
+      "professional_info": "Professional Information",
+      "personal_info": "Personal Information",
+      "tags_section": "Tags",
+      "addresses_section": "Addresses",
+      "male": "Male",
+      "female": "Female",
+      "other": "Other",
+      "prefer_not_to_say": "Prefer not to say"
+    },
+    "fr": {
+      "basic_info": "Informations de Base",
+      "professional_info": "Informations Professionnelles",
+      "personal_info": "Informations Personnelles",
+      "tags_section": "Tags",
+      "addresses_section": "Adresses",
+      "male": "Homme",
+      "female": "Femme",
+      "other": "Autre",
+      "prefer_not_to_say": "Prefere ne pas dire"
+    }
+  },
+  "elements": [
+    {
+      "type": "SHOW",
+      "elements": [
+        {
+          "type": "GROUP",
+          "label": "basic_info",
+          "elements": [
+            {
+              "type": "DISPLAY_TEXT",
+              "name": "first_name",
+              "label": "first_name"
+            },
+            {
+              "type": "DISPLAY_TEXT",
+              "name": "middle_name",
+              "label": "middle_name"
+            },
+            {
+              "type": "DISPLAY_TEXT",
+              "name": "last_name",
+              "label": "last_name"
+            }
+          ],
+          "className": "space-y-4"
+        },
+        {
+          "type": "GROUP",
+          "label": "professional_info",
+          "elements": [
+            {
+              "type": "DISPLAY_TEXT",
+              "name": "company",
+              "label": "company"
+            },
+            {
+              "type": "DISPLAY_TEXT",
+              "name": "job_title",
+              "label": "job_title"
+            }
+          ],
+          "className": "space-y-4"
+        },
+        {
+          "type": "GROUP",
+          "label": "personal_info",
+          "elements": [
+            {
+              "type": "DISPLAY_SELECT",
+              "name": "gender",
+              "label": "gender",
+              "options": [
+                {
+                  "label": "male",
+                  "value": "male"
+                },
+                {
+                  "label": "female",
+                  "value": "female"
+                },
+                {
+                  "label": "other",
+                  "value": "other"
+                },
+                {
+                  "label": "prefer_not_to_say",
+                  "value": "prefer_not_to_say"
+                }
+              ]
+            },
+            {
+              "type": "DISPLAY_DATE",
+              "name": "date_of_birth",
+              "label": "date_of_birth"
+            },
+            {
+              "type": "DISPLAY_TEXT",
+              "name": "place_of_birth",
+              "label": "place_of_birth"
+            },
+            {
+              "type": "DISPLAY_TEXT",
+              "name": "nationality",
+              "label": "nationality"
+            }
+          ],
+          "className": "space-y-4"
+        },
+        {
+          "type": "GROUP",
+          "label": "tags_section",
+          "elements": [
+            {
+              "type": "DISPLAY_TAGS",
+              "name": "tags",
+              "label": "tags"
+            }
+          ],
+          "className": "space-y-4"
+        },
+        {
+          "type": "DISPLAY_ARRAY",
+          "name": "addresses",
+          "template": [
+            {
+              "type": "DISPLAY_TEXT",
+              "name": "address_line_1",
+              "label": "address_line_1"
+            },
+            {
+              "type": "DISPLAY_TEXT",
+              "name": "city",
+              "label": "city"
+            },
+            {
+              "type": "DISPLAY_TEXT",
+              "name": "postal_code",
+              "label": "postal_code"
+            },
+            {
+              "type": "DISPLAY_TEXT",
+              "name": "country",
+              "label": "country"
+            }
+          ],
+          "label": "addresses_section"
+        }
+      ],
+      "className": "flex flex-col p-6 space-y-8"
+    }
+  ]
+}

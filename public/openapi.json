@@ -1,0 +1,672 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "API",
+    "version": "v1",
+    "description": "Auto-generated from Core::Tools DSL"
+  },
+  "servers": [
+    {
+      "url": "/api/v1",
+      "description": "API v1"
+    }
+  ],
+  "paths": {
+    "/workspaces/contacts": {
+      "get": {
+        "summary": "List all contacts with pagination and search",
+        "operationId": "contacts_index",
+        "tags": [
+          "Contacts"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List contacts with pagination",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Item"
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "page": {
+                          "type": "integer"
+                        },
+                        "per_page": {
+                          "type": "integer"
+                        },
+                        "total": {
+                          "type": "integer"
+                        },
+                        "total_pages": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "page",
+                        "per_page",
+                        "total",
+                        "total_pages"
+                      ]
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "data": [
+                        {
+                          "id": 1,
+                          "schema_slug": "contact",
+                          "workspace_id": 1,
+                          "created_at": "2024-01-15T10:00:00Z",
+                          "updated_at": "2024-01-15T10:00:00Z",
+                          "data": {
+                            "first_name": "John",
+                            "last_name": "Doe",
+                            "email": "john@example.com"
+                          }
+                        },
+                        {
+                          "id": 2,
+                          "schema_slug": "contact",
+                          "workspace_id": 1,
+                          "created_at": "2024-01-16T10:00:00Z",
+                          "updated_at": "2024-01-16T10:00:00Z",
+                          "data": {
+                            "first_name": "Jane",
+                            "last_name": "Smith",
+                            "email": "jane@example.com"
+                          }
+                        }
+                      ],
+                      "meta": {
+                        "page": 1,
+                        "per_page": 10,
+                        "total": 42,
+                        "total_pages": 5
+                      }
+                    }
+                  },
+                  "search": {
+                    "value": {
+                      "data": [
+                        {
+                          "id": 1,
+                          "schema_slug": "contact",
+                          "workspace_id": 1,
+                          "data": {
+                            "first_name": "John",
+                            "last_name": "Doe"
+                          }
+                        }
+                      ],
+                      "meta": {
+                        "page": 1,
+                        "per_page": 10,
+                        "total": 1,
+                        "total_pages": 1
+                      }
+                    }
+                  },
+                  "empty": {
+                    "value": {
+                      "data": [],
+                      "meta": {
+                        "page": 1,
+                        "per_page": 10,
+                        "total": 0,
+                        "total_pages": 0
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "activity": {
+        "name": "ActivitiesService::ActivitySchema",
+        "description": "An activity log entry",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "activity_type": {
+              "type": "string",
+              "description": "Type of activity (e.g., created, updated, deleted)"
+            },
+            "category": {
+              "type": "string",
+              "description": "Activity category (e.g., contact, invite)"
+            },
+            "level": {
+              "type": "string",
+              "enum": [
+                "info",
+                "warning",
+                "error"
+              ],
+              "description": "Severity level"
+            },
+            "message": {
+              "type": "string",
+              "description": "Human-readable activity message"
+            },
+            "item_id": {
+              "type": "string",
+              "description": "Related item ID"
+            },
+            "schema_slug": {
+              "type": "string",
+              "description": "Schema slug of related item"
+            },
+            "tool_slug": {
+              "type": "string",
+              "description": "Tool that triggered activity"
+            },
+            "feature_slug": {
+              "type": "string",
+              "description": "Feature slug"
+            },
+            "metadata": {
+              "type": "object",
+              "properties": {},
+              "required": [],
+              "additionalProperties": true
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "updated_at": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": [
+            "activity_type",
+            "category",
+            "level",
+            "message"
+          ],
+          "additionalProperties": false,
+          "strict": true
+        }
+      },
+      "activityInput": {
+        "name": "ActivitiesService::ActivitySchema",
+        "description": "An activity log entry",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "activity_type": {
+              "type": "string",
+              "description": "Type of activity (e.g., created, updated, deleted)"
+            },
+            "category": {
+              "type": "string",
+              "description": "Activity category (e.g., contact, invite)"
+            },
+            "level": {
+              "type": "string",
+              "enum": [
+                "info",
+                "warning",
+                "error"
+              ],
+              "description": "Severity level"
+            },
+            "message": {
+              "type": "string",
+              "description": "Human-readable activity message"
+            },
+            "item_id": {
+              "type": "string",
+              "description": "Related item ID"
+            },
+            "schema_slug": {
+              "type": "string",
+              "description": "Schema slug of related item"
+            },
+            "tool_slug": {
+              "type": "string",
+              "description": "Tool that triggered activity"
+            },
+            "feature_slug": {
+              "type": "string",
+              "description": "Feature slug"
+            },
+            "metadata": {
+              "type": "object",
+              "properties": {},
+              "required": [],
+              "additionalProperties": true
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "updated_at": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": [
+            "activity_type",
+            "category",
+            "level",
+            "message"
+          ],
+          "additionalProperties": false,
+          "strict": true
+        }
+      },
+      "contact": {
+        "name": "ContactsService::ContactSchema",
+        "description": "A contact record with personal information",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "first_name": {
+              "type": "string",
+              "description": "First name",
+              "maxLength": 255
+            },
+            "last_name": {
+              "type": "string",
+              "description": "Last name",
+              "maxLength": 255
+            },
+            "email": {
+              "type": "string",
+              "format": "email"
+            },
+            "phone": {
+              "type": "string"
+            },
+            "company": {
+              "type": "string"
+            },
+            "job_title": {
+              "type": "string"
+            },
+            "gender": {
+              "type": "string",
+              "enum": [
+                "male",
+                "female",
+                "other",
+                "prefer_not_to_say"
+              ]
+            },
+            "date_of_birth": {
+              "type": "string",
+              "format": "date"
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "updated_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "deleted_at": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": [
+            "first_name",
+            "last_name"
+          ],
+          "additionalProperties": false,
+          "strict": true
+        }
+      },
+      "contactInput": {
+        "name": "ContactsService::ContactSchema",
+        "description": "A contact record with personal information",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "first_name": {
+              "type": "string",
+              "description": "First name",
+              "maxLength": 255
+            },
+            "last_name": {
+              "type": "string",
+              "description": "Last name",
+              "maxLength": 255
+            },
+            "email": {
+              "type": "string",
+              "format": "email"
+            },
+            "phone": {
+              "type": "string"
+            },
+            "company": {
+              "type": "string"
+            },
+            "job_title": {
+              "type": "string"
+            },
+            "gender": {
+              "type": "string",
+              "enum": [
+                "male",
+                "female",
+                "other",
+                "prefer_not_to_say"
+              ]
+            },
+            "date_of_birth": {
+              "type": "string",
+              "format": "date"
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "updated_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "deleted_at": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": [
+            "first_name",
+            "last_name"
+          ],
+          "additionalProperties": false,
+          "strict": true
+        }
+      },
+      "invite": {
+        "name": "InvitesService::InviteSchema",
+        "description": "An invitation to share items between users",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "inviter_id": {
+              "type": "string",
+              "description": "User sending the invite"
+            },
+            "invitee_id": {
+              "type": "string",
+              "description": "User receiving the invite"
+            },
+            "recipient_workspace_id": {
+              "type": "string",
+              "description": "Target workspace for shared items"
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "pending",
+                "sent",
+                "opened",
+                "clicked",
+                "accepted",
+                "declined",
+                "cancelled"
+              ],
+              "description": "Invite status"
+            },
+            "item_ids": {
+              "type": "array",
+              "description": "IDs of items to share",
+              "items": {
+                "type": "string"
+              }
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "updated_at": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": [
+            "inviter_id",
+            "invitee_id"
+          ],
+          "additionalProperties": false,
+          "strict": true
+        }
+      },
+      "inviteInput": {
+        "name": "InvitesService::InviteSchema",
+        "description": "An invitation to share items between users",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "inviter_id": {
+              "type": "string",
+              "description": "User sending the invite"
+            },
+            "invitee_id": {
+              "type": "string",
+              "description": "User receiving the invite"
+            },
+            "recipient_workspace_id": {
+              "type": "string",
+              "description": "Target workspace for shared items"
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "pending",
+                "sent",
+                "opened",
+                "clicked",
+                "accepted",
+                "declined",
+                "cancelled"
+              ],
+              "description": "Invite status"
+            },
+            "item_ids": {
+              "type": "array",
+              "description": "IDs of items to share",
+              "items": {
+                "type": "string"
+              }
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "updated_at": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": [
+            "inviter_id",
+            "invitee_id"
+          ],
+          "additionalProperties": false,
+          "strict": true
+        }
+      },
+      "rib_request": {
+        "name": "RibCheckWorkflow::RibRequestSchema",
+        "description": "Request for bank account details (RIB) from contacts",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "comment": {
+              "type": "string",
+              "description": "Internal note"
+            },
+            "message_body": {
+              "type": "string",
+              "description": "Notification message"
+            },
+            "end_at": {
+              "type": "string",
+              "description": "Deadline",
+              "format": "date-time"
+            },
+            "notify_via_email": {
+              "type": "boolean",
+              "description": "Send email notification"
+            },
+            "notify_via_sms": {
+              "type": "boolean",
+              "description": "Send SMS notification"
+            },
+            "request_type": {
+              "type": "string",
+              "enum": [
+                "individual",
+                "common"
+              ],
+              "description": "Request type"
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "draft",
+                "pending",
+                "partial",
+                "completed",
+                "cancelled"
+              ],
+              "description": "Status"
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "updated_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "deleted_at": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": [
+            "request_type",
+            "status"
+          ],
+          "additionalProperties": false,
+          "strict": true
+        }
+      },
+      "rib_requestInput": {
+        "name": "RibCheckWorkflow::RibRequestSchema",
+        "description": "Request for bank account details (RIB) from contacts",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "comment": {
+              "type": "string",
+              "description": "Internal note"
+            },
+            "message_body": {
+              "type": "string",
+              "description": "Notification message"
+            },
+            "end_at": {
+              "type": "string",
+              "description": "Deadline",
+              "format": "date-time"
+            },
+            "notify_via_email": {
+              "type": "boolean",
+              "description": "Send email notification"
+            },
+            "notify_via_sms": {
+              "type": "boolean",
+              "description": "Send SMS notification"
+            },
+            "request_type": {
+              "type": "string",
+              "enum": [
+                "individual",
+                "common"
+              ],
+              "description": "Request type"
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "draft",
+                "pending",
+                "partial",
+                "completed",
+                "cancelled"
+              ],
+              "description": "Status"
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "updated_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "deleted_at": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": [
+            "request_type",
+            "status"
+          ],
+          "additionalProperties": false,
+          "strict": true
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

@@ -3,7 +3,9 @@ import { createRoot } from "react-dom/client";
 import { Routes, Route, BrowserRouter } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-import Layout from "@/views/layout";
+import Layout from "../views/layout";
+import { AppUIProvider } from "../providers/ui-provider";
+import ActivitiesIndex from "../../../packs/activities_service/app/frontend/views/index";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -18,12 +20,14 @@ const queryClient = new QueryClient({
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <Routes>
-          <Route element={<Layout />}>
-            <Route index element={<div>Home</div>} />
-          </Route>
-        </Routes>
+      <BrowserRouter basename="/app">
+        <AppUIProvider>
+          <Routes>
+            <Route element={<Layout />}>
+              <Route index element={<ActivitiesIndex />} />
+            </Route>
+          </Routes>
+        </AppUIProvider>
       </BrowserRouter>
     </QueryClientProvider>
   </StrictMode>,

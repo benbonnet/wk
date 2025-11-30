@@ -1,21 +1,31 @@
 Rails.application.routes.draw do
-  # Devise with Auth0
-  devise_for :users, controllers: {
-    omniauth_callbacks: "users/omniauth_callbacks"
-  }
+  # Swagger UI (development only)
+  if Rails.env.development?
+    mount Rswag::Ui::Engine => "/api-docs"
+    mount Rswag::Api::Engine => "/api-docs"
+  end
 
-  # Custom logout that also logs out of Auth0
-  delete "/logout", to: "sessions#destroy", as: :logout
+  devise_for(:users, module: :devise, controllers: { omniauth_callbacks: "auth" })
+
+  devise_scope(:user) do
+    get(:logout, to: "auth#logout")
+    get(:authenticate, to: "auth#authenticate")
+  end
 
   # Health check
-  get "up" => "rails/health#show", as: :rails_health_check
+  get "up" => "rails/health#show", :as => :rails_health_check
 
   # API routes
   namespace :api do
     namespace :v1 do
-      resource :me, only: [:show], controller: "me"
+      resource :account, only: [ :show ], controller: "account"
+      get "views/:namespace/:feature/:view_name", to: "views#show"
     end
   end
+
+
+  # Load pack routes
+  draw(:core)
 
   # SPA routes (authenticated)
   get "/app", to: "spa#index", as: :spa_root

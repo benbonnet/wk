@@ -1,9 +1,7 @@
 <div class="min-h-screen flex items-center justify-center bg-background">
   <div class="text-center">
     <h1 class="text-4xl font-bold mb-8">Welcome</h1>
-    <%= link_to "Sign in with Auth0", user_auth0_omniauth_authorize_path,
-        method: :post,
-        data: { turbo: false },
+    <%= link_to "Sign in with Auth0", authenticate_path,
         class: "inline-flex items-center px-6 py-3 bg-primary text-primary-foreground rounded-md hover:bg-primary/90" %>
   </div>
 </div>

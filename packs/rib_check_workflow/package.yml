@@ -1,0 +1,12 @@
+enforce_dependencies: true
+enforce_privacy: true
+
+dependencies:
+  - packs/core
+  - packs/ui
+  - packs/items_service
+  - packs/activities_service
+  - packs/invites_service
+
+metadata:
+  owner: rib_check

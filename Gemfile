@@ -44,6 +44,7 @@ group(:development, :test) do
   gem("rubocop-rails")
   gem("rubocop-rspec")
   gem("overcommit", require: false)
+  gem("rswag-specs")
 end
 
 group(:test) do
@@ -58,6 +59,8 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+  gem "rswag-api"
+  gem "rswag-ui"
 end
 
 gem "vite_rails", "~> 3.0"
@@ -87,9 +90,11 @@ gem "omniauth", "~> 2.1"
 gem "omniauth-rails_csrf_protection", "~> 2.0"
 gem "twilio-ruby", "~> 7.8"
 gem "repost", "~> 0.4.2"
-
 gem "omniauth-auth0", "~> 3.1"
-
 gem "ruby_llm", "~> 1.9"
-
 gem "ruby_llm-schema", "~> 0.2.5"
+
+# gems
+# NOTE: Local development uses `bundle config local.durable_workflow /path/to/durable_workflow`
+# This overrides the GitHub source to point to your local copy. Do NOT change to `path:` reference.
+gem "durable_workflow", github: "getnvoi/durable_workflows", branch: "main"

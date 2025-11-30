@@ -2,6 +2,7 @@
 
 FactoryBot.define do
   factory :invite do
+    workspace
     inviter { association(:user) }
     invitee { association(:user) }
     status { "pending" }

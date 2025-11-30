@@ -8,7 +8,8 @@ export default defineConfig({
   plugins: [react(), tailwindcss(), RubyPlugin()],
   resolve: {
     alias: {
-      "@/": `${path.resolve(__dirname, "./app/frontend/")}/`,
+      "@ui/": `${path.resolve(__dirname, "./packs/ui/app/frontend/")}/`,
+      "packs/ui/app/frontend/": `${path.resolve(__dirname, "./packs/ui/app/frontend/")}/`,
     },
   },
 });

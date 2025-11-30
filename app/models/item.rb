@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class Item < ApplicationRecord
-  belongs_to :workspace, optional: true
+  include WorkspaceScoped
+  include Core::HasRelationships
   belongs_to :created_by, class_name: "User"
   belongs_to :updated_by, class_name: "User", optional: true
   belongs_to :deleted_by, class_name: "User", optional: true

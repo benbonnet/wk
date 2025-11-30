@@ -9,7 +9,7 @@ RSpec.describe ItemRecipient, type: :model do
   end
 
   describe "validations" do
-    subject { build(:item_recipient) }
+    subject { create(:item_recipient) }
 
     it { is_expected.to validate_presence_of(:auth_status) }
     it { is_expected.to validate_inclusion_of(:auth_status).in_array(ItemRecipient::AUTH_STATUSES) }

@@ -26,7 +26,7 @@ class Feature < ApplicationRecord
 
   private
 
-  def generate_identifier
-    self.identifier = title.to_s.downcase.strip.gsub(/\s+/, "-").gsub(/[^\w-]/, "").gsub(/-+/, "-")
-  end
+    def generate_identifier
+      self.identifier = title.to_s.downcase.strip.gsub(/\s+/, "-").gsub(/[^\w-]/, "").gsub(/-+/, "-")
+    end
 end
