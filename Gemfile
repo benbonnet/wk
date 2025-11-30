@@ -38,7 +38,7 @@ group(:development, :test) do
   gem("annotaterb")
   gem("debug", ">= 1.0.0")
   gem("dotenv")
-  gem("factory_bot_rails", "~> 6.4.4")
+  gem("factory_bot_rails", "~> 6.5.1")
   gem("ffaker")
   gem("rubocop")
   gem("rubocop-rails")
