@@ -80,7 +80,14 @@ export function Table({
     enabled: !!viewConfig.url && !!viewConfig.api?.index,
   });
 
-  const data = (fetchedData?.data as DataTableRow[]) ?? dataProp;
+  // Flatten data: API returns { id, data: {...} }, we need { id, ...data }
+  const rawData = (fetchedData?.data as DataTableRow[]) ?? dataProp;
+  const data = rawData.map((item) => {
+    if (item.data && typeof item.data === "object") {
+      return { id: item.id, ...(item.data as Record<string, unknown>) };
+    }
+    return item;
+  });
 
   const columns: ColumnDef<DataTableRow>[] = useMemo(() => {
     const cols: ColumnDef<DataTableRow>[] = [];
