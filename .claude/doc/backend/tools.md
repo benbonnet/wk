@@ -68,10 +68,10 @@ Base class for all tools. Inherits from `RubyLLM::Tool` for LLM compatibility.
 
 **Location:** `packs/core/app/lib/core/tools/routing.rb`
 
-The `route` DSL determines whether a tool is exposed as an HTTP endpoint:
+The `route` DSL determines whether a tool is exposed to API consumers:
 
-- **With `route`**: Tool is an HTTP endpoint, needs rswag request specs
-- **Without `route`**: Tool is internal/workflow-only, no HTTP exposure, no rswag specs
+- **With `route`**: HTTP endpoint exposed to API consumers, needs rswag request specs
+- **Without `route`**: Internal/workflow-only, not exposed to API consumers, no rswag specs
 
 ```ruby
 class MyTool < Core::Tools::Base
