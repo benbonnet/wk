@@ -45,9 +45,7 @@ export default defineConfig({
           environment: "jsdom",
           setupFiles: ["./vitest.setup.ts"],
           include: [
-            "packs/ui/app/frontend/**/*.test.{ts,tsx}",
-            "packs/contacts_service/app/frontend/**/*.test.{ts,tsx}",
-            "packs/activities_service/app/frontend/**/*.test.{ts,tsx}",
+            "packs/**/*.test.{ts,tsx}",
             "app/frontend/**/*.test.{ts,tsx}",
           ],
           exclude: [
