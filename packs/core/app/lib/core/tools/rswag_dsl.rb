@@ -138,7 +138,7 @@ module Core
 
         # Reference another schema
         def ref(name, schema_name, description: nil, required: false)
-          add_property(name, { "$ref" => "#/components/schemas/#{schema_name}", description: }.compact, required)
+          add_property(name, { "$ref" => "#/components/schemas/#{schema_name}", :description => description }.compact, required)
         end
 
         def to_schema
@@ -149,10 +149,10 @@ module Core
 
         private
 
-        def add_property(name, definition, required)
-          @schema[:properties][name.to_sym] = definition
-          @required << name.to_s if required
-        end
+          def add_property(name, definition, required)
+            @schema[:properties][name.to_sym] = definition
+            @required << name.to_s if required
+          end
       end
 
       # Builder for examples

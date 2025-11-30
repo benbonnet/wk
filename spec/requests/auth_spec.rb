@@ -125,7 +125,7 @@ RSpec.describe "Authentication", type: :request do
 
       it "uses existing workspace if present" do
         workspace = create(:workspace)
-        existing_user.workspace_users.create!(workspace: workspace, role: "admin")
+        existing_user.workspace_users.create!(workspace:, role: "admin")
 
         expect {
           get "/users/auth/auth0/callback"

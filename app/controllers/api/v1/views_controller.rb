@@ -23,16 +23,11 @@ module Api
       private
 
         def find_view_class
-          class_name = [
-            params[:namespace].camelize,
-            params[:feature].camelize,
-            "Views",
-            params[:view_name].camelize
-          ].join("::")
-
-          class_name.constantize
-        rescue NameError
-          nil
+          Core::Features::Registry.find_view(
+            params[:namespace],
+            params[:feature],
+            params[:view_name]
+          )
         end
     end
   end
