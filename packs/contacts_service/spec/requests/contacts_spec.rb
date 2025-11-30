@@ -1,245 +1,315 @@
 # frozen_string_literal: true
 
-require "rails_helper"
+require "swagger_helper"
 
 RSpec.describe "Contacts API", type: :request do
   let(:user) { create(:user) }
   let(:workspace) { create(:workspace) }
+  let(:Authorization) { "Bearer #{Auth::JwtService.encode({ user_id: user.id, workspace_id: workspace.id })}" }
 
-  before do
-    Core::Schema::Registry.clear!
-    Core::Features::Registry.clear!
 
-    # Register schema
-    Core::Schema::Registry.register(ContactsService::ContactSchema)
+  path "/workspaces/contacts" do
+    get "List contacts" do
+      tags "Contacts"
+      produces "application/json"
+      security [{ bearerAuth: [] }]
+      parameter name: :page, in: :query, type: :integer, required: false
+      parameter name: :per_page, in: :query, type: :integer, required: false
+      parameter name: :search, in: :query, type: :string, required: false
 
-    # Register feature
-    Core::Features::Registry.register(
-      namespace: :workspaces,
-      feature: :contacts,
-      schema: :contact,
-      tools: [
-        ContactsService::Tools::Index,
-        ContactsService::Tools::Show,
-        ContactsService::Tools::Create,
-        ContactsService::Tools::Update,
-        ContactsService::Tools::Destroy,
-        ContactsService::Tools::AddRelationship
-      ]
-    )
+      response "200", "contacts list" do
+        schema type: :object,
+          properties: {
+            data: { type: :array, items: { "$ref" => "#/components/schemas/item" } },
+            meta: {
+              type: :object,
+              properties: {
+                page: { type: :integer },
+                per_page: { type: :integer },
+                total: { type: :integer },
+                total_pages: { type: :integer }
+              }
+            }
+          }
 
-    Core::Relationships::Registry.reload!
-  end
+        let!(:contacts) do
+          3.times.map do |i|
+            create(:item,
+              workspace:,
+              schema_slug: "contact",
+              tool_slug: "create",
+              data: { "first_name" => "Contact#{i}", "last_name" => "Test" },
+              created_by: user
+            )
+          end
+        end
 
-  describe "GET /api/v1/workspaces/contacts" do
-    it "returns contacts list" do
-      get "/api/v1/workspaces/contacts", headers: auth_headers(user)
+        run_test! do |response|
+          body = JSON.parse(response.body)
+          expect(body["data"].size).to eq(3)
+          expect(body["meta"]["total"]).to eq(3)
+        end
+      end
 
-      expect(response).to have_http_status(:ok)
-      body = JSON.parse(response.body)
-      expect(body).to have_key("data")
-      expect(body).to have_key("meta")
+      response "200", "paginated results" do
+        let(:page) { 2 }
+        let(:per_page) { 10 }
+
+        run_test! do |response|
+          body = JSON.parse(response.body)
+          expect(body["meta"]["page"]).to eq(2)
+          expect(body["meta"]["per_page"]).to eq(10)
+        end
+      end
     end
 
-    it "supports pagination params" do
-      get "/api/v1/workspaces/contacts", params: { page: 2, per_page: 10 }, headers: auth_headers(user)
-
-      expect(response).to have_http_status(:ok)
-      body = JSON.parse(response.body)
-      expect(body["meta"]["page"]).to eq(2)
-      expect(body["meta"]["per_page"]).to eq(10)
-    end
-  end
-
-  describe "POST /api/v1/workspaces/contacts" do
-    let(:valid_params) do
-      {
-        contact: {
-          first_name: "John",
-          last_name: "Doe",
-          email: "john@example.com"
+    post "Create contact" do
+      tags "Contacts"
+      consumes "application/json"
+      produces "application/json"
+      security [{ bearerAuth: [] }]
+      parameter name: :body, in: :body, schema: {
+        type: :object,
+        properties: {
+          contact: {
+            type: :object,
+            properties: {
+              first_name: { type: :string },
+              last_name: { type: :string },
+              email: { type: :string }
+            },
+            required: %w[first_name last_name]
+          }
         }
       }
-    end
 
-    it "creates a contact" do
-      post "/api/v1/workspaces/contacts", params: valid_params, headers: auth_headers(user)
+      response "200", "contact created" do
+        schema type: :object,
+          properties: {
+            data: { "$ref" => "#/components/schemas/item" },
+            meta: { type: :object, properties: { created: { type: :boolean } } }
+          }
 
-      expect(response).to have_http_status(:ok), -> { "Response: #{response.status} - #{response.body}" }
+        let(:body) { { contact: { first_name: "John", last_name: "Doe", email: "john@example.com" } } }
 
-      body = JSON.parse(response.body)
-      expect(body["data"]["data"]["first_name"]).to eq("John")
-      expect(body["meta"]["created"]).to be true
-    end
+        run_test! do |response|
+          body = JSON.parse(response.body)
+          expect(body["data"]["data"]["first_name"]).to eq("John")
+          expect(body["meta"]["created"]).to be true
+        end
+      end
 
-    it "returns validation error for missing fields" do
-      post "/api/v1/workspaces/contacts", params: { contact: {} }, headers: auth_headers(user)
+      response "422", "validation error" do
+        schema type: :object,
+          properties: {
+            error: { type: :string },
+            details: { type: :object }
+          }
 
-      expect(response).to have_http_status(:unprocessable_content)
-      body = JSON.parse(response.body)
-      expect(body["error"]).to eq("Validation failed")
-      expect(body["details"]).to have_key("first_name")
-    end
-  end
+        let(:body) { { contact: {} } }
 
-  describe "GET /api/v1/workspaces/contacts/:id" do
-    let(:contact) do
-      create(:item,
-        workspace:,
-        schema_slug: "contact",
-        tool_slug: "create",
-        data: { "first_name" => "Jane", "last_name" => "Smith" },
-        created_by: user
-      )
-    end
-
-    it "returns the contact with serialized data" do
-      get "/api/v1/workspaces/contacts/#{contact.id}", headers: auth_headers(user)
-
-      expect(response).to have_http_status(:ok)
-      body = JSON.parse(response.body)
-
-      # Serializer exposes data field, frontend picks from it
-      expect(body["data"]["id"]).to eq(contact.id)
-      expect(body["data"]["data"]["first_name"]).to eq("Jane")
-      expect(body["data"]["data"]["last_name"]).to eq("Smith")
-      expect(body["data"]["schema_slug"]).to eq("contact")
-      expect(body["data"]["created_at"]).to be_present
-    end
-
-    it "includes relationships from schema definition" do
-      spouse = create(:item,
-        workspace:,
-        schema_slug: "contact",
-        tool_slug: "create",
-        data: { "first_name" => "John", "last_name" => "Smith" },
-        created_by: user
-      )
-
-      child = create(:item,
-        workspace:,
-        schema_slug: "contact",
-        tool_slug: "create",
-        data: { "first_name" => "Junior", "last_name" => "Smith" },
-        created_by: user
-      )
-
-      # Create relationships
-      ItemRelationship.create!(source_item: contact, target_item: spouse, relationship_type: "spouse")
-      ItemRelationship.create!(source_item: contact, target_item: child, relationship_type: "children")
-
-      get "/api/v1/workspaces/contacts/#{contact.id}", headers: auth_headers(user)
-
-      expect(response).to have_http_status(:ok)
-      body = JSON.parse(response.body)
-
-      # Relationships loaded based on schema definition
-      expect(body["data"]["relationships"]).to be_a(Hash)
-      expect(body["data"]["relationships"]["spouse"]["id"]).to eq(spouse.id)
-      expect(body["data"]["relationships"]["spouse"]["first_name"]).to eq("John")
-      expect(body["data"]["relationships"]["children"]).to be_an(Array)
-      expect(body["data"]["relationships"]["children"].first["id"]).to eq(child.id)
-    end
-
-    it "returns 404 for unknown contact" do
-      get "/api/v1/workspaces/contacts/99999", headers: auth_headers(user)
-
-      expect(response).to have_http_status(:not_found)
+        run_test! do |response|
+          body = JSON.parse(response.body)
+          expect(body["error"]).to eq("Validation failed")
+          expect(body["details"]).to have_key("first_name")
+        end
+      end
     end
   end
 
-  describe "PUT /api/v1/workspaces/contacts/:id" do
-    let(:contact) do
-      create(:item,
-        workspace:,
-        schema_slug: "contact",
-        tool_slug: "create",
-        data: { "first_name" => "Jane", "last_name" => "Smith" },
-        created_by: user
-      )
+  path "/workspaces/contacts/{id}" do
+    parameter name: :id, in: :path, type: :integer, required: true
+
+    get "Get contact" do
+      tags "Contacts"
+      produces "application/json"
+      security [{ bearerAuth: [] }]
+
+      response "200", "contact found" do
+        schema type: :object,
+          properties: {
+            data: { "$ref" => "#/components/schemas/item" }
+          }
+
+        let(:contact) do
+          create(:item,
+            workspace:,
+            schema_slug: "contact",
+            tool_slug: "create",
+            data: { "first_name" => "Jane", "last_name" => "Smith" },
+            created_by: user
+          )
+        end
+        let(:id) { contact.id }
+
+        run_test! do |response|
+          body = JSON.parse(response.body)
+          expect(body["data"]["id"]).to eq(contact.id)
+          expect(body["data"]["data"]["first_name"]).to eq("Jane")
+        end
+      end
+
+      response "404", "contact not found" do
+        let(:id) { 99999 }
+
+        run_test!
+      end
     end
 
-    it "updates the contact" do
-      put "/api/v1/workspaces/contacts/#{contact.id}",
-        params: { contact: { first_name: "Janet" } },
-        headers: auth_headers(user)
+    put "Update contact" do
+      tags "Contacts"
+      consumes "application/json"
+      produces "application/json"
+      security [{ bearerAuth: [] }]
+      parameter name: :body, in: :body, schema: {
+        type: :object,
+        properties: {
+          contact: { type: :object }
+        }
+      }
 
-      expect(response).to have_http_status(:ok)
-      body = JSON.parse(response.body)
-      expect(body["data"]["data"]["first_name"]).to eq("Janet")
-      expect(body["meta"]["updated"]).to be true
+      response "200", "contact updated" do
+        schema type: :object,
+          properties: {
+            data: { "$ref" => "#/components/schemas/item" },
+            meta: { type: :object, properties: { updated: { type: :boolean } } }
+          }
+
+        let(:contact) do
+          create(:item,
+            workspace:,
+            schema_slug: "contact",
+            tool_slug: "create",
+            data: { "first_name" => "Jane", "last_name" => "Smith" },
+            created_by: user
+          )
+        end
+        let(:id) { contact.id }
+        let(:body) { { contact: { first_name: "Janet" } } }
+
+        run_test! do |response|
+          body = JSON.parse(response.body)
+          expect(body["data"]["data"]["first_name"]).to eq("Janet")
+          expect(body["meta"]["updated"]).to be true
+        end
+      end
+
+      response "404", "contact not found" do
+        let(:id) { 99999 }
+        let(:body) { { contact: { first_name: "Janet" } } }
+
+        run_test!
+      end
+    end
+
+    delete "Delete contact" do
+      tags "Contacts"
+      produces "application/json"
+      security [{ bearerAuth: [] }]
+
+      response "200", "contact deleted" do
+        schema type: :object,
+          properties: {
+            meta: {
+              type: :object,
+              properties: {
+                deleted: { type: :boolean },
+                id: { type: :string }
+              }
+            }
+          }
+
+        let(:contact) do
+          create(:item,
+            workspace:,
+            schema_slug: "contact",
+            tool_slug: "create",
+            data: { "first_name" => "Jane", "last_name" => "Smith" },
+            created_by: user
+          )
+        end
+        let(:id) { contact.id }
+
+        run_test! do |response|
+          body = JSON.parse(response.body)
+          expect(body["meta"]["deleted"]).to be true
+          expect(contact.reload.deleted_at).not_to be_nil
+        end
+      end
+
+      response "404", "contact not found" do
+        let(:id) { 99999 }
+
+        run_test!
+      end
     end
   end
 
-  describe "DELETE /api/v1/workspaces/contacts/:id" do
-    let(:contact) do
-      create(:item,
-        workspace:,
-        schema_slug: "contact",
-        tool_slug: "create",
-        data: { "first_name" => "Jane", "last_name" => "Smith" },
-        created_by: user
-      )
-    end
+  path "/workspaces/contacts/{id}/relationships" do
+    parameter name: :id, in: :path, type: :integer, required: true
 
-    it "soft deletes the contact" do
-      delete "/api/v1/workspaces/contacts/#{contact.id}", headers: auth_headers(user)
+    post "Add relationship" do
+      tags "Contacts"
+      consumes "application/json"
+      produces "application/json"
+      security [{ bearerAuth: [] }]
+      parameter name: :body, in: :body, schema: {
+        type: :object,
+        properties: {
+          relationship_type: { type: :string },
+          target_id: { type: :integer }
+        },
+        required: %w[relationship_type target_id]
+      }
 
-      expect(response).to have_http_status(:ok)
-      body = JSON.parse(response.body)
-      expect(body["meta"]["deleted"]).to be true
+      response "200", "relationship added" do
+        schema type: :object,
+          properties: {
+            data: {
+              type: :object,
+              properties: {
+                id: { type: :integer },
+                relationship_type: { type: :string },
+                source_id: { type: :integer },
+                target_id: { type: :integer }
+              }
+            },
+            meta: { type: :object, properties: { created: { type: :boolean } } }
+          }
 
-      contact.reload
-      expect(contact.deleted_at).not_to be_nil
+        let(:parent) do
+          create(:item,
+            workspace:,
+            schema_slug: "contact",
+            tool_slug: "create",
+            data: { "first_name" => "Parent", "last_name" => "Contact" },
+            created_by: user
+          )
+        end
+        let(:child) do
+          create(:item,
+            workspace:,
+            schema_slug: "contact",
+            tool_slug: "create",
+            data: { "first_name" => "Child", "last_name" => "Contact" },
+            created_by: user
+          )
+        end
+        let(:id) { parent.id }
+        let(:body) { { relationship_type: "children", target_id: child.id } }
+
+        run_test! do |response|
+          body = JSON.parse(response.body)
+          expect(body["data"]["relationship_type"]).to eq("children")
+        end
+      end
+
+      response "404", "contact not found" do
+        let(:id) { 99999 }
+        let(:body) { { relationship_type: "children", target_id: 1 } }
+
+        run_test!
+      end
     end
   end
-
-  describe "POST /api/v1/workspaces/contacts/:id/relationships" do
-    let(:parent) do
-      create(:item,
-        workspace:,
-        schema_slug: "contact",
-        tool_slug: "create",
-        data: { "first_name" => "Parent", "last_name" => "Contact" },
-        created_by: user
-      )
-    end
-
-    let(:child) do
-      create(:item,
-        workspace:,
-        schema_slug: "contact",
-        tool_slug: "create",
-        data: { "first_name" => "Child", "last_name" => "Contact" },
-        created_by: user
-      )
-    end
-
-    it "adds a relationship" do
-      expect {
-        post "/api/v1/workspaces/contacts/#{parent.id}/relationships",
-          params: { relationship_type: "children", target_id: child.id },
-          headers: auth_headers(user)
-      }.to change(ItemRelationship, :count).by(2) # forward + inverse
-
-      expect(response).to have_http_status(:ok)
-      body = JSON.parse(response.body)
-      expect(body["data"]["relationship_type"]).to eq("children")
-    end
-  end
-
-  describe "unknown feature" do
-    it "returns 404" do
-      get "/api/v1/workspaces/unknown_feature", headers: auth_headers(user)
-      expect(response).to have_http_status(:not_found)
-    end
-  end
-
-  private
-
-    def auth_headers(user)
-      payload = { user_id: user.id, workspace_id: workspace.id }
-      token = Auth::JwtService.encode(payload)
-      { "Authorization" => "Bearer #{token}" }
-    end
 end

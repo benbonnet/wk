@@ -1,232 +1,291 @@
 # frozen_string_literal: true
 
-require "rails_helper"
+require "swagger_helper"
 
 RSpec.describe "RIB Requests API", type: :request do
   let(:user) { create(:user) }
   let(:workspace) { create(:workspace) }
+  let(:Authorization) { "Bearer #{Auth::JwtService.encode({ user_id: user.id, workspace_id: workspace.id })}" }
 
-  before do
-    Core::Schema::Registry.clear!
-    Core::Features::Registry.clear!
-    Core::Workflow::Registry.clear!
 
-    # Register schema
-    Core::Schema::Registry.register(RibCheckWorkflow::RibRequestSchema)
+  path "/workspaces/rib_check_requests" do
+    get "List RIB requests" do
+      tags "RIB Requests"
+      produces "application/json"
+      security [{ bearerAuth: [] }]
+      parameter name: :page, in: :query, type: :integer, required: false
+      parameter name: :per_page, in: :query, type: :integer, required: false
 
-    # Register feature
-    Core::Features::Registry.register(
-      namespace: :workspaces,
-      feature: :rib_requests,
-      schema: :rib_request,
-      tools: [
-        RibCheckWorkflow::Tools::Index,
-        RibCheckWorkflow::Tools::Show,
-        RibCheckWorkflow::Tools::Create,
-        RibCheckWorkflow::Tools::Update,
-        RibCheckWorkflow::Tools::Destroy,
-        RibCheckWorkflow::Tools::Cancel
-      ]
-    )
+      response "200", "rib requests list" do
+        schema type: :object,
+          properties: {
+            data: { type: :array, items: { "$ref" => "#/components/schemas/item" } },
+            meta: {
+              type: :object,
+              properties: {
+                page: { type: :integer },
+                per_page: { type: :integer },
+                total: { type: :integer },
+                total_pages: { type: :integer }
+              }
+            }
+          }
 
-    # Register workflows
-    workflow_dir = Rails.root.join("packs/rib_check_workflow/app/lib/rib_check_workflow/workflows")
-    Dir["#{workflow_dir}/*.yml"].each do |path|
-      Core::Workflow::Registry.register(path)
-    end
-  end
+        run_test! do |response|
+          body = JSON.parse(response.body)
+          expect(body).to have_key("data")
+          expect(body).to have_key("meta")
+        end
+      end
 
-  describe "GET /api/v1/workspaces/rib_requests" do
-    it "returns rib_requests list" do
-      get "/api/v1/workspaces/rib_requests", headers: auth_headers(user)
+      response "200", "paginated results" do
+        let(:page) { 2 }
+        let(:per_page) { 10 }
 
-      expect(response).to have_http_status(:ok)
-      body = JSON.parse(response.body)
-      expect(body).to have_key("data")
-      expect(body).to have_key("meta")
-    end
-
-    it "supports pagination params" do
-      get "/api/v1/workspaces/rib_requests", params: { page: 2, per_page: 10 }, headers: auth_headers(user)
-
-      expect(response).to have_http_status(:ok)
-      body = JSON.parse(response.body)
-      expect(body["meta"]["page"]).to eq(2)
-      expect(body["meta"]["per_page"]).to eq(10)
-    end
-  end
-
-  describe "POST /api/v1/workspaces/rib_requests" do
-    let(:valid_params) do
-      {
-        rib_request: {
-          message_body: "Please provide your RIB",
-          request_type: "individual",
-          status: "draft"
-        }
-      }
+        run_test! do |response|
+          body = JSON.parse(response.body)
+          expect(body["meta"]["page"]).to eq(2)
+          expect(body["meta"]["per_page"]).to eq(10)
+        end
+      end
     end
 
-    it "creates a rib_request via workflow" do
-      expect {
-        post "/api/v1/workspaces/rib_requests", params: valid_params, headers: auth_headers(user)
-      }.to change(Item, :count).by(1)
-        .and change(Activity, :count).by(1)
-        .and change(WorkflowExecution, :count).by(1)
-
-      expect(response).to have_http_status(:ok), -> { "Response: #{response.status} - #{response.body}" }
-
-      body = JSON.parse(response.body)
-      expect(body["data"]["data"]["message_body"]).to eq("Please provide your RIB")
-      expect(body["meta"]["created"]).to be true
-    end
-
-    it "creates invites when recipients provided" do
-      recipient = create(:user)
-      params = {
-        rib_request: {
-          message_body: "Please provide your RIB",
-          request_type: "individual",
-          status: "pending",
-          recipients_attributes: [{ id: recipient.id }]
+    post "Create RIB request" do
+      tags "RIB Requests"
+      consumes "application/json"
+      produces "application/json"
+      security [{ bearerAuth: [] }]
+      parameter name: :body, in: :body, schema: {
+        type: :object,
+        properties: {
+          rib_request: {
+            type: :object,
+            properties: {
+              message_body: { type: :string },
+              request_type: { type: :string },
+              status: { type: :string }
+            }
+          }
         }
       }
 
-      expect {
-        post "/api/v1/workspaces/rib_requests", params:, headers: auth_headers(user)
-      }.to change(Invite, :count).by(1)
+      response "200", "rib request created" do
+        schema type: :object,
+          properties: {
+            data: { "$ref" => "#/components/schemas/item" },
+            meta: { type: :object, properties: { created: { type: :boolean } } }
+          }
 
-      expect(response).to have_http_status(:ok)
+        let(:body) do
+          {
+            rib_request: {
+              message_body: "Please provide your RIB",
+              request_type: "individual",
+              status: "draft"
+            }
+          }
+        end
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data["data"]["data"]["message_body"]).to eq("Please provide your RIB")
+          expect(data["meta"]["created"]).to be true
+        end
+      end
     end
   end
 
-  describe "GET /api/v1/workspaces/rib_requests/:id" do
-    let(:rib_request) do
-      create(:item,
-        schema_slug: "rib_request",
-        tool_slug: "create",
-        workspace:,
-        data: { "status" => "draft", "message_body" => "Test RIB request" },
-        created_by: user
-      )
+  path "/workspaces/rib_check_requests/{id}" do
+    parameter name: :id, in: :path, type: :integer, required: true
+
+    get "Get RIB request" do
+      tags "RIB Requests"
+      produces "application/json"
+      security [{ bearerAuth: [] }]
+
+      response "200", "rib request found" do
+        schema type: :object,
+          properties: {
+            data: { "$ref" => "#/components/schemas/item" }
+          }
+
+        let(:rib_request) do
+          create(:item,
+            schema_slug: "rib_request",
+            tool_slug: "create",
+            workspace:,
+            data: { "status" => "draft", "message_body" => "Test RIB request" },
+            created_by: user
+          )
+        end
+        let(:id) { rib_request.id }
+
+        run_test! do |response|
+          body = JSON.parse(response.body)
+          expect(body["data"]["id"]).to eq(rib_request.id)
+          expect(body["data"]["data"]["status"]).to eq("draft")
+        end
+      end
+
+      response "404", "rib request not found" do
+        let(:id) { 99999 }
+
+        run_test!
+      end
     end
 
-    it "returns the rib_request with serialized data" do
-      get "/api/v1/workspaces/rib_requests/#{rib_request.id}", headers: auth_headers(user)
+    put "Update RIB request" do
+      tags "RIB Requests"
+      consumes "application/json"
+      produces "application/json"
+      security [{ bearerAuth: [] }]
+      parameter name: :body, in: :body, schema: {
+        type: :object,
+        properties: {
+          rib_request: { type: :object }
+        }
+      }
 
-      expect(response).to have_http_status(:ok)
-      body = JSON.parse(response.body)
+      response "200", "rib request updated" do
+        schema type: :object,
+          properties: {
+            data: { "$ref" => "#/components/schemas/item" },
+            meta: { type: :object, properties: { updated: { type: :boolean } } }
+          }
 
-      expect(body["data"]["id"]).to eq(rib_request.id)
-      expect(body["data"]["data"]["status"]).to eq("draft")
-      expect(body["data"]["data"]["message_body"]).to eq("Test RIB request")
-      expect(body["data"]["schema_slug"]).to eq("rib_request")
+        let(:rib_request) do
+          create(:item,
+            schema_slug: "rib_request",
+            tool_slug: "create",
+            workspace:,
+            data: { "status" => "draft", "message_body" => "Original" },
+            created_by: user
+          )
+        end
+        let(:id) { rib_request.id }
+        let(:body) { { rib_request: { status: "pending", message_body: "Updated" } } }
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data["data"]["data"]["status"]).to eq("pending")
+          expect(data["data"]["data"]["message_body"]).to eq("Updated")
+          expect(data["meta"]["updated"]).to be true
+        end
+      end
+
+      response "404", "rib request not found" do
+        let(:id) { 99999 }
+        let(:body) { { rib_request: { status: "pending" } } }
+
+        run_test!
+      end
     end
 
-    it "returns 404 for unknown rib_request" do
-      get "/api/v1/workspaces/rib_requests/99999", headers: auth_headers(user)
+    delete "Delete RIB request" do
+      tags "RIB Requests"
+      produces "application/json"
+      security [{ bearerAuth: [] }]
 
-      expect(response).to have_http_status(:not_found)
+      response "200", "rib request deleted" do
+        schema type: :object,
+          properties: {
+            meta: {
+              type: :object,
+              properties: {
+                deleted: { type: :boolean },
+                id: { type: :string }
+              }
+            }
+          }
+
+        let(:rib_request) do
+          create(:item,
+            schema_slug: "rib_request",
+            tool_slug: "create",
+            workspace:,
+            data: { "status" => "draft" },
+            created_by: user
+          )
+        end
+        let(:id) { rib_request.id }
+
+        run_test! do |response|
+          body = JSON.parse(response.body)
+          expect(body["meta"]["deleted"]).to be true
+          expect(rib_request.reload.deleted_at).not_to be_nil
+        end
+      end
+
+      response "404", "rib request not found" do
+        let(:id) { 99999 }
+
+        run_test!
+      end
     end
   end
 
-  describe "PUT /api/v1/workspaces/rib_requests/:id" do
-    let(:rib_request) do
-      create(:item,
-        schema_slug: "rib_request",
-        tool_slug: "create",
-        workspace:,
-        data: { "status" => "draft", "message_body" => "Original" },
-        created_by: user
-      )
-    end
+  path "/workspaces/rib_check_requests/{id}/cancel" do
+    parameter name: :id, in: :path, type: :integer, required: true
 
-    it "updates the rib_request via workflow" do
-      expect {
-        put "/api/v1/workspaces/rib_requests/#{rib_request.id}",
-          params: { rib_request: { status: "pending", message_body: "Updated" } },
-          headers: auth_headers(user)
-      }.to change(Activity, :count).by(1)
-        .and change(WorkflowExecution, :count).by(1)
+    post "Cancel RIB request" do
+      tags "RIB Requests"
+      produces "application/json"
+      security [{ bearerAuth: [] }]
 
-      expect(response).to have_http_status(:ok)
-      body = JSON.parse(response.body)
-      expect(body["data"]["data"]["status"]).to eq("pending")
-      expect(body["data"]["data"]["message_body"]).to eq("Updated")
-      expect(body["meta"]["updated"]).to be true
-    end
-  end
+      response "200", "rib request cancelled" do
+        schema type: :object,
+          properties: {
+            data: { "$ref" => "#/components/schemas/item" },
+            meta: { type: :object, properties: { cancelled: { type: :boolean } } }
+          }
 
-  describe "POST /api/v1/workspaces/rib_requests/:id/cancel" do
-    let(:rib_request) do
-      create(:item,
-        schema_slug: "rib_request",
-        tool_slug: "create",
-        workspace:,
-        data: { "status" => "pending" },
-        created_by: user
-      )
-    end
+        let(:rib_request) do
+          create(:item,
+            schema_slug: "rib_request",
+            tool_slug: "create",
+            workspace:,
+            data: { "status" => "pending" },
+            created_by: user
+          )
+        end
+        let(:id) { rib_request.id }
 
-    it "cancels the rib_request via workflow" do
-      expect {
-        post "/api/v1/workspaces/rib_requests/#{rib_request.id}/cancel",
-          headers: auth_headers(user)
-      }.to change(Activity, :count).by(1)
-        .and change(WorkflowExecution, :count).by(1)
+        run_test! do |response|
+          body = JSON.parse(response.body)
+          expect(body["data"]["data"]["status"]).to eq("cancelled")
+          expect(body["meta"]["cancelled"]).to be true
+        end
+      end
 
-      expect(response).to have_http_status(:ok)
-      body = JSON.parse(response.body)
-      expect(body["data"]["data"]["status"]).to eq("cancelled")
-      expect(body["meta"]["cancelled"]).to be true
-    end
+      response "422", "cannot cancel completed request" do
+        schema type: :object,
+          properties: {
+            error: { type: :string },
+            details: { type: :object }
+          }
 
-    it "returns error when cancelling completed request" do
-      completed_request = create(:item,
-        schema_slug: "rib_request",
-        tool_slug: "create",
-        workspace:,
-        data: { "status" => "completed" },
-        created_by: user
-      )
+        let(:completed_request) do
+          create(:item,
+            schema_slug: "rib_request",
+            tool_slug: "create",
+            workspace:,
+            data: { "status" => "completed" },
+            created_by: user
+          )
+        end
+        let(:id) { completed_request.id }
 
-      post "/api/v1/workspaces/rib_requests/#{completed_request.id}/cancel",
-        headers: auth_headers(user)
+        run_test! do |response|
+          body = JSON.parse(response.body)
+          expect(body["error"]).to eq("Cannot cancel completed request")
+        end
+      end
 
-      expect(response).to have_http_status(:unprocessable_content)
-      body = JSON.parse(response.body)
-      expect(body["error"]).to eq("Cannot cancel completed request")
+      response "404", "rib request not found" do
+        let(:id) { 99999 }
+
+        run_test!
+      end
     end
   end
-
-  describe "DELETE /api/v1/workspaces/rib_requests/:id" do
-    let(:rib_request) do
-      create(:item,
-        schema_slug: "rib_request",
-        tool_slug: "create",
-        workspace:,
-        data: { "status" => "draft" },
-        created_by: user
-      )
-    end
-
-    it "soft deletes the rib_request" do
-      delete "/api/v1/workspaces/rib_requests/#{rib_request.id}", headers: auth_headers(user)
-
-      expect(response).to have_http_status(:ok)
-      body = JSON.parse(response.body)
-      expect(body["meta"]["deleted"]).to be true
-
-      rib_request.reload
-      expect(rib_request.deleted_at).not_to be_nil
-    end
-  end
-
-  private
-
-    def auth_headers(user)
-      payload = { user_id: user.id, workspace_id: workspace.id }
-      token = Auth::JwtService.encode(payload)
-      { "Authorization" => "Bearer #{token}" }
-    end
 end

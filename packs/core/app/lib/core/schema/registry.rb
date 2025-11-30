@@ -37,14 +37,11 @@ module Core
         def to_openapi_schemas
           schemas = {}
           all.each do |schema_class|
-            slug = schema_class.slug
+            name = schema_class.name.demodulize.sub(/Schema$/, "").underscore
             json_schema = schema_class.new.to_json_schema
 
-            # Output schema (for responses)
-            schemas[slug] = json_schema
-
-            # Input schema (for create/update)
-            schemas["#{slug}Input"] = json_schema
+            schemas[name] = json_schema
+            schemas["#{name}_input"] = json_schema
           end
           schemas
         end
