@@ -280,6 +280,110 @@ describe("RelationshipPicker Integration", () => {
       );
       expect(postCalls).toHaveLength(1);
     });
+
+    it("does NOT add duplicate when refetch returns created item", async () => {
+      const user = userEvent.setup();
+      let postCalled = false;
+
+      // After POST, GET returns the created item (simulating cache invalidation refetch)
+      mockFetch.mockImplementation((url: string, options?: RequestInit) => {
+        if (options?.method === "POST") {
+          postCalled = true;
+          return Promise.resolve({
+            data: {
+              id: 42,
+              data: {
+                first_name: "Bob",
+                last_name: "Smith",
+                email: "bob@example.com",
+              },
+            },
+          });
+        }
+        // After POST, GET returns the newly created item
+        if (postCalled) {
+          return Promise.resolve({
+            data: [
+              {
+                id: 42,
+                data: {
+                  first_name: "Bob",
+                  last_name: "Smith",
+                  email: "bob@example.com",
+                },
+              },
+            ],
+          });
+        }
+        return Promise.resolve({ data: [] });
+      });
+
+      render(
+        <TestWrapper services={services} queryClient={queryClient}>
+          <DynamicRenderer schema={formSchema} data={{}} />
+        </TestWrapper>,
+      );
+
+      // Open picker
+      await user.click(screen.getByRole("button", { name: /add/i }));
+
+      await waitFor(() => {
+        expect(screen.getByText("no_results")).toBeInTheDocument();
+      });
+
+      // Create new
+      await user.click(screen.getByRole("button", { name: /create_new/i }));
+
+      await waitFor(() => {
+        expect(
+          screen.getByTestId("relationship-create-drawer-recipients_attributes"),
+        ).toBeInTheDocument();
+      });
+
+      const createDrawer = screen.getByTestId(
+        "relationship-create-drawer-recipients_attributes",
+      );
+
+      await user.type(within(createDrawer).getByLabelText("first_name"), "Bob");
+      await user.type(within(createDrawer).getByLabelText("last_name"), "Smith");
+      await user.type(
+        within(createDrawer).getByLabelText("email"),
+        "bob@example.com",
+      );
+
+      await user.click(
+        within(createDrawer).getByRole("button", { name: /add/i }),
+      );
+
+      // Wait for create drawer to close
+      await waitFor(() => {
+        expect(
+          screen.queryByTestId("relationship-create-drawer-recipients_attributes"),
+        ).not.toBeInTheDocument();
+      });
+
+      // Confirm button should show exactly 1 (not 2)
+      expect(
+        screen.getByRole("button", { name: /confirm.*1/i }),
+      ).toBeInTheDocument();
+
+      // Click confirm to add to Layer 1
+      await user.click(screen.getByRole("button", { name: /confirm.*1/i }));
+
+      // Wait for picker drawer to close
+      await waitFor(() => {
+        expect(
+          screen.queryByTestId("relationship-picker-drawer-recipients_attributes"),
+        ).not.toBeInTheDocument();
+      });
+
+      // Layer 1 should show exactly ONE item (Bob), not two
+      const pickerField = screen.getByTestId(
+        "relationship-picker-recipients_attributes",
+      );
+      const bobEntries = within(pickerField).getAllByText(/Bob/);
+      expect(bobEntries).toHaveLength(1);
+    });
   });
 
   describe("Layer 2: Select existing contacts", () => {
