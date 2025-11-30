@@ -81,8 +81,12 @@ export function Table({
   });
 
   // Flatten data: API returns { id, data: {...} }, we need { id, ...data }
-  const rawData = (fetchedData?.data as DataTableRow[]) ?? dataProp;
-  const data = rawData.map((item) => {
+  const rawData = Array.isArray(fetchedData?.data)
+    ? fetchedData.data
+    : Array.isArray(dataProp)
+      ? dataProp
+      : [];
+  const data = (rawData as DataTableRow[]).map((item) => {
     if (item.data && typeof item.data === "object") {
       return { id: item.id, ...(item.data as Record<string, unknown>) };
     }
