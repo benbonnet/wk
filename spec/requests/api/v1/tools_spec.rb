@@ -2,9 +2,12 @@
 
 require "swagger_helper"
 
+# Registry is populated at load time
+
 # Helper to build API path from namespace, feature, and route config
+# NOTE: Paths are RELATIVE to the server URL defined in swagger_helper (/api/v1)
 def build_api_path(namespace, feature_slug, config)
-  base = "/api/v1/#{namespace}/#{feature_slug}"
+  base = "/#{namespace}/#{feature_slug}"
   parts = []
   parts << "{id}" if config[:scope] == :member
   parts << config[:action] if config[:action]
@@ -12,6 +15,25 @@ def build_api_path(namespace, feature_slug, config)
 end
 
 RSpec.describe "API", type: :request do
+  # Auth setup - shared across all tool specs
+  let(:user) { create(:user) }
+  let(:workspace) { create(:workspace) }
+  let(:auth_token) { Auth::JwtService.encode({ user_id: user.id, workspace_id: workspace.id }) }
+  let(:Authorization) { "Bearer #{auth_token}" }
+
+  # Re-register features before each test (other specs may have cleared the registry)
+  before do
+    # Clear and reload registries to ensure clean state
+    Core::Schema::Registry.clear!
+    Core::Features::Registry.clear!
+
+    # Register schemas
+    Core::Schema::Registry.register(ContactsService::ContactSchema)
+
+    # Reload features initializer
+    load Rails.root.join("config/initializers/features.rb")
+  end
+
   # Dynamically build specs from Core::Features::Registry
   # Each tool with rswag? configured gets documented and tested
 
@@ -74,7 +96,6 @@ RSpec.describe "API", type: :request do
 
                   context ex[:name].to_s do
                     let(:body) { ex[:request] }
-                    let(:Authorization) { "Bearer test-token" }
 
                     run_test!
                   end
@@ -89,7 +110,6 @@ RSpec.describe "API", type: :request do
 
                     context ex[:name].to_s do
                       let(:body) { ex[:request] }
-                      let(:Authorization) { "Bearer test-token" }
 
                       run_test!
                     end
