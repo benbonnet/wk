@@ -6,16 +6,18 @@ import { DisplayAdapter } from "./display-adapter";
 
 // Layouts
 import { View } from "./custom/view";
-import { Page } from "./page";
-import { Drawer } from "./drawer";
-import { Show } from "./show";
-import { Group } from "./group";
-import { CardGroup } from "./card-group";
-import { Multistep } from "./multistep";
-import { Step } from "./step";
-import { DisplayArray } from "./display-array";
-import { Alert } from "./alert";
-import { Actions } from "./actions";
+import {
+  Page,
+  Drawer,
+  Show,
+  Group,
+  CardGroup,
+  Multistep,
+  Step,
+  DisplayArray,
+  Alert,
+  Actions,
+} from "./layouts";
 
 // Custom (complex)
 import { Table } from "./custom/table";
@@ -23,53 +25,34 @@ import { Form, FormArray } from "./custom/form";
 import { RelationshipPicker } from "./custom/relationship-picker";
 
 // Primitives
-import { Button } from "./button";
-import { Link } from "./link";
-import { Dropdown } from "./dropdown";
-import { Option } from "./option";
-import { Search } from "./search";
-import { Submit } from "./submit";
+import { Button, Link, Dropdown, Option, Search, Submit } from "./primitives";
+
+// Type constants from inputs/displays
+import { INPUT_COMPONENTS } from "./inputs";
+import { DISPLAY_COMPONENTS } from "./displays";
 
 // =============================================================================
-// TYPE CONSTANTS
+// TYPE CONSTANTS (derived from component mappings)
 // =============================================================================
 
-export const INPUT_TYPES = [
-  "INPUT_TEXT",
-  "INPUT_TEXTAREA",
-  "INPUT_SELECT",
-  "INPUT_CHECKBOX",
-  "INPUT_CHECKBOXES",
-  "INPUT_RADIOS",
-  "INPUT_DATE",
-  "INPUT_DATETIME",
-  "INPUT_TAGS",
-  "INPUT_AI_RICH_TEXT",
-] as const;
-
-export const DISPLAY_TYPES = [
-  "DISPLAY_TEXT",
-  "DISPLAY_LONGTEXT",
-  "DISPLAY_NUMBER",
-  "DISPLAY_DATE",
-  "DISPLAY_DATETIME",
-  "DISPLAY_BADGE",
-  "DISPLAY_TAGS",
-  "DISPLAY_BOOLEAN",
-  "DISPLAY_SELECT",
-] as const;
+export const INPUT_TYPES = Object.keys(
+  INPUT_COMPONENTS,
+) as (keyof typeof INPUT_COMPONENTS)[];
+export const DISPLAY_TYPES = Object.keys(
+  DISPLAY_COMPONENTS,
+) as (keyof typeof DISPLAY_COMPONENTS)[];
 
 // =============================================================================
-// SUB-REGISTRIES (generated)
+// SUB-REGISTRIES
 // =============================================================================
 
 const inputAdapters = Object.fromEntries(
-  INPUT_TYPES.map((type) => [type, FormikAdapter])
-) as Record<(typeof INPUT_TYPES)[number], typeof FormikAdapter>;
+  INPUT_TYPES.map((type) => [type, FormikAdapter]),
+) as Record<keyof typeof INPUT_COMPONENTS, typeof FormikAdapter>;
 
 const displayAdapters = Object.fromEntries(
-  DISPLAY_TYPES.map((type) => [type, DisplayAdapter])
-) as Record<(typeof DISPLAY_TYPES)[number], typeof DisplayAdapter>;
+  DISPLAY_TYPES.map((type) => [type, DisplayAdapter]),
+) as Record<keyof typeof DISPLAY_COMPONENTS, typeof DisplayAdapter>;
 
 /** Layouts - structural components */
 const layoutAdapters = {

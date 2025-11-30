@@ -6,24 +6,25 @@ export { FormikAdapter } from "./formik-adapter";
 export { DisplayAdapter } from "./display-adapter";
 
 // Layouts
-export { Page } from "./page";
-export { Drawer } from "./drawer";
-export { Show, ShowContext, useShowData } from "./show";
-export { Group } from "./group";
-export { CardGroup } from "./card-group";
-export { Multistep, MultistepContext, useMultistep } from "./multistep";
-export { Step } from "./step";
-export { DisplayArray } from "./display-array";
-export { Alert } from "./alert";
-export { Actions } from "./actions";
+export {
+  Page,
+  Drawer,
+  Show,
+  ShowContext,
+  useShowData,
+  Group,
+  CardGroup,
+  Multistep,
+  MultistepContext,
+  useMultistep,
+  Step,
+  DisplayArray,
+  Alert,
+  Actions,
+} from "./layouts";
 
 // Primitives
-export { Button } from "./button";
-export { Link } from "./link";
-export { Dropdown } from "./dropdown";
-export { Option } from "./option";
-export { Search } from "./search";
-export { Submit } from "./submit";
+export { Button, Link, Dropdown, Option, Search, Submit } from "./primitives";
 
 // Custom (complex components)
 export { View, DrawerContext, ViewContext, useDrawer, useViewConfig } from "./custom/view";
