@@ -36,7 +36,7 @@ const menuOptions: MenuOption[] = [
     url: "#",
     icon: SquareTerminal,
     isActive: true,
-    items: [{ title: "RIB Checks", url: "/app/rib-checks" }],
+    items: [{ title: "RIB Checks", url: "/rib-checks" }],
   },
 ];
 

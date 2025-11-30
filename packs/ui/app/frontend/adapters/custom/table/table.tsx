@@ -80,18 +80,12 @@ export function Table({
     enabled: !!viewConfig.url && !!viewConfig.api?.index,
   });
 
-  // Flatten data: API returns { id, data: {...} }, we need { id, ...data }
-  const rawData = Array.isArray(fetchedData?.data)
-    ? fetchedData.data
+  // Keep data as-is: { id, data: {...} } structure
+  const data = Array.isArray(fetchedData?.data)
+    ? (fetchedData.data as DataTableRow[])
     : Array.isArray(dataProp)
       ? dataProp
       : [];
-  const data = (rawData as DataTableRow[]).map((item) => {
-    if (item.data && typeof item.data === "object") {
-      return { id: item.id, ...(item.data as Record<string, unknown>) };
-    }
-    return item;
-  });
 
   const columns: ColumnDef<DataTableRow>[] = useMemo(() => {
     const cols: ColumnDef<DataTableRow>[] = [];
@@ -127,7 +121,8 @@ export function Table({
     columnsProp.forEach((col: UISchemaColumn) => {
       cols.push({
         id: col.name,
-        accessorKey: col.name,
+        accessorFn: (row: DataTableRow) =>
+          (row.data as Record<string, unknown>)?.[col.name] ?? row[col.name],
         header: ({ column }) =>
           col.sortable !== false ? (
             <Button
