@@ -182,9 +182,9 @@ export const RelationshipPickerDrawer: FC<RelationshipPickerDrawerProps> = ({
   const handleConfirm = () => {
     const selected: AttributePayload[] = [];
 
-    // Add selected items from fetched data
+    // Add selected items from fetched data (skip if already in createdItems to avoid duplicates)
     for (const item of data) {
-      if (selectedIds.has(item.id)) {
+      if (selectedIds.has(item.id) && !createdItems.has(item.id)) {
         selected.push({
           id: item.id,
           ...(item.data as Record<string, unknown>),
