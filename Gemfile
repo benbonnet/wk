@@ -50,7 +50,7 @@ end
 group(:test) do
   gem("database_cleaner", "~> 2.0.1")
   gem("rails-controller-testing", "~> 1.0")
-  gem("rspec-rails", "~> 6.1")
+  gem("rspec-rails", "~> 8.0")
   gem("shoulda-matchers", "~> 5.3")
   gem("test-prof", "~> 1.0")
   gem("webmock")
