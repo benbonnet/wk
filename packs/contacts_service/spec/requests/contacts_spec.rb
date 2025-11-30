@@ -106,12 +106,13 @@ RSpec.describe "Contacts API", type: :request do
             details: { type: :object }
           }
 
-        let(:body) { { data: {} } }
+        # Send data with email but missing required first_name and last_name
+        let(:body) { { data: { email: "test@example.com" } } }
 
         run_test! do |response|
           body = JSON.parse(response.body)
           expect(body["error"]).to eq("Validation failed")
-          expect(body["details"]).to have_key("first_name")
+          expect(body["details"]).to have_key("data")
         end
       end
     end

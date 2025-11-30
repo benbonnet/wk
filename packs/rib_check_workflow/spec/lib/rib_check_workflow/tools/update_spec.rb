@@ -10,7 +10,7 @@ RSpec.describe RibCheckWorkflow::Tools::Update do
       schema_slug: "rib_request",
       workspace:,
       created_by: user,
-      data: { "status" => "draft", "message_body" => "Original" }
+      data: { "request_type" => "individual", "status" => "draft", "message_body" => "Original" }
     )
   end
 

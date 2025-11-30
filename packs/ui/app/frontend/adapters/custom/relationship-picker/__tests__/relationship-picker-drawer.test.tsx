@@ -203,7 +203,7 @@ describe("RelationshipPickerDrawer", () => {
 
       await waitFor(() => {
         expect(mockServices.fetch).toHaveBeenCalledWith(
-          expect.stringContaining("q=john")
+          expect.stringContaining("search=john")
         );
       });
     });

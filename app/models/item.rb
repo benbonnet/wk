@@ -37,6 +37,9 @@
 class Item < ApplicationRecord
   include WorkspaceScoped
   include Core::HasRelationships
+  include Core::HasSchemaValidation
+  include Core::HasNestedAttributes
+
   belongs_to :created_by, class_name: "User"
   belongs_to :updated_by, class_name: "User", optional: true
   belongs_to :deleted_by, class_name: "User", optional: true
@@ -44,8 +47,8 @@ class Item < ApplicationRecord
   has_many :documents, dependent: :destroy
   has_many :activities, dependent: :destroy
 
-  validates :schema_slug, presence: true, format: { with: /\A[a-z0-9\-_]+\z/, message: "must be lowercase alphanumeric with hyphens/underscores" }
-  validates :tool_slug, presence: true, format: { with: /\A[a-z0-9\-_]+\z/, message: "must be lowercase alphanumeric with hyphens/underscores" }
+  validates :schema_slug, presence: true
+  validates :tool_slug, presence: true
   validates :data, presence: true
   validates :created_by, presence: true
 

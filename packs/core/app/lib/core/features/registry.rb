@@ -88,7 +88,7 @@ module Core
 
             api[tool_name] = {
               method: route[:method].to_s.upcase,
-              path: path
+              path:
             }
           end
 
@@ -118,7 +118,7 @@ module Core
                 end
 
                 routes << {
-                  path: path,
+                  path:,
                   namespace: namespace.to_s,
                   feature: feature_name.to_s,
                   view: view_name

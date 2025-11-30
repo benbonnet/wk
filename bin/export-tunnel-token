@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+# Extracts tunnel token from Rails credentials for docker-compose
+# Usage: export TUNNEL_TOKEN=$(bin/export-tunnel-token)
+
+require_relative "../config/environment"
+
+token = Rails.application.credentials.dig(:cloudflare, :nvoi_dev_tunnel_token)
+print token if token

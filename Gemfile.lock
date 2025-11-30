@@ -647,6 +647,7 @@ DEPENDENCIES
   factory_bot_rails (~> 6.4.4)
   ffaker
   jbuilder
+  json-schema (~> 6.0)
   kamal
   omniauth (~> 2.1)
   omniauth-auth0 (~> 3.1)

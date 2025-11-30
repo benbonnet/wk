@@ -3,38 +3,18 @@
 require "rails_helper"
 
 RSpec.describe Core::HasRelationships do
-  let(:contact_schema) do
-    Class.new(Core::Schema::Base) do
-      def self.name
-        "TestPersonSchema"
-      end
-      title "TestPerson"
-
-      relationships do
-        has_many :children, schema: :testperson, inverse: :parents
-        has_many :parents, schema: :testperson, inverse: :children
-        has_one :spouse, schema: :testperson, inverse: :spouse
-      end
-    end
-  end
-
   let(:user) { create(:user) }
-  let(:item) { create(:item, schema_slug: "testperson", created_by: user) }
-  let(:child1) { create(:item, schema_slug: "testperson", created_by: user) }
-  let(:child2) { create(:item, schema_slug: "testperson", created_by: user) }
-  let(:spouse) { create(:item, schema_slug: "testperson", created_by: user) }
+  let(:workspace) { create(:workspace) }
 
-  before do
-    Core::Schema::Registry.register(contact_schema)
-    Core::Relationships::Registry.reload!
-
-    # Include the concern in Item for testing
-    Item.include(Core::HasRelationships) unless Item.included_modules.include?(Core::HasRelationships)
-  end
+  # Use real contact schema
+  let(:item) { create(:item, schema_slug: "contact", workspace:, created_by: user) }
+  let(:child1) { create(:item, schema_slug: "contact", workspace:, created_by: user) }
+  let(:child2) { create(:item, schema_slug: "contact", workspace:, created_by: user) }
+  let(:spouse) { create(:item, schema_slug: "contact", workspace:, created_by: user) }
 
   describe "#schema_class" do
     it "returns the schema class" do
-      expect(item.schema_class).to eq(contact_schema)
+      expect(item.schema_class).to eq(ContactsService::ContactSchema)
     end
   end
 

@@ -14,11 +14,7 @@ module ContactsService
 
       def execute(user_id:, workspace_id:, id:, data: {}, **_)
         item = find_item!(id)
-
-        item.update!(
-          data: item.data.merge(data.stringify_keys),
-          updated_by_id: user_id
-        )
+        item.update!(data: item.data.merge(data), updated_by_id: user_id)
 
         { data: Core::Serializers::ItemSerializer.new(item).to_h, meta: { updated: true } }
       end

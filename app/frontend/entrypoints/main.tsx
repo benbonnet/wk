@@ -48,14 +48,19 @@ function AppRoutes() {
   );
 }
 
-createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter basename="/app">
-        <AppUIProvider>
-          <AppRoutes />
-        </AppUIProvider>
-      </BrowserRouter>
-    </QueryClientProvider>
-  </StrictMode>,
-);
+document.addEventListener("DOMContentLoaded", () => {
+  const root = document.getElementById("root");
+  if (!root) return;
+
+  createRoot(root).render(
+    <StrictMode>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter basename="/app">
+          <AppUIProvider>
+            <AppRoutes />
+          </AppUIProvider>
+        </BrowserRouter>
+      </QueryClientProvider>
+    </StrictMode>,
+  );
+});

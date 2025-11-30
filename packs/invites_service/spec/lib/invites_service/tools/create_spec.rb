@@ -6,7 +6,7 @@ RSpec.describe InvitesService::Tools::Create do
   let(:inviter) { create(:user) }
   let(:invitee) { create(:user) }
   let(:workspace) { create(:workspace) }
-  let(:item) { create(:item, schema_slug: "rib_request", workspace:, created_by: inviter) }
+  let(:item) { create(:item, schema_slug: "test", workspace:, created_by: inviter, data: { "name" => "Test Item" }) }
 
   describe ".execute" do
     let(:valid_params) do
@@ -71,7 +71,7 @@ RSpec.describe InvitesService::Tools::Create do
     end
 
     it "handles multiple item_ids" do
-      item2 = create(:item, schema_slug: "document", workspace:, created_by: inviter)
+      item2 = create(:item, schema_slug: "test", workspace:, created_by: inviter, data: { "name" => "Test Item 2" })
 
       result = described_class.execute(**valid_params, item_ids: [item.id, item2.id])
 

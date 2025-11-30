@@ -28,12 +28,12 @@ export function DynamicRenderer({ schema, data = {}, active }: DynamicRendererPr
     return null;
   }
 
-  // Extract type and spread the rest as props
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { type: _type, elements, template, rules: _rules, ...props } = schema;
+  // Extract schema fields and spread the rest as props
+  // Pass type to unified adapters (InputAdapter, DisplayAdapter)
+  const { type, elements, template, rules: _rules, ...props } = schema;
 
   // Apply disabled state from rules
-  const effectiveProps = enabled ? props : { ...props, disabled: true };
+  const effectiveProps = enabled ? { ...props, type } : { ...props, type, disabled: true };
 
   // Pass data for display components to access
   // Don't overwrite schema.data if it exists (e.g., TABLE with inline data)

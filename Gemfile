@@ -98,3 +98,5 @@ gem "ruby_llm-schema", "~> 0.2.5"
 # NOTE: Local development uses `bundle config local.durable_workflow /path/to/durable_workflow`
 # This overrides the GitHub source to point to your local copy. Do NOT change to `path:` reference.
 gem "durable_workflow", github: "getnvoi/durable_workflows", branch: "main"
+
+gem "json-schema", "~> 6.0"

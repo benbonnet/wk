@@ -10,7 +10,7 @@ RSpec.describe "RibCheckWorkflow Cancel Workflow" do
       schema_slug: "rib_request",
       workspace:,
       created_by: user,
-      data: { "status" => "pending" }
+      data: { "request_type" => "individual", "status" => "pending" }
     )
   end
 

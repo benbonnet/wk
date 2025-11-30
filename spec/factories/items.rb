@@ -38,8 +38,35 @@ FactoryBot.define do
   factory :item do
     workspace
     created_by { association(:user) }
-    schema_slug { "contacts" }
+    schema_slug { "contact" }
     tool_slug { "create" }
-    data { { "name" => "Test Item" } }
+    data do
+      case schema_slug
+      when "contact"
+        { "first_name" => "Test", "last_name" => "Item" }
+      when "rib_request"
+        { "request_type" => "individual", "status" => "draft" }
+      when "test"
+        { "name" => "Test Item" }
+      else
+        # Unknown schema - will fail validation (as intended)
+        {}
+      end
+    end
+
+    trait :rib_request do
+      schema_slug { "rib_request" }
+      data { { "request_type" => "individual", "status" => "draft" } }
+    end
+
+    trait :contact do
+      schema_slug { "contact" }
+      data { { "first_name" => "Test", "last_name" => "Item" } }
+    end
+
+    trait :test do
+      schema_slug { "test" }
+      data { { "name" => "Test Item" } }
+    end
   end
 end

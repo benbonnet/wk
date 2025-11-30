@@ -10,7 +10,7 @@ RSpec.describe RibCheckWorkflow::Tools::Cancel do
       schema_slug: "rib_request",
       workspace:,
       created_by: user,
-      data: { "status" => "pending" }
+      data: { "request_type" => "individual", "status" => "pending" }
     )
   end
 
@@ -56,7 +56,7 @@ RSpec.describe RibCheckWorkflow::Tools::Cancel do
     end
 
     context "when item is already completed" do
-      before { item.update!(data: { "status" => "completed" }) }
+      before { item.update!(data: { "request_type" => "individual", "status" => "completed" }) }
 
       it "raises ValidationError" do
         expect { described_class.execute(**params) }

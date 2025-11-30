@@ -6,7 +6,7 @@ RSpec.describe InvitesService::InviteSerializer do
   let(:inviter) { create(:user) }
   let(:invitee) { create(:user) }
   let(:recipient_workspace) { create(:workspace) }
-  let(:item) { create(:item, schema_slug: "rib_request", created_by: inviter) }
+  let(:item) { create(:item, schema_slug: "test", created_by: inviter, data: { "name" => "Test Item" }) }
   let(:invite) do
     create(:invite,
       inviter:,

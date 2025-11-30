@@ -114,7 +114,7 @@ RSpec.describe "RIB Requests API", type: :request do
             schema_slug: "rib_request",
             tool_slug: "create",
             workspace:,
-            data: { "status" => "draft", "message_body" => "Test RIB request" },
+            data: { "request_type" => "individual", "status" => "draft", "message_body" => "Test RIB request" },
             created_by: user
           )
         end
@@ -158,7 +158,7 @@ RSpec.describe "RIB Requests API", type: :request do
             schema_slug: "rib_request",
             tool_slug: "create",
             workspace:,
-            data: { "status" => "draft", "message_body" => "Original" },
+            data: { "request_type" => "individual", "status" => "draft", "message_body" => "Original" },
             created_by: user
           )
         end
@@ -203,7 +203,7 @@ RSpec.describe "RIB Requests API", type: :request do
             schema_slug: "rib_request",
             tool_slug: "create",
             workspace:,
-            data: { "status" => "draft" },
+            data: { "request_type" => "individual", "status" => "draft" },
             created_by: user
           )
         end
@@ -244,7 +244,7 @@ RSpec.describe "RIB Requests API", type: :request do
             schema_slug: "rib_request",
             tool_slug: "create",
             workspace:,
-            data: { "status" => "pending" },
+            data: { "request_type" => "individual", "status" => "pending" },
             created_by: user
           )
         end
@@ -269,7 +269,7 @@ RSpec.describe "RIB Requests API", type: :request do
             schema_slug: "rib_request",
             tool_slug: "create",
             workspace:,
-            data: { "status" => "completed" },
+            data: { "request_type" => "individual", "status" => "completed" },
             created_by: user
           )
         end

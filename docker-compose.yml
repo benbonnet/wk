@@ -1,0 +1,72 @@
+x-rails-env: &rails-env
+  DATABASE_HOST: db
+  DATABASE_USER: postgres
+  DATABASE_PASSWORD: postgres
+  BUNDLE_PATH: /usr/local/bundle
+  RAILS_ENV: development
+
+x-app: &app
+  build:
+    context: .
+    dockerfile: Dockerfile.dev
+  volumes:
+    - .:/rails
+    - bundle_cache:/usr/local/bundle
+    - node_modules:/rails/node_modules
+  depends_on:
+    - db
+  stdin_open: true
+  tty: true
+
+services:
+  db:
+    image: postgres:16-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+
+  web:
+    <<: *app
+    ports:
+      - "3000:3000"
+    environment:
+      <<: *rails-env
+      VITE_RUBY_HOST: vite
+    depends_on:
+      - db
+      - vite
+    command: bin/rails server -b 0.0.0.0 -p 3000
+
+  vite:
+    <<: *app
+    ports:
+      - "3036:3036"
+    environment:
+      <<: *rails-env
+      VITE_RUBY_HOST: 0.0.0.0
+    command: bin/vite dev
+
+  jobs:
+    <<: *app
+    environment:
+      <<: *rails-env
+    command: bin/jobs
+    profiles:
+      - jobs
+
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    command: tunnel run --url http://web:3000
+    env_file:
+      - .env.tunnel
+    depends_on:
+      - web
+
+volumes:
+  postgres_data:
+  bundle_cache:
+  node_modules:

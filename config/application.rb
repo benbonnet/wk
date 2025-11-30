@@ -23,5 +23,8 @@ module Reg
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    config.hosts << "nvoi.dev"
+    config.hosts << "*.nvoi.dev"
   end
 end

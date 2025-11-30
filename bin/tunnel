@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby
+
+require_relative "../config/environment"
+
+PIDFILE = Rails.root.join("tmp/pids/nvoi_tunnel.pid")
+
+# Kill our specific tunnel if running (not other tunnels)
+if File.exist?(PIDFILE)
+  pid = File.read(PIDFILE).to_i
+  if system("ps -p #{pid} > /dev/null 2>&1")
+    puts "Killing existing nvoi tunnel (PID #{pid})..."
+    Process.kill("TERM", pid)
+    sleep 0.5
+  end
+  File.delete(PIDFILE)
+end
+
+token = Rails.application.credentials.dig(:cloudflare, :nvoi_dev_tunnel_token)
+
+if token.nil? || token.empty?
+  puts "ERROR: Missing cloudflare.nvoi_dev_tunnel_token in credentials"
+  exit 1
+end
+
+exec "cloudflared", "tunnel", "--pidfile", PIDFILE.to_s, "run", "--token", token

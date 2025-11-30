@@ -118,7 +118,7 @@ RSpec.describe "RibCheckWorkflow Create Workflow" do
       {
         user_id: user.id,
         workspace_id: workspace.id,
-        data: { status: "draft" }
+        data: { request_type: "individual", status: "draft" }
       }
     end
 
@@ -166,7 +166,7 @@ RSpec.describe "RibCheckWorkflow Create Workflow" do
       {
         user_id: user.id,
         workspace_id: workspace.id,
-        data: { status: "draft" }
+        data: { request_type: "individual", status: "draft" }
       }
     end
 

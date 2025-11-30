@@ -55,12 +55,14 @@ RSpec.describe Item, type: :model do
     it { is_expected.to validate_presence_of(:data) }
     it { is_expected.to validate_presence_of(:created_by) }
 
-    it { is_expected.to allow_value("contacts").for(:schema_slug) }
-    it { is_expected.to allow_value("my-schema_123").for(:schema_slug) }
-    it { is_expected.not_to allow_value("My Schema").for(:schema_slug) }
+    # schema_slug must be a registered schema
+    it { is_expected.to allow_value("contact").for(:schema_slug) }
+    it { is_expected.not_to allow_value("nonexistent_schema").for(:schema_slug) }
 
+    # tool_slug accepts any non-blank value
     it { is_expected.to allow_value("create").for(:tool_slug) }
-    it { is_expected.not_to allow_value("Create Tool").for(:tool_slug) }
+    it { is_expected.to allow_value("update").for(:tool_slug) }
+    it { is_expected.to allow_value("nested_create").for(:tool_slug) }
   end
 
   describe "scopes" do
@@ -75,6 +77,23 @@ RSpec.describe Item, type: :model do
     it ".deleted returns deleted items" do
       expect(described_class.deleted).to include(deleted_item)
       expect(described_class.deleted).not_to include(active_item)
+    end
+  end
+
+  describe "data= setter" do
+    let(:workspace) { create(:workspace) }
+    let(:user) { create(:user) }
+
+    it "strips nested attributes from data" do
+      item = described_class.new(
+        schema_slug: "contact",
+        tool_slug: "create",
+        workspace:,
+        created_by: user,
+        data: { "first_name" => "John", "last_name" => "Doe", "children_attributes" => [{ "id" => 1 }] }
+      )
+
+      expect(item.data).to eq({ "first_name" => "John", "last_name" => "Doe" })
     end
   end
 end

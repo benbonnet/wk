@@ -1,0 +1,101 @@
+version: "8.0"
+
+environment:
+  RAILS_ENV: development
+
+compose:
+  files:
+    - docker-compose.yml
+
+interaction:
+  sh:
+    description: Open a Bash shell
+    service: web
+    command: /bin/bash
+
+  bundle:
+    description: Run Bundler commands
+    service: web
+    command: bundle
+
+  rails:
+    description: Run Rails commands
+    service: web
+    command: bundle exec rails
+    subcommands:
+      s:
+        description: Run Rails server
+        service: web
+        compose:
+          run_options: [service-ports]
+        command: rm -f tmp/pids/server.pid && bin/rails server -b 0.0.0.0 -p 3000
+      c:
+        description: Run Rails console
+        service: web
+        command: bundle exec rails c
+
+  rake:
+    description: Run Rake commands
+    service: web
+    command: bundle exec rake
+
+  yarn:
+    description: Run Yarn commands
+    service: web
+    command: yarn
+
+  rspec:
+    description: Run RSpec tests
+    service: web
+    compose:
+      run_options: [--rm]
+    environment:
+      RAILS_ENV: test
+    command: bundle exec rspec
+
+  rubocop:
+    description: Run Rubocop
+    service: web
+    command: bundle exec rubocop
+
+  psql:
+    description: Run psql console
+    service: db
+    default_args: postgresql://postgres:postgres@db:5432/reg_development
+    command: psql
+
+  vite:
+    description: Run Vite commands
+    service: vite
+    command: bin/vite
+
+  up:
+    description: Start all services
+    service: web
+    compose:
+      run_options: [service-ports, use-aliases]
+    command: bin/rails server -b 0.0.0.0 -p 3000
+
+  tunnel:
+    description: Start with tunnel (run 'dip compose --profile tunnel up' instead)
+    compose:
+      profiles: [tunnel]
+    service: tunnel
+    command: tunnel run
+
+  setup-tunnel:
+    description: Extract tunnel token from Rails credentials
+    service: web
+    command: bash -c 'echo "TUNNEL_TOKEN=$(bin/export-tunnel-token)" > .env.tunnel && echo "Tunnel token written to .env.tunnel"'
+
+provision:
+  - dip compose down --volumes
+  - dip compose build
+  - dip compose up -d db
+  - sleep 3
+  - dip bundle install
+  - dip yarn install
+  - dip compose exec db createdb -U postgres reg_development
+  - dip compose exec db createdb -U postgres reg_test
+  - dip sh -c "DISABLE_TYPELIZER=true bin/rails db:prepare"
+  - dip setup-tunnel

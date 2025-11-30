@@ -13,7 +13,7 @@ RSpec.describe ItemsService::Tools::Create do
         workspace_id: workspace.id,
         schema_slug: "rib_request",
         tool_slug: "create",
-        data: { status: "draft", message_body: "Please provide RIB" }
+        data: { request_type: "individual", status: "draft", message_body: "Please provide RIB" }
       }
     end
 

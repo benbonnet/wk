@@ -65,12 +65,18 @@ module Core
           render json: result
         rescue Core::Tools::ValidationError => e
           render json: { error: e.message, details: e.details }, status: :unprocessable_content
+        rescue ActiveRecord::RecordInvalid => e
+          render json: { error: "Validation failed", details: validation_errors(e.record) }, status: :unprocessable_content
         rescue Core::Tools::NotFoundError => e
           render json: { error: e.message }, status: :not_found
         rescue Core::Tools::ForbiddenError => e
           render json: { error: e.message }, status: :forbidden
         rescue StandardError => e
           render json: { error: e.class.name, message: e.message }, status: :internal_server_error
+        end
+
+        def validation_errors(record)
+          record.errors.to_hash(full_messages: false)
         end
 
         def tool_params

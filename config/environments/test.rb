@@ -6,6 +6,9 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  # Allow any host in tests
+  config.hosts.clear
+
   # While tests run files are not watched, reloading is not necessary.
   config.enable_reloading = false
 
