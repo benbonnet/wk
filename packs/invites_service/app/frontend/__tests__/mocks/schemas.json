@@ -1,0 +1,63 @@
+[
+  {
+    "slug": "invite",
+    "title": "Invite",
+    "schema": {
+      "name": "InvitesService::InviteSchema",
+      "description": "An invitation to share items between users",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "inviter_id": {
+            "type": "string",
+            "description": "User sending the invite"
+          },
+          "invitee_id": {
+            "type": "string",
+            "description": "User receiving the invite"
+          },
+          "recipient_workspace_id": {
+            "type": "string",
+            "description": "Target workspace for shared items"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "sent",
+              "opened",
+              "clicked",
+              "accepted",
+              "declined",
+              "cancelled"
+            ],
+            "description": "Invite status"
+          },
+          "item_ids": {
+            "type": "array",
+            "description": "IDs of items to share",
+            "items": {
+              "type": "string"
+            }
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "inviter_id",
+          "invitee_id"
+        ],
+        "additionalProperties": false,
+        "strict": true
+      }
+    },
+    "relationships": [],
+    "translations": {}
+  }
+]

@@ -1,0 +1,25 @@
+[
+  {
+    "namespace": "workspaces",
+    "slug": "activities",
+    "schema": "activity",
+    "tools": [
+      {
+        "name": "Create",
+        "route": {
+          "method": "get",
+          "scope": "collection",
+          "action": null
+        }
+      },
+      {
+        "name": "Index",
+        "route": {
+          "method": "get",
+          "scope": "collection",
+          "action": null
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,76 @@
+[
+  {
+    "slug": "activity",
+    "title": "Activity",
+    "schema": {
+      "name": "ActivitiesService::ActivitySchema",
+      "description": "An activity log entry",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "activity_type": {
+            "type": "string",
+            "description": "Type of activity (e.g., created, updated, deleted)"
+          },
+          "category": {
+            "type": "string",
+            "description": "Activity category (e.g., contact, invite)"
+          },
+          "level": {
+            "type": "string",
+            "enum": [
+              "info",
+              "warning",
+              "error"
+            ],
+            "description": "Severity level"
+          },
+          "message": {
+            "type": "string",
+            "description": "Human-readable activity message"
+          },
+          "item_id": {
+            "type": "string",
+            "description": "Related item ID"
+          },
+          "schema_slug": {
+            "type": "string",
+            "description": "Schema slug of related item"
+          },
+          "tool_slug": {
+            "type": "string",
+            "description": "Tool that triggered activity"
+          },
+          "feature_slug": {
+            "type": "string",
+            "description": "Feature slug"
+          },
+          "metadata": {
+            "type": "object",
+            "properties": {},
+            "required": [],
+            "additionalProperties": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "activity_type",
+          "category",
+          "level",
+          "message"
+        ],
+        "additionalProperties": false,
+        "strict": true
+      }
+    },
+    "relationships": [],
+    "translations": {}
+  }
+]

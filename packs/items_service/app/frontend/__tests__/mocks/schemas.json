@@ -1,0 +1,82 @@
+[
+  {
+    "slug": "item",
+    "title": "Item",
+    "schema": {
+      "name": "ItemsService::ItemSchema",
+      "description": "Generic item wrapper for all domain data",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier"
+          },
+          "data": {
+            "type": "object",
+            "properties": {},
+            "required": [],
+            "additionalProperties": true,
+            "description": "Domain-specific data"
+          },
+          "workspace_id": {
+            "type": "integer",
+            "description": "Workspace ID"
+          },
+          "created_by_id": {
+            "type": "integer",
+            "description": "Creator user ID"
+          },
+          "updated_by_id": {
+            "type": "integer",
+            "description": "Last updater user ID"
+          },
+          "schema_slug": {
+            "type": "string",
+            "description": "Schema type identifier"
+          },
+          "tool_slug": {
+            "type": "string",
+            "description": "Tool that created/modified this item"
+          },
+          "created_at": {
+            "type": "string",
+            "description": "Creation timestamp",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "description": "Last update timestamp",
+            "format": "date-time"
+          },
+          "deleted_at": {
+            "type": "string",
+            "description": "Soft delete timestamp",
+            "format": "date-time"
+          },
+          "relationships": {
+            "type": "object",
+            "properties": {},
+            "required": [],
+            "additionalProperties": true,
+            "description": "Related items"
+          }
+        },
+        "required": [
+          "id",
+          "data",
+          "workspace_id",
+          "created_by_id",
+          "schema_slug",
+          "tool_slug",
+          "created_at",
+          "updated_at"
+        ],
+        "additionalProperties": false,
+        "strict": true
+      }
+    },
+    "relationships": [],
+    "translations": {}
+  }
+]

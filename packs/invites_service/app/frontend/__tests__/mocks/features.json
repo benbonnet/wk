@@ -1,0 +1,25 @@
+[
+  {
+    "namespace": "workspaces",
+    "slug": "invites",
+    "schema": "invite",
+    "tools": [
+      {
+        "name": "Cancel",
+        "route": {
+          "method": "get",
+          "scope": "collection",
+          "action": null
+        }
+      },
+      {
+        "name": "Create",
+        "route": {
+          "method": "get",
+          "scope": "collection",
+          "action": null
+        }
+      }
+    ]
+  }
+]
