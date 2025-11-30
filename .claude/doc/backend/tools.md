@@ -68,6 +68,11 @@ Base class for all tools. Inherits from `RubyLLM::Tool` for LLM compatibility.
 
 **Location:** `packs/core/app/lib/core/tools/routing.rb`
 
+The `route` DSL determines whether a tool is exposed as an HTTP endpoint:
+
+- **With `route`**: Tool is an HTTP endpoint, needs rswag request specs
+- **Without `route`**: Tool is internal/workflow-only, no HTTP exposure, no rswag specs
+
 ```ruby
 class MyTool < Core::Tools::Base
   route method: :get, scope: :collection           # GET /feature
@@ -76,6 +81,14 @@ class MyTool < Core::Tools::Base
   route method: :put, scope: :member               # PUT /feature/:id
   route method: :delete, scope: :member            # DELETE /feature/:id
   route method: :post, scope: :member, action: "cancel"  # POST /feature/:id/cancel
+end
+
+# Internal tool - no route, no HTTP endpoint
+class InternalTool < Core::Tools::Base
+  # No route - workflow only
+  def execute(**params)
+    # Called by other tools or workflows, not via HTTP
+  end
 end
 ```
 
