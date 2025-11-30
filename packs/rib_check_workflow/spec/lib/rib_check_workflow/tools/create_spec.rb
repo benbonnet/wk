@@ -6,17 +6,6 @@ RSpec.describe RibCheckWorkflow::Tools::Create do
   let(:user) { create(:user) }
   let(:workspace) { create(:workspace) }
 
-  before do
-    Core::Schema::Registry.clear!
-    Core::Schema::Registry.register(RibCheckWorkflow::RibRequestSchema)
-    Core::Workflow::Registry.clear!
-
-    # Register workflows
-    workflow_dir = Rails.root.join("packs/rib_check_workflow/app/lib/rib_check_workflow/workflows")
-    Dir["#{workflow_dir}/*.yml"].each do |path|
-      Core::Workflow::Registry.register(path)
-    end
-  end
 
   describe ".workflow_id" do
     it "infers workflow ID from class name" do
@@ -29,7 +18,7 @@ RSpec.describe RibCheckWorkflow::Tools::Create do
       {
         user_id: user.id,
         workspace_id: workspace.id,
-        rib_request: {
+        data: {
           message_body: "Please provide your RIB",
           request_type: "individual",
           status: "draft"
@@ -65,7 +54,7 @@ RSpec.describe RibCheckWorkflow::Tools::Create do
       let(:recipient) { create(:user) }
       let(:params_with_recipients) do
         params.deep_merge(
-          rib_request: {
+          data: {
             recipients_attributes: [{ id: recipient.id }]
           }
         )

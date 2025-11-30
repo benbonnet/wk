@@ -7,14 +7,17 @@ module RibCheckWorkflow
       route method: :put, scope: :member
       schema "rib_request"
 
-      params RibRequestSchema
+      params do
+        integer :id, required: true
+        object :data, of: RibRequestSchema
+      end
 
       # Inferred workflow_id: rib_check_update
 
-      def execute(user_id:, workspace_id:, id:, rib_request: {}, **_)
+      def execute(user_id:, workspace_id:, id:, data: {}, **_)
         item = find_item!(id)
 
-        result = run_workflow(input: { user_id:, workspace_id:, item_id: item.id, data: rib_request })
+        result = run_workflow(input: { user_id:, workspace_id:, item_id: item.id, data: })
 
         {
           data: Core::Serializers::ItemSerializer.new(Item.find(result.output[:item][:id])).to_h,

@@ -22,7 +22,6 @@ RSpec.describe Core::Relationships::Service do
   let(:child_item) { create(:item, schema_slug: "contact", created_by: user) }
 
   before do
-    Core::Schema::Registry.clear!
     Core::Schema::Registry.register(contact_schema)
     Core::Relationships::Registry.reload!
   end

@@ -5,6 +5,8 @@ module ActivitiesService
     class Index < Core::Tools::Base
       route method: :get, scope: :collection
 
+      param :limit, type: :integer, desc: "Number of activities to return", required: false
+
       def execute(limit: 50, **_)
         activities = Activity
           .where(workspace_id:)

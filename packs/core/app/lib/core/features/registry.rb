@@ -41,10 +41,6 @@ module Core
           end
         end
 
-        def clear!
-          @all = nil
-        end
-
         # Returns all routable views for frontend routing
         def frontend_routes
           all.flat_map do |namespace, features|

@@ -8,7 +8,11 @@ module ContactsService
 
       description "List all contacts with pagination and search"
 
-      def execute(page: 1, per_page: 25, search: nil, **filters)
+      param :page, type: :integer, desc: "Page number", required: false
+      param :per_page, type: :integer, desc: "Items per page", required: false
+      param :search, type: :string, desc: "Search query", required: false
+
+      def execute(page: 1, per_page: 25, search: nil, **)
         query = items.active
 
         if search.present?

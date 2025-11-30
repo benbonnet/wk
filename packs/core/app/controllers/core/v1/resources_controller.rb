@@ -74,9 +74,8 @@ module Core
         end
 
         def tool_params
-          params.permit!.to_h.symbolize_keys.except(
-            :namespace, :feature, :action_name, :controller, :action, :format
-          )
+          permitted = Tools::RailsParameters.permit_structure(@tool_class)
+          params.permit(*permitted).to_h.deep_symbolize_keys
         end
     end
   end

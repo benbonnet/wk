@@ -45,8 +45,8 @@ export const WithActions: Story = {
     title: "Contacts",
     description: "Manage your contacts and leads",
     actions: [
-      { type: "Button", label: "Export", variant: "outline" },
-      { type: "Button", label: "New Contact", variant: "primary" },
+      { type: "BUTTON", label: "Export", variant: "outline" },
+      { type: "BUTTON", label: "New Contact", variant: "primary" },
     ],
     children: (
       <div className="p-4 border rounded-lg">

@@ -3,9 +3,6 @@
 require "rails_helper"
 
 RSpec.describe Core::Workflow::Base do
-  before { Core::Workflow::Registry.clear! }
-  after { Core::Workflow::Registry.clear! }
-
   describe ".inferred_workflow_id" do
     it "infers workflow ID from class name" do
       stub_const("RibCheckWorkflow::Tools::Create", Class.new(described_class))

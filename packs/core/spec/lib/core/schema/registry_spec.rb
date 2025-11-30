@@ -12,8 +12,6 @@ RSpec.describe Core::Schema::Registry do
     end
   end
 
-  before { described_class.clear! }
-
   describe ".register" do
     it "adds schema to registry" do
       described_class.register(schema_class)
@@ -31,11 +29,13 @@ RSpec.describe Core::Schema::Registry do
     before { described_class.register(schema_class) }
 
     it "finds schema by slug" do
-      expect(described_class.find("testcontact")).to eq(schema_class)
+      found = described_class.find("testcontact")
+      expect(found).to be_present
+      expect(found.slug).to eq("testcontact")
     end
 
     it "returns nil for unknown slug" do
-      expect(described_class.find("unknown")).to be_nil
+      expect(described_class.find("unknown_xyz_schema")).to be_nil
     end
   end
 
@@ -43,11 +43,12 @@ RSpec.describe Core::Schema::Registry do
     before { described_class.register(schema_class) }
 
     it "returns schema when found" do
-      expect(described_class.find!("testcontact")).to eq(schema_class)
+      found = described_class.find!("testcontact")
+      expect(found.slug).to eq("testcontact")
     end
 
     it "raises NotFoundError when not found" do
-      expect { described_class.find!("unknown") }
+      expect { described_class.find!("unknown_xyz_schema") }
         .to raise_error(Core::Schema::Registry::NotFoundError)
     end
   end
@@ -60,21 +61,13 @@ RSpec.describe Core::Schema::Registry do
     end
   end
 
-  describe ".clear!" do
-    it "removes all registered schemas" do
-      described_class.register(schema_class)
-      described_class.clear!
-      expect(described_class.all).to be_empty
-    end
-  end
-
   describe ".to_mock_data" do
     before { described_class.register(schema_class) }
 
     it "returns array of mock data for all schemas" do
       mocks = described_class.to_mock_data
       expect(mocks).to be_an(Array)
-      expect(mocks.first[:slug]).to eq("testcontact")
+      expect(mocks.map { |m| m[:slug] }).to include("testcontact")
     end
   end
 end

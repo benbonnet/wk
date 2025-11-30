@@ -203,7 +203,7 @@ describe("Phase 11: API Integration", () => {
       await waitFor(() => {
         expect(mockFetch).toHaveBeenCalledWith("/api/contacts", {
           method: "POST",
-          body: { name: "Test Contact" },
+          body: { data: { name: "Test Contact" } },
         });
       });
     });
@@ -241,7 +241,7 @@ describe("Phase 11: API Integration", () => {
       await waitFor(() => {
         expect(mockFetch).toHaveBeenCalledWith("/api/contacts", {
           method: "POST",
-          body: { name: "New Contact" },
+          body: { data: { name: "New Contact" } },
         });
       });
     });
@@ -254,7 +254,11 @@ describe("Phase 11: API Integration", () => {
       function ApiCaller() {
         const { executeApi } = useViewConfig();
         return (
-          <button onClick={() => executeApi("update", { id: 99 }, { data: { name: "Updated" } })}>
+          <button onClick={() => executeApi({
+            action: "update",
+            url_parameters: { id: 99 },
+            body: { data: { name: "Updated" } },
+          })}>
             Update
           </button>
         );
@@ -290,7 +294,10 @@ describe("Phase 11: API Integration", () => {
       function DeleteButton() {
         const { executeApi } = useViewConfig();
         return (
-          <button onClick={() => executeApi("destroy", { id: 5 })}>
+          <button onClick={() => executeApi({
+            action: "destroy",
+            url_parameters: { id: 5 },
+          })}>
             Delete
           </button>
         );

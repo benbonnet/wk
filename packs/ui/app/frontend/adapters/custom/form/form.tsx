@@ -150,14 +150,14 @@ export function Form({
     setIsSubmitting(true);
     try {
       const formAction = action || "save";
-      const item = use_record && drawerData ? drawerData : values;
+      const record = use_record && drawerData ? drawerData : values;
 
-      await executeApi(
-        formAction,
-        item as Record<string, unknown>,
-        { data: values },
+      await executeApi({
+        action: formAction,
+        url_parameters: record as Record<string, unknown>,
+        body: { data: values },
         notification,
-      );
+      });
 
       if (onSubmit) await onSubmit(values);
     } catch (error) {

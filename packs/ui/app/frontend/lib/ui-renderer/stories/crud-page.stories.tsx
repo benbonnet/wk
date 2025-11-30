@@ -295,16 +295,16 @@ export const ContactsList: Story = {
           });
         }),
         http.post("/api/v1/contacts", async ({ request }) => {
-          const body = await request.json();
+          const body = (await request.json()) as { data: Record<string, unknown> };
           return HttpResponse.json({
             id: 6,
-            ...body,
+            ...body.data,
             created_at: new Date().toISOString(),
           });
         }),
         http.put("/api/v1/contacts/:id", async ({ request }) => {
-          const body = await request.json();
-          return HttpResponse.json(body);
+          const body = (await request.json()) as { data: Record<string, unknown> };
+          return HttpResponse.json(body.data);
         }),
         http.delete("/api/v1/contacts/:id", () => {
           return HttpResponse.json({ success: true });

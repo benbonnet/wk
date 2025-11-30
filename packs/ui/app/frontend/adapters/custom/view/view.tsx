@@ -20,23 +20,21 @@ interface DrawerContextValue {
   setDrawerData: (data: Record<string, unknown> | null) => void;
 }
 
-interface ExecuteApiOptions {
-  data?: Record<string, unknown>;
-}
-
-interface ExecuteApiNotification {
-  success?: string;
-  error?: string;
+interface ExecuteApiParams {
+  action: string;
+  url_parameters?: Record<string, unknown>;
+  body?: Record<string, unknown>;
+  notification?: {
+    success?: string;
+    error?: string;
+  };
 }
 
 interface ViewContextValue {
   url: string;
   api: Record<string, { method: string; path: string }>;
   executeApi: (
-    action: string,
-    item: Record<string, unknown> | null,
-    options?: ExecuteApiOptions,
-    notification?: ExecuteApiNotification,
+    params: ExecuteApiParams,
   ) => Promise<{ success: boolean; data?: unknown; error?: unknown }>;
 }
 
@@ -83,26 +81,32 @@ export function View({
   };
 
   const executeApi = useCallback(
-    async (
-      action: string,
-      item: Record<string, unknown> | null,
-      options?: ExecuteApiOptions,
-      notification?: ExecuteApiNotification,
-    ): Promise<{ success: boolean; data?: unknown; error?: unknown }> => {
+    async ({
+      action,
+      url_parameters,
+      body,
+      notification,
+    }: ExecuteApiParams): Promise<{
+      success: boolean;
+      data?: unknown;
+      error?: unknown;
+    }> => {
       let resolvedAction = action;
       if (action === "save") {
-        resolvedAction = item?.id ? "update" : "create";
+        resolvedAction = url_parameters?.id ? "update" : "create";
       }
 
       const endpoint = api[resolvedAction];
       if (!endpoint) {
-        console.error(`No API endpoint found for action: ${resolvedAction}`);
         return { success: false, error: `No endpoint for ${resolvedAction}` };
       }
 
       let path = endpoint.path;
-      if (item) {
-        path = path.replace(/:(\w+)/g, (_, key) => String(item[key] ?? ""));
+      if (url_parameters) {
+        path = path.replace(
+          /:(\w+)/g,
+          (_, key) => String(url_parameters[key] ?? ""),
+        );
       }
 
       const fullUrl = `${url}${path ? `/${path}` : ""}`;
@@ -110,7 +114,7 @@ export function View({
       try {
         const result = await services.fetch(fullUrl, {
           method: endpoint.method,
-          body: options?.data,
+          body,
         });
 
         if (result?.data) {

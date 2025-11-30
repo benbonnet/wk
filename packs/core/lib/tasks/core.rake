@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 namespace :core do
+  desc "Sync schemas, features, tools, and views from Registry to database"
+  task sync: :environment do
+    silent = ENV["SILENT"] == "true"
+    Core::Sync.call(silent:)
+  end
+
   desc "Export schema/feature data for frontend integration tests"
   task export_mocks: :environment do
     require "fileutils"
@@ -122,4 +128,10 @@ def export_pack_features(pack_name, output_dir, silent: false)
     File.write(features_file, JSON.pretty_generate(features_data))
     puts "#{pack_name}: Exported #{features_data.length} features" unless silent
   end
+end
+
+# Hook sync and mocks generation into db:migrate
+Rake::Task["db:migrate"].enhance do
+  Rake::Task["core:sync"].invoke
+  Rake::Task["core:export_mocks"].invoke if Rails.env.development?
 end

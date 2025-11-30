@@ -58,7 +58,7 @@ RSpec.describe "RIB Requests API", type: :request do
       parameter name: :body, in: :body, schema: {
         type: :object,
         properties: {
-          rib_request: {
+          data: {
             type: :object,
             properties: {
               message_body: { type: :string },
@@ -78,7 +78,7 @@ RSpec.describe "RIB Requests API", type: :request do
 
         let(:body) do
           {
-            rib_request: {
+            data: {
               message_body: "Please provide your RIB",
               request_type: "individual",
               status: "draft"
@@ -142,7 +142,7 @@ RSpec.describe "RIB Requests API", type: :request do
       parameter name: :body, in: :body, schema: {
         type: :object,
         properties: {
-          rib_request: { type: :object }
+          data: { type: :object }
         }
       }
 
@@ -163,7 +163,7 @@ RSpec.describe "RIB Requests API", type: :request do
           )
         end
         let(:id) { rib_request.id }
-        let(:body) { { rib_request: { status: "pending", message_body: "Updated" } } }
+        let(:body) { { data: { status: "pending", message_body: "Updated" } } }
 
         run_test! do |response|
           data = JSON.parse(response.body)
@@ -175,7 +175,7 @@ RSpec.describe "RIB Requests API", type: :request do
 
       response "404", "rib request not found" do
         let(:id) { 99999 }
-        let(:body) { { rib_request: { status: "pending" } } }
+        let(:body) { { data: { status: "pending" } } }
 
         run_test!
       end

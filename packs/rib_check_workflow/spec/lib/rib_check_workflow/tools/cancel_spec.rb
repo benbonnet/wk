@@ -14,18 +14,6 @@ RSpec.describe RibCheckWorkflow::Tools::Cancel do
     )
   end
 
-  before do
-    Core::Schema::Registry.clear!
-    Core::Schema::Registry.register(RibCheckWorkflow::RibRequestSchema)
-    Core::Workflow::Registry.clear!
-
-    # Register workflows
-    workflow_dir = Rails.root.join("packs/rib_check_workflow/app/lib/rib_check_workflow/workflows")
-    Dir["#{workflow_dir}/*.yml"].each do |path|
-      Core::Workflow::Registry.register(path)
-    end
-  end
-
   describe ".workflow_id" do
     it "infers workflow ID from class name" do
       expect(described_class.workflow_id).to eq("rib_check_cancel")

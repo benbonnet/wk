@@ -71,7 +71,7 @@ RSpec.describe "Contacts API", type: :request do
       parameter name: :body, in: :body, schema: {
         type: :object,
         properties: {
-          contact: {
+          data: {
             type: :object,
             properties: {
               first_name: { type: :string },
@@ -90,7 +90,7 @@ RSpec.describe "Contacts API", type: :request do
             meta: { type: :object, properties: { created: { type: :boolean } } }
           }
 
-        let(:body) { { contact: { first_name: "John", last_name: "Doe", email: "john@example.com" } } }
+        let(:body) { { data: { first_name: "John", last_name: "Doe", email: "john@example.com" } } }
 
         run_test! do |response|
           body = JSON.parse(response.body)
@@ -106,7 +106,7 @@ RSpec.describe "Contacts API", type: :request do
             details: { type: :object }
           }
 
-        let(:body) { { contact: {} } }
+        let(:body) { { data: {} } }
 
         run_test! do |response|
           body = JSON.parse(response.body)
@@ -164,7 +164,7 @@ RSpec.describe "Contacts API", type: :request do
       parameter name: :body, in: :body, schema: {
         type: :object,
         properties: {
-          contact: { type: :object }
+          data: { type: :object }
         }
       }
 
@@ -185,7 +185,7 @@ RSpec.describe "Contacts API", type: :request do
           )
         end
         let(:id) { contact.id }
-        let(:body) { { contact: { first_name: "Janet" } } }
+        let(:body) { { data: { first_name: "Janet" } } }
 
         run_test! do |response|
           body = JSON.parse(response.body)
@@ -196,7 +196,7 @@ RSpec.describe "Contacts API", type: :request do
 
       response "404", "contact not found" do
         let(:id) { 99999 }
-        let(:body) { { contact: { first_name: "Janet" } } }
+        let(:body) { { data: { first_name: "Janet" } } }
 
         run_test!
       end

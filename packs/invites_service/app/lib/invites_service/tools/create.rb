@@ -6,7 +6,9 @@ module InvitesService
       description "Create an invite to share items between users"
       # No route - workflow only
 
-      params InviteSchema
+      params do
+        object :data, of: InviteSchema
+      end
 
       def execute(
         user_id:,

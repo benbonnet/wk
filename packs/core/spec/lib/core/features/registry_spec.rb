@@ -27,71 +27,69 @@ RSpec.describe Core::Features::Registry do
     end
   end
 
-  before { described_class.clear! }
-
   describe ".register" do
     it "registers a feature with tools" do
       described_class.register(
-        namespace: :workspaces,
-        feature: :contacts,
-        tools: [ index_tool, show_tool, create_tool ]
+        namespace: :test_ns,
+        feature: :test_feature,
+        tools: [index_tool, show_tool, create_tool]
       )
 
-      expect(described_class.find(:workspaces, :contacts)).to be_present
+      expect(described_class.find(:test_ns, :test_feature)).to be_present
     end
   end
 
   describe ".find" do
     before do
       described_class.register(
-        namespace: :workspaces,
-        feature: :contacts,
-        schema: :contact,
-        tools: [ index_tool ]
+        namespace: :test_ns,
+        feature: :test_contacts,
+        schema: :test_contact,
+        tools: [index_tool]
       )
     end
 
     it "finds registered feature" do
-      feature = described_class.find(:workspaces, :contacts)
-      expect(feature[:schema]).to eq(:contact)
+      feature = described_class.find(:test_ns, :test_contacts)
+      expect(feature[:schema]).to eq(:test_contact)
     end
 
     it "returns nil for unregistered feature" do
-      expect(described_class.find(:unknown, :feature)).to be_nil
+      expect(described_class.find(:unknown_ns, :unknown_feature)).to be_nil
     end
   end
 
   describe ".tools_for" do
     before do
       described_class.register(
-        namespace: :workspaces,
-        feature: :contacts,
-        tools: [ index_tool, show_tool ]
+        namespace: :test_ns,
+        feature: :test_items,
+        tools: [index_tool, show_tool]
       )
     end
 
     it "returns tools for feature" do
-      tools = described_class.tools_for(:workspaces, :contacts)
+      tools = described_class.tools_for(:test_ns, :test_items)
       expect(tools).to contain_exactly(index_tool, show_tool)
     end
 
     it "returns empty array for unknown feature" do
-      expect(described_class.tools_for(:unknown, :feature)).to eq([])
+      expect(described_class.tools_for(:unknown_ns, :unknown_feature)).to eq([])
     end
   end
 
   describe ".find_tool" do
     before do
       described_class.register(
-        namespace: :workspaces,
-        feature: :contacts,
-        tools: [ index_tool, show_tool, create_tool, publish_tool ]
+        namespace: :test_ns,
+        feature: :test_resources,
+        tools: [index_tool, show_tool, create_tool, publish_tool]
       )
     end
 
     it "finds GET collection tool" do
       tool = described_class.find_tool(
-        :workspaces, :contacts,
+        :test_ns, :test_resources,
         http_method: :get, scope: :collection
       )
       expect(tool).to eq(index_tool)
@@ -99,7 +97,7 @@ RSpec.describe Core::Features::Registry do
 
     it "finds GET member tool" do
       tool = described_class.find_tool(
-        :workspaces, :contacts,
+        :test_ns, :test_resources,
         http_method: :get, scope: :member
       )
       expect(tool).to eq(show_tool)
@@ -107,7 +105,7 @@ RSpec.describe Core::Features::Registry do
 
     it "finds POST collection tool" do
       tool = described_class.find_tool(
-        :workspaces, :contacts,
+        :test_ns, :test_resources,
         http_method: :post, scope: :collection
       )
       expect(tool).to eq(create_tool)
@@ -115,7 +113,7 @@ RSpec.describe Core::Features::Registry do
 
     it "finds custom action tool" do
       tool = described_class.find_tool(
-        :workspaces, :contacts,
+        :test_ns, :test_resources,
         http_method: :post, scope: :member, action: "publish"
       )
       expect(tool).to eq(publish_tool)
@@ -123,40 +121,28 @@ RSpec.describe Core::Features::Registry do
 
     it "returns nil for non-matching route" do
       tool = described_class.find_tool(
-        :workspaces, :contacts,
+        :test_ns, :test_resources,
         http_method: :delete, scope: :collection
       )
       expect(tool).to be_nil
     end
   end
 
-  describe ".clear!" do
-    it "removes all registrations" do
-      described_class.register(
-        namespace: :workspaces,
-        feature: :contacts,
-        tools: [ index_tool ]
-      )
-
-      described_class.clear!
-      expect(described_class.all).to be_empty
-    end
-  end
-
   describe ".to_mock_data" do
     before do
       described_class.register(
-        namespace: :workspaces,
-        feature: :contacts,
-        schema: :contact,
-        tools: [ index_tool ]
+        namespace: :mock_ns,
+        feature: :mock_items,
+        schema: :mock_item,
+        tools: [index_tool]
       )
     end
 
     it "exports features for frontend mocks" do
       mocks = described_class.to_mock_data
-      expect(mocks.first[:namespace]).to eq(:workspaces)
-      expect(mocks.first[:features].first[:slug]).to eq(:contacts)
+      mock_ns = mocks.find { |m| m[:namespace] == :mock_ns }
+      expect(mock_ns).to be_present
+      expect(mock_ns[:features].first[:slug]).to eq(:mock_items)
     end
   end
 end

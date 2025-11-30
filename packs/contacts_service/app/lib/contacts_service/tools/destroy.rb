@@ -6,6 +6,8 @@ module ContactsService
       route method: :delete, scope: :member
       schema "contact"
 
+      param :id, type: :integer, desc: "Contact ID", required: true
+
       def execute(user_id:, workspace_id:, id:, **_)
         item = find_item!(id)
 

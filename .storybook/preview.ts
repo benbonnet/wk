@@ -7,6 +7,7 @@ import { withProviders } from "./decorators";
 // Initialize MSW with options to bypass unhandled requests
 initialize({
   onUnhandledRequest: "bypass",
+  quiet: true,
 });
 
 const preview: Preview = {

@@ -6,7 +6,9 @@ module ActivitiesService
       description "Log an activity event"
       # No route - workflow only
 
-      params ActivitySchema
+      params do
+        object :data, of: ActivitySchema
+      end
 
       def execute(
         user_id:,

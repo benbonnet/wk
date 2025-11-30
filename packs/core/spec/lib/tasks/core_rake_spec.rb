@@ -17,8 +17,6 @@ RSpec.describe "core:export_mocks" do
 
   before do
     Rake::Task["core:export_mocks"].reenable
-    Core::Schema::Registry.clear!
-    Core::Features::Registry.clear!
   end
 
   let(:test_schema) do

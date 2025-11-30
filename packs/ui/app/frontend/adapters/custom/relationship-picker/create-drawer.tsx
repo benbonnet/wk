@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
 } from "@ui/components/sheet";
@@ -129,6 +130,9 @@ export const RelationshipCreateDrawer: FC<RelationshipCreateDrawerProps> = ({
       >
         <SheetHeader>
           <SheetTitle>{t("create_new")}</SheetTitle>
+          <SheetDescription className="sr-only">
+            {t("create_new_description")}
+          </SheetDescription>
         </SheetHeader>
         <div className="flex-1 overflow-y-auto p-4">
           <FormContext.Provider value={formContextValue}>

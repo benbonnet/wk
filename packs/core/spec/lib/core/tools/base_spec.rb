@@ -3,16 +3,7 @@
 require "rails_helper"
 
 RSpec.describe Core::Tools::Base do
-  let(:schema_class) do
-    Class.new(Core::Schema::Base) do
-      def self.name
-        "ContactSchema"
-      end
-      title "Contact"
-      string :name
-    end
-  end
-
+  # Use existing ContactSchema which is already registered
   let(:tool_class) do
     Class.new(Core::Tools::Base) do
       route method: :get, scope: :collection
@@ -27,11 +18,6 @@ RSpec.describe Core::Tools::Base do
   let(:user) { create(:user) }
   let(:workspace) { create(:workspace) }
 
-  before do
-    Core::Schema::Registry.clear!
-    Core::Schema::Registry.register(schema_class)
-  end
-
   describe ".schema" do
     it "stores schema slug" do
       expect(tool_class.schema_slug).to eq("contact")
@@ -40,7 +26,7 @@ RSpec.describe Core::Tools::Base do
 
   describe ".schema_class" do
     it "returns the schema class from registry" do
-      expect(tool_class.schema_class).to eq(schema_class)
+      expect(tool_class.schema_class).to eq(ContactsService::ContactSchema)
     end
   end
 

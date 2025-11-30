@@ -24,10 +24,6 @@ module Core
           all.map(&:slug)
         end
 
-        def clear!
-          @all = nil
-        end
-
         # Export all schemas for frontend mocks
         def to_mock_data
           all.map(&:to_mock_data)

@@ -6,6 +6,8 @@ module ContactsService
       route method: :get, scope: :member
       schema "contact"
 
+      param :id, type: :integer, desc: "Contact ID", required: true
+
       def execute(id:, **_)
         item = find_item!(id)
 

@@ -6,26 +6,25 @@ RSpec.describe Core::HasRelationships do
   let(:contact_schema) do
     Class.new(Core::Schema::Base) do
       def self.name
-        "ContactSchema"
+        "TestPersonSchema"
       end
-      title "Contact"
+      title "TestPerson"
 
       relationships do
-        has_many :children, schema: :contact, inverse: :parents
-        has_many :parents, schema: :contact, inverse: :children
-        has_one :spouse, schema: :contact, inverse: :spouse
+        has_many :children, schema: :testperson, inverse: :parents
+        has_many :parents, schema: :testperson, inverse: :children
+        has_one :spouse, schema: :testperson, inverse: :spouse
       end
     end
   end
 
   let(:user) { create(:user) }
-  let(:item) { create(:item, schema_slug: "contact", created_by: user) }
-  let(:child1) { create(:item, schema_slug: "contact", created_by: user) }
-  let(:child2) { create(:item, schema_slug: "contact", created_by: user) }
-  let(:spouse) { create(:item, schema_slug: "contact", created_by: user) }
+  let(:item) { create(:item, schema_slug: "testperson", created_by: user) }
+  let(:child1) { create(:item, schema_slug: "testperson", created_by: user) }
+  let(:child2) { create(:item, schema_slug: "testperson", created_by: user) }
+  let(:spouse) { create(:item, schema_slug: "testperson", created_by: user) }
 
   before do
-    Core::Schema::Registry.clear!
     Core::Schema::Registry.register(contact_schema)
     Core::Relationships::Registry.reload!
 

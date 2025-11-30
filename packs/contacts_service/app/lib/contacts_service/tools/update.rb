@@ -7,13 +7,16 @@ module ContactsService
       route method: :put, scope: :member
       schema "contact"
 
-      params ContactSchema
+      params do
+        integer :id, required: true
+        object :data, of: ContactSchema
+      end
 
-      def execute(user_id:, workspace_id:, id:, contact: {}, **_)
+      def execute(user_id:, workspace_id:, id:, data: {}, **_)
         item = find_item!(id)
 
         item.update!(
-          data: item.data.merge(contact.stringify_keys),
+          data: item.data.merge(data.stringify_keys),
           updated_by_id: user_id
         )
 

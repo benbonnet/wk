@@ -7,6 +7,8 @@ module RibCheckWorkflow
       route method: :delete, scope: :member
       schema "rib_request"
 
+      param :id, type: :integer, desc: "RIB request ID", required: true
+
       def execute(user_id:, workspace_id:, id:, **_)
         item = find_item!(id)
 

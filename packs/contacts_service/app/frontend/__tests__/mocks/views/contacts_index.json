@@ -30,14 +30,7 @@
       "contacts_deleted": "%{count} contacts deleted successfully",
       "contacts_delete_failed": "Failed to delete contacts",
       "contacts_exported": "%{count} contacts exported successfully",
-      "contacts_export_failed": "Failed to export contacts",
-      "first_name": "First Name",
-      "last_name": "Last Name",
-      "company": "Company",
-      "job_title": "Job Title",
-      "basic_info": "Basic Information",
-      "professional_info": "Professional Information",
-      "personal_info": "Personal Information"
+      "contacts_export_failed": "Failed to export contacts"
     },
     "fr": {
       "page_title": "Contacts",

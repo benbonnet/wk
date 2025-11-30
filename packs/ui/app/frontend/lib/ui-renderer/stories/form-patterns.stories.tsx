@@ -31,16 +31,14 @@ const inputKindsSchema: UISchema = {
               subtitle: "Various text input components",
               elements: [
                 {
-                  type: "COMPONENT",
+                  type: "INPUT_TEXT",
                   name: "text",
-                  kind: "INPUT_TEXT",
                   label: "Text Input",
                   placeholder: "Enter text...",
                 },
                 {
-                  type: "COMPONENT",
+                  type: "INPUT_TEXTAREA",
                   name: "textarea",
-                  kind: "INPUT_TEXTAREA",
                   label: "Textarea",
                   rows: 4,
                   placeholder: "Enter longer text...",
@@ -53,9 +51,8 @@ const inputKindsSchema: UISchema = {
               subtitle: "Choose from predefined options",
               elements: [
                 {
-                  type: "COMPONENT",
+                  type: "INPUT_SELECT",
                   name: "select",
-                  kind: "INPUT_SELECT",
                   label: "Select",
                   placeholder: "Select an option...",
                   options: [
@@ -65,16 +62,14 @@ const inputKindsSchema: UISchema = {
                   ],
                 },
                 {
-                  type: "COMPONENT",
+                  type: "INPUT_CHECKBOX",
                   name: "checkbox",
-                  kind: "INPUT_CHECKBOX",
                   label: "Checkbox",
                   helperText: "Toggle this option",
                 },
                 {
-                  type: "COMPONENT",
+                  type: "INPUT_CHECKBOXES",
                   name: "checkboxes",
-                  kind: "INPUT_CHECKBOXES",
                   label: "Checkboxes",
                   options: [
                     { label: "Option 1", value: "1" },
@@ -83,9 +78,8 @@ const inputKindsSchema: UISchema = {
                   ],
                 },
                 {
-                  type: "COMPONENT",
+                  type: "INPUT_RADIOS",
                   name: "radios",
-                  kind: "INPUT_RADIOS",
                   label: "Radio Group",
                   options: [
                     { label: "Small", value: "small" },
@@ -100,15 +94,13 @@ const inputKindsSchema: UISchema = {
               label: "Date & Time Inputs",
               elements: [
                 {
-                  type: "COMPONENT",
+                  type: "INPUT_DATE",
                   name: "date",
-                  kind: "INPUT_DATE",
                   label: "Date",
                 },
                 {
-                  type: "COMPONENT",
+                  type: "INPUT_DATETIME",
                   name: "datetime",
-                  kind: "INPUT_DATETIME",
                   label: "Date & Time",
                 },
               ],
@@ -118,9 +110,8 @@ const inputKindsSchema: UISchema = {
               label: "Other Inputs",
               elements: [
                 {
-                  type: "COMPONENT",
+                  type: "INPUT_TAGS",
                   name: "tags",
-                  kind: "INPUT_TAGS",
                   label: "Tags",
                   placeholder: "Add tags...",
                 },
@@ -163,21 +154,18 @@ const multistepSchema: UISchema = {
                   subtitle: "Enter your personal information",
                   elements: [
                     {
-                      type: "COMPONENT",
+                      type: "INPUT_TEXT",
                       name: "first_name",
-                      kind: "INPUT_TEXT",
                       label: "First Name",
                     },
                     {
-                      type: "COMPONENT",
+                      type: "INPUT_TEXT",
                       name: "last_name",
-                      kind: "INPUT_TEXT",
                       label: "Last Name",
                     },
                     {
-                      type: "COMPONENT",
+                      type: "INPUT_TEXT",
                       name: "email",
-                      kind: "INPUT_TEXT",
                       label: "Email Address",
                     },
                   ],
@@ -188,22 +176,19 @@ const multistepSchema: UISchema = {
                   subtitle: "Set up your account credentials",
                   elements: [
                     {
-                      type: "COMPONENT",
+                      type: "INPUT_TEXT",
                       name: "username",
-                      kind: "INPUT_TEXT",
                       label: "Username",
                     },
                     {
-                      type: "COMPONENT",
+                      type: "INPUT_TEXT",
                       name: "password",
-                      kind: "INPUT_TEXT",
                       label: "Password",
                       inputType: "password",
                     },
                     {
-                      type: "COMPONENT",
+                      type: "INPUT_TEXT",
                       name: "confirm_password",
-                      kind: "INPUT_TEXT",
                       label: "Confirm Password",
                       inputType: "password",
                     },
@@ -215,9 +200,8 @@ const multistepSchema: UISchema = {
                   subtitle: "Customize your experience",
                   elements: [
                     {
-                      type: "COMPONENT",
+                      type: "INPUT_SELECT",
                       name: "language",
-                      kind: "INPUT_SELECT",
                       label: "Preferred Language",
                       options: [
                         { label: "English", value: "en" },
@@ -226,9 +210,8 @@ const multistepSchema: UISchema = {
                       ],
                     },
                     {
-                      type: "COMPONENT",
+                      type: "INPUT_CHECKBOXES",
                       name: "notifications",
-                      kind: "INPUT_CHECKBOXES",
                       label: "Notification Preferences",
                       options: [
                         { label: "Email updates", value: "email" },
@@ -249,9 +232,8 @@ const multistepSchema: UISchema = {
                       color: "blue",
                     },
                     {
-                      type: "COMPONENT",
+                      type: "INPUT_CHECKBOX",
                       name: "terms",
-                      kind: "INPUT_CHECKBOX",
                       label: "I agree to the Terms of Service and Privacy Policy",
                     },
                   ],
@@ -295,29 +277,25 @@ const formArraySchema: UISchema = {
                   direction: "HORIZONTAL",
                   elements: [
                     {
-                      type: "COMPONENT",
+                      type: "INPUT_TEXT",
                       name: "first_name",
-                      kind: "INPUT_TEXT",
                       label: "First Name",
                     },
                     {
-                      type: "COMPONENT",
+                      type: "INPUT_TEXT",
                       name: "last_name",
-                      kind: "INPUT_TEXT",
                       label: "Last Name",
                     },
                   ],
                 },
                 {
-                  type: "COMPONENT",
+                  type: "INPUT_TEXT",
                   name: "email",
-                  kind: "INPUT_TEXT",
                   label: "Email",
                 },
                 {
-                  type: "COMPONENT",
+                  type: "INPUT_TEXT",
                   name: "phone",
-                  kind: "INPUT_TEXT",
                   label: "Phone",
                 },
               ],
@@ -330,9 +308,8 @@ const formArraySchema: UISchema = {
               removeLabel: "Remove",
               template: [
                 {
-                  type: "COMPONENT",
+                  type: "INPUT_TEXT",
                   name: "street",
-                  kind: "INPUT_TEXT",
                   label: "Street",
                 },
                 {
@@ -340,21 +317,18 @@ const formArraySchema: UISchema = {
                   direction: "HORIZONTAL",
                   elements: [
                     {
-                      type: "COMPONENT",
+                      type: "INPUT_TEXT",
                       name: "city",
-                      kind: "INPUT_TEXT",
                       label: "City",
                     },
                     {
-                      type: "COMPONENT",
+                      type: "INPUT_TEXT",
                       name: "state",
-                      kind: "INPUT_TEXT",
                       label: "State",
                     },
                     {
-                      type: "COMPONENT",
+                      type: "INPUT_TEXT",
                       name: "zip",
-                      kind: "INPUT_TEXT",
                       label: "ZIP Code",
                     },
                   ],
@@ -395,16 +369,14 @@ const settingsFormSchema: UISchema = {
               subtitle: "Your public profile information",
               elements: [
                 {
-                  type: "COMPONENT",
+                  type: "INPUT_TEXT",
                   name: "display_name",
-                  kind: "INPUT_TEXT",
                   label: "Display Name",
                   helperText: "This is how your name will appear to others",
                 },
                 {
-                  type: "COMPONENT",
+                  type: "INPUT_TEXTAREA",
                   name: "bio",
-                  kind: "INPUT_TEXTAREA",
                   label: "Bio",
                   rows: 3,
                   placeholder: "Tell us about yourself...",
@@ -417,9 +389,8 @@ const settingsFormSchema: UISchema = {
               subtitle: "Customize your experience",
               elements: [
                 {
-                  type: "COMPONENT",
+                  type: "INPUT_SELECT",
                   name: "timezone",
-                  kind: "INPUT_SELECT",
                   label: "Timezone",
                   options: [
                     { label: "UTC", value: "utc" },
@@ -429,9 +400,8 @@ const settingsFormSchema: UISchema = {
                   ],
                 },
                 {
-                  type: "COMPONENT",
+                  type: "INPUT_SELECT",
                   name: "language",
-                  kind: "INPUT_SELECT",
                   label: "Language",
                   options: [
                     { label: "English", value: "en" },
@@ -448,23 +418,20 @@ const settingsFormSchema: UISchema = {
               subtitle: "Choose how you want to be notified",
               elements: [
                 {
-                  type: "COMPONENT",
+                  type: "INPUT_CHECKBOX",
                   name: "email_notifications",
-                  kind: "INPUT_CHECKBOX",
                   label: "Email notifications",
                   helperText: "Receive notifications via email",
                 },
                 {
-                  type: "COMPONENT",
+                  type: "INPUT_CHECKBOX",
                   name: "push_notifications",
-                  kind: "INPUT_CHECKBOX",
                   label: "Push notifications",
                   helperText: "Receive browser push notifications",
                 },
                 {
-                  type: "COMPONENT",
+                  type: "INPUT_CHECKBOX",
                   name: "newsletter",
-                  kind: "INPUT_CHECKBOX",
                   label: "Weekly newsletter",
                   helperText: "Get weekly updates about new features",
                 },

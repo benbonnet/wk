@@ -100,6 +100,56 @@ end
 
 ---
 
+## Parameter Declarations
+
+**Inherited from:** `RubyLLM::Tool`
+
+Tools can declare their expected parameters using the `param` DSL. Declared params are:
+1. Used by the controller for strong parameter filtering (`params.permit`)
+2. Available for LLM agent tool calling with proper type information
+3. Self-documenting for API consumers
+
+```ruby
+class Create < Core::Tools::Base
+  route method: :post, scope: :collection
+  schema "rib_request"
+
+  param :iban, type: :string, desc: "Bank account IBAN", required: true
+  param :bic, type: :string, desc: "Bank identifier code"
+  param :amount, type: :number, desc: "Amount to check"
+
+  def execute(iban:, bic: nil, amount: nil, **)
+    # ...
+  end
+end
+```
+
+### Parameter Options
+
+| Option     | Type    | Default  | Description                        |
+| ---------- | ------- | -------- | ---------------------------------- |
+| `type`     | Symbol  | `:string`| `:string`, `:integer`, `:number`, `:boolean`, `:array`, `:object` |
+| `desc`     | String  | `nil`    | Human-readable description         |
+| `required` | Boolean | `true`   | Whether the parameter is mandatory |
+
+### How It Works
+
+The `ResourcesController` builds the permit list from declared params:
+
+```ruby
+def tool_params
+  declared = @tool_class.parameters.keys
+  base_params = [:id, :page, :per_page]
+  params.permit(*(declared + base_params)).to_h.symbolize_keys
+end
+```
+
+- Tools with declared params: only those params + base params are permitted
+- Tools without declarations: only base params (`:id`, `:page`, `:per_page`) are permitted
+- Nested `data` hash for Item attributes is handled separately by the schema validation
+
+---
+
 ## Standard Tool Patterns
 
 ### Index (List with Pagination)

@@ -29,10 +29,6 @@ module Core
           end
         end
 
-        def clear!
-          @workflows = {}
-        end
-
         def registered_ids
           workflows.keys
         end

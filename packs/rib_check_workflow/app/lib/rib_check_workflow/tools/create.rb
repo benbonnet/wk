@@ -7,12 +7,14 @@ module RibCheckWorkflow
       route method: :post, scope: :collection
       schema "rib_request"
 
-      params RibRequestSchema
+      params do
+        object :data, of: RibRequestSchema
+      end
 
       # Inferred workflow_id: rib_check_create
 
-      def execute(user_id:, workspace_id:, rib_request: {}, **_)
-        result = run_workflow(input: { user_id:, workspace_id:, data: rib_request })
+      def execute(user_id:, workspace_id:, data: {}, **_)
+        result = run_workflow(input: { user_id:, workspace_id:, data: })
 
         {
           data: Core::Serializers::ItemSerializer.new(Item.find(result.output[:item][:id])).to_h,

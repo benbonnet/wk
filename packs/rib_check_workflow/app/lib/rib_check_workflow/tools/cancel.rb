@@ -7,6 +7,8 @@ module RibCheckWorkflow
       route method: :post, scope: :member, action: "cancel"
       schema "rib_request"
 
+      param :id, type: :integer, desc: "RIB request ID", required: true
+
       # Inferred workflow_id: rib_check_cancel
 
       def execute(user_id:, workspace_id:, id:, **_)

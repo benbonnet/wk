@@ -7,6 +7,9 @@ module RibCheckWorkflow
       route method: :get, scope: :collection
       schema "rib_request"
 
+      param :page, type: :integer, desc: "Page number", required: false
+      param :per_page, type: :integer, desc: "Items per page", required: false
+
       def execute(user_id:, workspace_id:, page: 1, per_page: 25, **_)
         query = items.where(workspace_id:).active
 

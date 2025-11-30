@@ -7,15 +7,17 @@ module ContactsService
       route method: :post, scope: :collection
       schema "contact"
 
-      params ContactSchema
+      params do
+        object :data, of: ContactSchema
+      end
 
-      def execute(user_id:, workspace_id:, contact: {}, **_)
-        validate!(contact)
+      def execute(user_id:, workspace_id:, data: {}, **_)
+        validate!(data)
 
         item = Item.create!(
           schema_slug: "contact",
           tool_slug: "create",
-          data: contact,
+          data:,
           created_by_id: user_id,
           workspace_id:
         )
