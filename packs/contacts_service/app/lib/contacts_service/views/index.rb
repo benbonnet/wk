@@ -5,6 +5,8 @@ module ContactsService
     class Index
       include Ui::Views::BaseView
 
+      frontend_route "/contacts"
+
       view do
         url "/api/v1/workspaces/contacts"
 

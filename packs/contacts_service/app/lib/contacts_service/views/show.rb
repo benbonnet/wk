@@ -5,6 +5,8 @@ module ContactsService
     class Show
       include Ui::Views::BaseView
 
+      frontend_route "/contacts/:id"
+
       view do
         translations(
           en: {

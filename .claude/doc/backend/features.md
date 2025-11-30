@@ -233,6 +233,27 @@ Core::Features::Registry.to_mock_data
 # ]
 ```
 
+### Export Rake Task
+
+**Location:** `packs/core/lib/tasks/core.rake`
+
+```bash
+rake core:export_mocks
+```
+
+Exports JSON fixtures for frontend integration tests:
+
+```
+packs/{pack}/app/frontend/__tests__/mocks/
+  schemas.json        # from Schema::Registry.to_mock_data
+  relationships.json  # from Relationships::Registry
+  features.json       # from Features::Registry
+  views/
+    {feature}_{view}.json  # from view_class.view_config
+```
+
+See [Frontend Testing](../frontend/testing.md) for usage.
+
 ---
 
 ## Dynamic Routing

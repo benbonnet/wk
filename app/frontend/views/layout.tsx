@@ -86,7 +86,7 @@ export default function Layout() {
 
   return (
     <SidebarProvider>
-      <Sidebar collapsible="icon">
+      <Sidebar collapsible="icon" role="navigation">
         <SidebarHeader>
           <WorkspaceSwitcher
             workspaces={dropdownOptions}
@@ -109,9 +109,9 @@ export default function Layout() {
         <SidebarRail />
       </Sidebar>
       <SidebarInset>
-        <main className="flex-1">
+        <div className="flex-1">
           <Outlet />
-        </main>
+        </div>
       </SidebarInset>
     </SidebarProvider>
   );

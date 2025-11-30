@@ -1,0 +1,145 @@
+{
+  "type": "VIEW",
+  "translations": {
+    "en": {
+      "request_details": "Request Details",
+      "notification_settings": "Notification Settings",
+      "recipients_section": "Recipients",
+      "draft": "Draft",
+      "pending": "Pending",
+      "partial": "Partial",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "individual": "Individual",
+      "common": "Common"
+    },
+    "fr": {
+      "request_details": "Details de la Demande",
+      "notification_settings": "Parametres de Notification",
+      "recipients_section": "Destinataires",
+      "draft": "Brouillon",
+      "pending": "En attente",
+      "partial": "Partiel",
+      "completed": "Complete",
+      "cancelled": "Annule",
+      "individual": "Individuel",
+      "common": "Commun"
+    }
+  },
+  "elements": [
+    {
+      "type": "SHOW",
+      "elements": [
+        {
+          "type": "GROUP",
+          "label": "request_details",
+          "elements": [
+            {
+              "type": "DISPLAY_BADGE",
+              "name": "status",
+              "label": "status",
+              "options": [
+                {
+                  "label": "draft",
+                  "value": "draft",
+                  "variant": "secondary"
+                },
+                {
+                  "label": "pending",
+                  "value": "pending",
+                  "variant": "warning"
+                },
+                {
+                  "label": "partial",
+                  "value": "partial",
+                  "variant": "info"
+                },
+                {
+                  "label": "completed",
+                  "value": "completed",
+                  "variant": "success"
+                },
+                {
+                  "label": "cancelled",
+                  "value": "cancelled",
+                  "variant": "destructive"
+                }
+              ]
+            },
+            {
+              "type": "DISPLAY_SELECT",
+              "name": "request_type",
+              "label": "request_type",
+              "options": [
+                {
+                  "label": "individual",
+                  "value": "individual"
+                },
+                {
+                  "label": "common",
+                  "value": "common"
+                }
+              ]
+            },
+            {
+              "type": "DISPLAY_DATETIME",
+              "name": "end_at",
+              "label": "end_at"
+            },
+            {
+              "type": "DISPLAY_LONGTEXT",
+              "name": "message_body",
+              "label": "message_body"
+            },
+            {
+              "type": "DISPLAY_LONGTEXT",
+              "name": "comment",
+              "label": "comment"
+            }
+          ],
+          "className": "space-y-4"
+        },
+        {
+          "type": "GROUP",
+          "label": "notification_settings",
+          "elements": [
+            {
+              "type": "DISPLAY_BOOLEAN",
+              "name": "notify_via_email",
+              "label": "notify_via_email"
+            },
+            {
+              "type": "DISPLAY_BOOLEAN",
+              "name": "notify_via_sms",
+              "label": "notify_via_sms"
+            }
+          ],
+          "className": "space-y-4"
+        },
+        {
+          "type": "DISPLAY_ARRAY",
+          "name": "recipients",
+          "template": [
+            {
+              "type": "DISPLAY_TEXT",
+              "name": "first_name",
+              "label": "first_name"
+            },
+            {
+              "type": "DISPLAY_TEXT",
+              "name": "last_name",
+              "label": "last_name"
+            },
+            {
+              "type": "DISPLAY_TEXT",
+              "name": "email",
+              "label": "email"
+            }
+          ],
+          "label": "recipients_section"
+        }
+      ],
+      "className": "flex flex-col p-6 space-y-8"
+    }
+  ]
+}

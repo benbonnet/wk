@@ -5,6 +5,8 @@ module RibCheckWorkflow
     class Index
       include Ui::Views::BaseView
 
+      frontend_route "/rib-checks"
+
       view do
         url "/api/v1/workspaces/rib_requests"
 

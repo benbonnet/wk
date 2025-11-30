@@ -1,0 +1,99 @@
+[
+  {
+    "slug": "rib_request",
+    "title": "RIB Request",
+    "schema": {
+      "name": "RibCheckWorkflow::RibRequestSchema",
+      "description": "Request for bank account details (RIB) from contacts",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "comment": {
+            "type": "string",
+            "description": "Internal note"
+          },
+          "message_body": {
+            "type": "string",
+            "description": "Notification message"
+          },
+          "end_at": {
+            "type": "string",
+            "description": "Deadline",
+            "format": "date-time"
+          },
+          "notify_via_email": {
+            "type": "boolean",
+            "description": "Send email notification"
+          },
+          "notify_via_sms": {
+            "type": "boolean",
+            "description": "Send SMS notification"
+          },
+          "request_type": {
+            "type": "string",
+            "enum": ["individual", "common"],
+            "description": "Request type"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["draft", "pending", "partial", "completed", "cancelled"],
+            "description": "Status"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "deleted_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["request_type", "status"],
+        "additionalProperties": false,
+        "strict": true
+      }
+    },
+    "relationships": [
+      {
+        "name": "recipients",
+        "cardinality": "many",
+        "targetSchema": "contact",
+        "inverseName": "rib_requests"
+      },
+      {
+        "name": "documents",
+        "cardinality": "many",
+        "targetSchema": "document",
+        "inverseName": "rib_request"
+      }
+    ],
+    "translations": {
+      "en": {
+        "comment": "Internal Comment",
+        "message_body": "Message",
+        "end_at": "Deadline",
+        "notify_via_email": "Email Notification",
+        "notify_via_sms": "SMS Notification",
+        "request_type": "Request Type",
+        "status": "Status",
+        "recipients": "Recipients",
+        "documents": "Documents"
+      },
+      "fr": {
+        "comment": "Commentaire interne",
+        "message_body": "Message",
+        "end_at": "Echéance",
+        "notify_via_email": "Notification Email",
+        "notify_via_sms": "Notification SMS",
+        "request_type": "Type de demande",
+        "status": "Statut",
+        "recipients": "Destinataires",
+        "documents": "Documents"
+      }
+    }
+  }
+]

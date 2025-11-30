@@ -1,0 +1,18 @@
+{
+  "rib_request": {
+    "recipients": {
+      "name": "recipients",
+      "cardinality": "many",
+      "target_schema": "contact",
+      "inverse_name": "rib_requests",
+      "description": null
+    },
+    "documents": {
+      "name": "documents",
+      "cardinality": "many",
+      "target_schema": "document",
+      "inverse_name": "rib_request",
+      "description": null
+    }
+  }
+}
