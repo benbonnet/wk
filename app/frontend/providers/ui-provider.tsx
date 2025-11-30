@@ -18,7 +18,11 @@ export function AppUIProvider({
 
   const services: UIServices = {
     fetch: async (url, options) => {
-      const response = await axios(url, options);
+      const response = await axios({
+        url,
+        method: options?.method || "GET",
+        data: options?.data,
+      });
       return response.data;
     },
     navigate: (path) => navigate(path),
