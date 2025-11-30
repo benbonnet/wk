@@ -1,6 +1,5 @@
 {
   "type": "VIEW",
-  "url": "/api/v1/workspaces/rib_requests",
   "translations": {
     "en": {
       "page_title": "RIB Requests",
@@ -34,7 +33,21 @@
       "completed": "Completed",
       "cancelled": "Cancelled",
       "individual": "Individual",
-      "common": "Common"
+      "common": "Common",
+      "request_details": "Request Details",
+      "notification_settings": "Notification Settings",
+      "recipients_section": "Recipients",
+      "message_body": "Message",
+      "comment": "Internal Comment",
+      "end_at": "Deadline",
+      "notify_via_email": "Email Notification",
+      "notify_via_sms": "SMS Notification",
+      "message_body_placeholder": "Enter the message to send to recipients...",
+      "comment_placeholder": "Internal notes (not visible to recipients)",
+      "save": "Save",
+      "saving": "Saving...",
+      "add_recipient": "Add Recipient",
+      "no_selection": "No recipients selected"
     },
     "fr": {
       "page_title": "Demandes RIB",
@@ -68,33 +81,21 @@
       "completed": "Complete",
       "cancelled": "Annule",
       "individual": "Individuel",
-      "common": "Commun"
-    }
-  },
-  "api": {
-    "index": {
-      "method": "GET",
-      "path": ""
-    },
-    "show": {
-      "method": "GET",
-      "path": ":id"
-    },
-    "create": {
-      "method": "POST",
-      "path": ""
-    },
-    "update": {
-      "method": "PATCH",
-      "path": ":id"
-    },
-    "destroy": {
-      "method": "DELETE",
-      "path": ":id"
-    },
-    "cancel": {
-      "method": "POST",
-      "path": ":id/cancel"
+      "common": "Commun",
+      "request_details": "Details de la Demande",
+      "notification_settings": "Parametres de Notification",
+      "recipients_section": "Destinataires",
+      "message_body": "Message",
+      "comment": "Commentaire Interne",
+      "end_at": "Echeance",
+      "notify_via_email": "Notification Email",
+      "notify_via_sms": "Notification SMS",
+      "message_body_placeholder": "Entrez le message a envoyer aux destinataires...",
+      "comment_placeholder": "Notes internes (non visibles par les destinataires)",
+      "save": "Sauvegarder",
+      "saving": "Sauvegarde...",
+      "add_recipient": "Ajouter un Destinataire",
+      "no_selection": "Aucun destinataire selectionne"
     }
   },
   "drawers": {
@@ -626,5 +627,32 @@
       ],
       "classname": "bg-slate-50"
     }
-  ]
+  ],
+  "url": "/api/v1/workspaces/rib_check_requests",
+  "api": {
+    "cancel": {
+      "method": "POST",
+      "path": ":id/cancel"
+    },
+    "create": {
+      "method": "POST",
+      "path": ""
+    },
+    "destroy": {
+      "method": "DELETE",
+      "path": ":id"
+    },
+    "index": {
+      "method": "GET",
+      "path": ""
+    },
+    "show": {
+      "method": "GET",
+      "path": ":id"
+    },
+    "update": {
+      "method": "PUT",
+      "path": ":id"
+    }
+  }
 }

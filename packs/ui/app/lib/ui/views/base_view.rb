@@ -34,12 +34,13 @@ module Ui
           @view_block = block
         end
 
-        def view_config
-          return @view_config if @view_config
+        # Returns raw view config WITHOUT url/api (those come from Registry)
+        def view_config_raw
+          return @view_config_raw if @view_config_raw
 
           builder = ViewBuilder.new(schema_class: resolve_schema_class)
           builder.instance_eval(&@view_block)
-          @view_config = builder.to_ui_schema
+          @view_config_raw = builder.to_ui_schema
         end
 
         def has_view?

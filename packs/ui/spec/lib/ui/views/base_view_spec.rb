@@ -15,9 +15,11 @@ RSpec.describe Ui::Views::BaseView do
       end
     end
 
-    it "returns view config" do
-      config = test_class.view_config
+    it "returns view config without url or api" do
+      config = test_class.view_config_raw
       expect(config).to include(type: "VIEW")
+      expect(config).not_to have_key(:url)
+      expect(config).not_to have_key(:api)
       expect(config[:elements]).to have_attributes(length: 2)
     end
 
@@ -44,7 +46,7 @@ RSpec.describe Ui::Views::BaseView do
     end
 
     it "creates nested group structure" do
-      config = grouped_class.view_config
+      config = grouped_class.view_config_raw
       expect(config[:elements]).to contain_exactly(
         a_hash_including(
           type: "GROUP",
@@ -75,7 +77,7 @@ RSpec.describe Ui::Views::BaseView do
     end
 
     it "creates page with table" do
-      expect(page_class.view_config[:elements]).to include(
+      expect(page_class.view_config_raw[:elements]).to include(
         a_hash_including(type: "PAGE", title: "page_title")
       )
     end
@@ -100,7 +102,7 @@ RSpec.describe Ui::Views::BaseView do
     end
 
     it "includes translations in config" do
-      expect(translated_class.view_config[:translations]).to include(
+      expect(translated_class.view_config_raw[:translations]).to include(
         en: a_hash_including(page_title: "Test Page"),
         fr: a_hash_including(page_title: "Page Test")
       )
@@ -127,7 +129,7 @@ RSpec.describe Ui::Views::BaseView do
     end
 
     it "creates drawers registry" do
-      config = drawer_class.view_config
+      config = drawer_class.view_config_raw
       expect(config[:drawers]).to be_a(Hash)
       expect(config[:drawers]).to have_key(:new_drawer)
     end

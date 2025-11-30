@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { http, HttpResponse } from "msw";
-import { RelationshipPickerField } from "@ui/adapters";
+import { RelationshipPickerField, ViewContext } from "@ui/adapters";
 
 const meta: Meta<typeof RelationshipPickerField> = {
   title: "Complex/RelationshipPicker",
@@ -15,12 +15,19 @@ const meta: Meta<typeof RelationshipPickerField> = {
 export default meta;
 type Story = StoryObj<typeof RelationshipPickerField>;
 
+// Mock ViewContext value
+const mockViewConfig = {
+  url: "/api/v1/workspaces/rib_requests",
+  api: {},
+  executeApi: async () => ({ success: true }),
+};
+
 // Mock data for contacts
 const mockContacts = [
-  { id: 1, first_name: "John", last_name: "Doe", email: "john@example.com" },
-  { id: 2, first_name: "Jane", last_name: "Smith", email: "jane@example.com" },
-  { id: 3, first_name: "Bob", last_name: "Wilson", email: "bob@example.com" },
-  { id: 4, first_name: "Alice", last_name: "Brown", email: "alice@example.com" },
+  { id: 1, data: { first_name: "John", last_name: "Doe", email: "john@example.com" } },
+  { id: 2, data: { first_name: "Jane", last_name: "Smith", email: "jane@example.com" } },
+  { id: 3, data: { first_name: "Bob", last_name: "Wilson", email: "bob@example.com" } },
+  { id: 4, data: { first_name: "Alice", last_name: "Brown", email: "alice@example.com" } },
 ];
 
 const contactColumns = [
@@ -46,23 +53,24 @@ const RelationshipPickerDemo = ({
   const [value, setValue] = useState(initialValue);
 
   return (
-    <div className="max-w-md">
-      <RelationshipPickerField
-        name="contacts"
-        cardinality={cardinality}
-        relationSchema="contact"
-        basePath="/api/contacts"
-        label="Contacts"
-        addLabel="Add Contact"
-        emptyMessage="No contacts selected"
-        searchPlaceholder="Search contacts..."
-        confirmLabel="Add Selected"
-        columns={contactColumns}
-        template={contactTemplate}
-        value={value}
-        onChange={setValue}
-      />
-    </div>
+    <ViewContext.Provider value={mockViewConfig}>
+      <div className="max-w-md">
+        <RelationshipPickerField
+          name="contacts"
+          cardinality={cardinality}
+          relationSchema="contact"
+          label="Contacts"
+          addLabel="Add Contact"
+          emptyMessage="No contacts selected"
+          searchPlaceholder="Search contacts..."
+          confirmLabel="Add Selected"
+          columns={contactColumns}
+          template={contactTemplate}
+          value={value}
+          onChange={setValue}
+        />
+      </div>
+    </ViewContext.Provider>
   );
 };
 
@@ -70,7 +78,7 @@ export const HasManyEmpty: Story = {
   parameters: {
     msw: {
       handlers: [
-        http.get("/api/contacts", () => {
+        http.get("/api/v1/workspaces/contacts", () => {
           return HttpResponse.json({ data: mockContacts });
         }),
       ],
@@ -83,7 +91,7 @@ export const HasManyWithItems: Story = {
   parameters: {
     msw: {
       handlers: [
-        http.get("/api/contacts", () => {
+        http.get("/api/v1/workspaces/contacts", () => {
           return HttpResponse.json({ data: mockContacts });
         }),
       ],
@@ -104,7 +112,7 @@ export const HasOneEmpty: Story = {
   parameters: {
     msw: {
       handlers: [
-        http.get("/api/contacts", () => {
+        http.get("/api/v1/workspaces/contacts", () => {
           return HttpResponse.json({ data: mockContacts });
         }),
       ],
@@ -117,7 +125,7 @@ export const HasOneWithItem: Story = {
   parameters: {
     msw: {
       handlers: [
-        http.get("/api/contacts", () => {
+        http.get("/api/v1/workspaces/contacts", () => {
           return HttpResponse.json({ data: mockContacts });
         }),
       ],
@@ -144,32 +152,33 @@ const addressTemplate = [
 ];
 
 const mockAddresses = [
-  { id: 1, street: "123 Main St", city: "New York", zip: "10001" },
-  { id: 2, street: "456 Oak Ave", city: "Los Angeles", zip: "90001" },
-  { id: 3, street: "789 Pine Rd", city: "Chicago", zip: "60601" },
+  { id: 1, data: { street: "123 Main St", city: "New York", zip: "10001" } },
+  { id: 2, data: { street: "456 Oak Ave", city: "Los Angeles", zip: "90001" } },
+  { id: 3, data: { street: "789 Pine Rd", city: "Chicago", zip: "60601" } },
 ];
 
 const AddressPickerDemo = () => {
   const [value, setValue] = useState<unknown>(null);
 
   return (
-    <div className="max-w-md">
-      <RelationshipPickerField
-        name="addresses"
-        cardinality="many"
-        relationSchema="address"
-        basePath="/api/addresses"
-        label="Addresses"
-        addLabel="Add Address"
-        emptyMessage="No addresses added"
-        searchPlaceholder="Search addresses..."
-        confirmLabel="Select Address"
-        columns={addressColumns}
-        template={addressTemplate}
-        value={value}
-        onChange={setValue}
-      />
-    </div>
+    <ViewContext.Provider value={mockViewConfig}>
+      <div className="max-w-md">
+        <RelationshipPickerField
+          name="addresses"
+          cardinality="many"
+          relationSchema="address"
+          label="Addresses"
+          addLabel="Add Address"
+          emptyMessage="No addresses added"
+          searchPlaceholder="Search addresses..."
+          confirmLabel="Select Address"
+          columns={addressColumns}
+          template={addressTemplate}
+          value={value}
+          onChange={setValue}
+        />
+      </div>
+    </ViewContext.Provider>
   );
 };
 
@@ -177,7 +186,7 @@ export const AddressPicker: Story = {
   parameters: {
     msw: {
       handlers: [
-        http.get("/api/addresses", () => {
+        http.get("/api/v1/workspaces/addresses", () => {
           return HttpResponse.json({ data: mockAddresses });
         }),
       ],

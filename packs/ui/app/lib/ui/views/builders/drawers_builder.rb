@@ -44,7 +44,7 @@ module Ui
 
         def body(view_class = nil, **options, &block)
           if view_class
-            config = view_class.view_config
+            config = view_class.view_config_raw
             if config && config[:elements]
               # Merge options into FORM elements
               elements = config[:elements].map do |el|

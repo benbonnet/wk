@@ -69,21 +69,12 @@ interface TestWrapperProps {
 
 function TestWrapper({ children, services, locale = "en" }: TestWrapperProps) {
   const qc = createQueryClient();
-  const viewTranslations = ribRequestsSchema.translations?.[locale as keyof typeof ribRequestsSchema.translations] || {};
-  const schemaTranslations = schemasData[0]?.translations?.[locale as keyof typeof schemasData[0]["translations"]] || {};
 
+  // View component handles translations from schema - no manual wiring needed
   return (
     <QueryClientProvider client={qc}>
       <MemoryRouter>
-        <UIProvider
-          services={services}
-          translations={{
-            views: viewTranslations,
-            schemas: schemaTranslations,
-            common: {},
-          }}
-          locale={locale}
-        >
+        <UIProvider services={services} locale={locale}>
           <TooltipProvider>{children}</TooltipProvider>
         </UIProvider>
       </MemoryRouter>
@@ -259,9 +250,9 @@ describe("RIB Requests Integration", () => {
 
       await waitFor(() => {
         const drawer = screen.getByTestId("drawer-new_drawer");
-        // Group labels (not translated)
-        expect(within(drawer).getByText("request_details")).toBeInTheDocument();
-        expect(within(drawer).getByText("notification_settings")).toBeInTheDocument();
+        // Group labels (translated via View component)
+        expect(within(drawer).getByText("Request Details")).toBeInTheDocument();
+        expect(within(drawer).getByText("Notification Settings")).toBeInTheDocument();
         // Field labels (from view translations: status -> "Status", request_type -> "Type")
         expect(within(drawer).getByLabelText("Status")).toBeInTheDocument();
         expect(within(drawer).getByLabelText("Type")).toBeInTheDocument();

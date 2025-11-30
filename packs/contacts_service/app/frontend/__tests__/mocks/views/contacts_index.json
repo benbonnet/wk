@@ -1,6 +1,5 @@
 {
   "type": "VIEW",
-  "url": "/api/v1/workspaces/contacts",
   "translations": {
     "en": {
       "page_title": "Contacts",
@@ -61,28 +60,6 @@
       "contacts_delete_failed": "Echec de la suppression des contacts",
       "contacts_exported": "%{count} contacts exportes avec succes",
       "contacts_export_failed": "Echec de l'exportation des contacts"
-    }
-  },
-  "api": {
-    "index": {
-      "method": "GET",
-      "path": ""
-    },
-    "show": {
-      "method": "GET",
-      "path": ":id"
-    },
-    "create": {
-      "method": "POST",
-      "path": ""
-    },
-    "update": {
-      "method": "PATCH",
-      "path": ":id"
-    },
-    "destroy": {
-      "method": "DELETE",
-      "path": ":id"
     }
   },
   "drawers": {
@@ -752,5 +729,32 @@
       ],
       "classname": "bg-slate-50"
     }
-  ]
+  ],
+  "url": "/api/v1/workspaces/contacts",
+  "api": {
+    "add_relationship": {
+      "method": "POST",
+      "path": ":id/relationships"
+    },
+    "create": {
+      "method": "POST",
+      "path": ""
+    },
+    "destroy": {
+      "method": "DELETE",
+      "path": ":id"
+    },
+    "index": {
+      "method": "GET",
+      "path": ""
+    },
+    "show": {
+      "method": "GET",
+      "path": ":id"
+    },
+    "update": {
+      "method": "PUT",
+      "path": ":id"
+    }
+  }
 }

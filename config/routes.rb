@@ -19,7 +19,6 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resource :account, only: [ :show ], controller: "account"
-      get "views/:namespace/:feature/:view_name", to: "views#show"
     end
   end
 

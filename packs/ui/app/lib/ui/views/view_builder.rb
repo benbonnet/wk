@@ -5,15 +5,13 @@ module Ui
     # DSL builder for view definitions
     # Pure DSL → JSON structure
     class ViewBuilder
-      attr_reader :elements, :api_registry, :drawers_registry
+      attr_reader :elements, :drawers_registry
       attr_accessor :schema_class
 
       def initialize(schema_class: nil)
         @elements = []
-        @api_registry = {}
         @drawers_registry = {}
         @translations_data = {}
-        @url_value = nil
         @schema_class = schema_class
         @field_prefix = nil
       end
@@ -24,16 +22,6 @@ module Ui
 
       def translations(locales)
         @translations_data = locales
-      end
-
-      def url(path)
-        @url_value = path
-      end
-
-      def api(&block)
-        builder = Builders::ApiBuilder.new
-        yield(builder)
-        @api_registry = builder.endpoints
       end
 
       def drawers(&block)
@@ -386,9 +374,7 @@ module Ui
       def to_ui_schema
         {
           type: "VIEW",
-          url: @url_value,
           translations: @translations_data.empty? ? nil : @translations_data,
-          api: @api_registry.empty? ? nil : @api_registry,
           drawers: @drawers_registry.empty? ? nil : @drawers_registry,
           elements: @elements
         }.compact

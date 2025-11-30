@@ -99,15 +99,12 @@ function TestWrapper({
   services = createMockServices(),
   queryClient = createQueryClient(),
 }: WrapperProps) {
-  // Extract translations from schema
-  const translations = contactsIndexSchema.translations?.en || {};
-
+  // View component handles translations from schema - no manual wiring needed
   return (
     <QueryClientProvider client={queryClient}>
       <UIProvider
         adapters={mockAdapters}
         services={services}
-        translations={{ views: translations, schemas: {}, common: {} }}
         locale="en"
       >
         <TooltipProvider>{children}</TooltipProvider>

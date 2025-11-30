@@ -21,38 +21,29 @@ function createMockServices(overrides?: Partial<UIServices>): UIServices {
 interface WrapperProps {
   children: ReactNode;
   services?: UIServices;
-  translations?: Record<string, string>;
 }
 
 function TestWrapper({
   children,
   services = createMockServices(),
-  translations = {},
 }: WrapperProps) {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
 
+  // View component handles translations from schema - no manual wiring needed
   return (
     <QueryClientProvider client={queryClient}>
-      <UIProvider
-        services={services}
-        translations={{ views: translations, schemas: {}, common: {} }}
-        locale="en"
-      >
+      <UIProvider services={services} locale="en">
         <TooltipProvider>{children}</TooltipProvider>
       </UIProvider>
     </QueryClientProvider>
   );
 }
 
-function renderSchema(
-  schema: UISchema,
-  data: Record<string, unknown>,
-  options?: { translations?: Record<string, string> }
-) {
+function renderSchema(schema: UISchema, data: Record<string, unknown>) {
   return render(
-    <TestWrapper translations={options?.translations}>
+    <TestWrapper>
       <DynamicRenderer schema={schema} data={data} />
     </TestWrapper>
   );
@@ -121,6 +112,7 @@ describe("Phase 15: DISPLAY_ARRAY (Read-only Arrays)", () => {
       renderSchema(
         {
           type: "VIEW",
+          translations: { en: { addresses_label: "Shipping Addresses" } },
           elements: [
             {
               type: "SHOW",
@@ -136,8 +128,7 @@ describe("Phase 15: DISPLAY_ARRAY (Read-only Arrays)", () => {
             },
           ],
         },
-        { addresses: [] },
-        { translations: { addresses_label: "Shipping Addresses" } }
+        { addresses: [] }
       );
 
       expect(screen.getByText("Shipping Addresses")).toBeInTheDocument();
@@ -147,6 +138,7 @@ describe("Phase 15: DISPLAY_ARRAY (Read-only Arrays)", () => {
       renderSchema(
         {
           type: "VIEW",
+          translations: { en: { no_items: "Nothing to display" } },
           elements: [
             {
               type: "SHOW",
@@ -161,8 +153,7 @@ describe("Phase 15: DISPLAY_ARRAY (Read-only Arrays)", () => {
             },
           ],
         },
-        { items: [] },
-        { translations: { no_items: "Nothing to display" } }
+        { items: [] }
       );
 
       expect(screen.getByText("Nothing to display")).toBeInTheDocument();

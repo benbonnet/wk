@@ -2,6 +2,7 @@ import { useState, type FC } from "react";
 import { Button } from "@ui/components/button";
 import { Plus, X } from "lucide-react";
 import { useTranslate } from "@ui/lib/ui-renderer/provider";
+import { useViewConfig } from "../view";
 import { RelationshipPickerDrawer } from "./picker-drawer";
 import type { UISchema } from "@ui/lib/ui-renderer/types";
 
@@ -21,7 +22,6 @@ interface RelationshipPickerFieldProps {
   name: string;
   cardinality: "one" | "many";
   relationSchema: string;
-  basePath: string;
   label?: string;
   addLabel?: string;
   emptyMessage?: string;
@@ -48,7 +48,6 @@ export const RelationshipPickerField: FC<RelationshipPickerFieldProps> = ({
   name,
   cardinality,
   relationSchema,
-  basePath,
   label,
   addLabel = "add",
   emptyMessage = "no_selection",
@@ -63,6 +62,13 @@ export const RelationshipPickerField: FC<RelationshipPickerFieldProps> = ({
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [drawerKey, setDrawerKey] = useState(0);
   const t = useTranslate();
+  const { url } = useViewConfig();
+
+  // Derive picker basePath from view's URL
+  // View URL: /api/v1/workspaces/rib_requests
+  // Remove last segment: /api/v1/workspaces
+  // Append relation: /api/v1/workspaces/contacts
+  const basePath = `${url.replace(/\/[^/]+$/, "")}/${relationSchema}s`;
 
   // Open drawer with fresh state (key forces remount)
   const handleOpenDrawer = () => {

@@ -87,7 +87,7 @@ export const RelationshipCreateDrawer: FC<RelationshipCreateDrawerProps> = ({
       });
       return response;
     },
-    onSuccess: (created) => {
+    onSuccess: (response) => {
       // Invalidate picker list so it refetches with new item
       queryClient.invalidateQueries({
         queryKey: ["relationship-picker", basePath],
@@ -96,8 +96,10 @@ export const RelationshipCreateDrawer: FC<RelationshipCreateDrawerProps> = ({
       setValuesState({});
       setErrors({});
       setTouchedState({});
-      // Return created item with ID to parent
-      onSuccess({ id: created.id, ...created.data });
+      // Response structure: { data: { id, data: {...} }, meta }
+      // Extract the created item and flatten it
+      const item = response.data;
+      onSuccess({ id: item.id, ...item.data });
     },
   });
 

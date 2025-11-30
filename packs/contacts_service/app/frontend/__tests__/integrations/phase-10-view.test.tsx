@@ -24,38 +24,30 @@ function createMockServices(overrides?: Partial<UIServices>): UIServices {
 interface WrapperProps {
   children: ReactNode;
   services?: UIServices;
-  translations?: Record<string, string>;
 }
 
 function TestWrapper({
   children,
   services = createMockServices(),
-  translations = {},
 }: WrapperProps) {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
 
+  // View component handles translations from schema - no manual wiring needed
   return (
     <QueryClientProvider client={queryClient}>
-      <UIProvider
-        services={services}
-        translations={{ views: translations, schemas: {}, common: {} }}
-        locale="en"
-      >
+      <UIProvider services={services} locale="en">
         <TooltipProvider>{children}</TooltipProvider>
       </UIProvider>
     </QueryClientProvider>
   );
 }
 
-function renderSchema(
-  schema: UISchema,
-  options?: { services?: UIServices; translations?: Record<string, string> }
-) {
+function renderSchema(schema: UISchema, options?: { services?: UIServices }) {
   const services = options?.services ?? createMockServices();
   return render(
-    <TestWrapper services={services} translations={options?.translations}>
+    <TestWrapper services={services}>
       <DynamicRenderer schema={schema} />
     </TestWrapper>
   );
@@ -175,19 +167,17 @@ describe("Phase 10: VIEW Adapter", () => {
     it("VIEW renders drawer title from drawers registry", async () => {
       const user = userEvent.setup();
 
-      renderSchema(
-        {
-          type: "VIEW",
-          drawers: {
-            edit_drawer: {
-              title: "edit_contact",
-              elements: [],
-            },
+      renderSchema({
+        type: "VIEW",
+        translations: { en: { edit_contact: "Edit Contact" } },
+        drawers: {
+          edit_drawer: {
+            title: "edit_contact",
+            elements: [],
           },
-          elements: [{ type: "LINK", label: "Edit", opens: "edit_drawer" }],
         },
-        { translations: { edit_contact: "Edit Contact" } }
-      );
+        elements: [{ type: "LINK", label: "Edit", opens: "edit_drawer" }],
+      });
 
       await user.click(screen.getByRole("button", { name: "Edit" }));
       expect(screen.getByText("Edit Contact")).toBeInTheDocument();

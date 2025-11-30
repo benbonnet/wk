@@ -28,38 +28,30 @@ function createMockServices(overrides?: Partial<UIServices>): UIServices {
 interface WrapperProps {
   children: ReactNode;
   services?: UIServices;
-  translations?: Record<string, string>;
 }
 
 function TestWrapper({
   children,
   services = createMockServices(),
-  translations = {},
 }: WrapperProps) {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
 
+  // View component handles translations from schema - no manual wiring needed
   return (
     <QueryClientProvider client={queryClient}>
-      <UIProvider
-        services={services}
-        translations={{ views: translations, schemas: {}, common: {} }}
-        locale="en"
-      >
+      <UIProvider services={services} locale="en">
         <TooltipProvider>{children}</TooltipProvider>
       </UIProvider>
     </QueryClientProvider>
   );
 }
 
-function renderSchema(
-  schema: UISchema,
-  options?: { services?: UIServices; translations?: Record<string, string> }
-) {
+function renderSchema(schema: UISchema, options?: { services?: UIServices }) {
   const services = options?.services ?? createMockServices();
   return render(
-    <TestWrapper services={services} translations={options?.translations}>
+    <TestWrapper services={services}>
       <DynamicRenderer schema={schema} />
     </TestWrapper>
   );
@@ -93,22 +85,20 @@ describe("Phase 8: TABLE Adapter", () => {
     });
 
     it("translates column labels", () => {
-      renderSchema(
-        {
-          type: "VIEW",
-          elements: [
-            {
-              type: "TABLE",
-              columns: [
-                { name: "first_name", label: "first_name" },
-                { name: "last_name", label: "last_name" },
-              ],
-              data: mockData,
-            },
-          ],
-        },
-        { translations: { first_name: "Prénom", last_name: "Nom" } }
-      );
+      renderSchema({
+        type: "VIEW",
+        translations: { en: { first_name: "Prénom", last_name: "Nom" } },
+        elements: [
+          {
+            type: "TABLE",
+            columns: [
+              { name: "first_name", label: "first_name" },
+              { name: "last_name", label: "last_name" },
+            ],
+            data: mockData,
+          },
+        ],
+      });
 
       expect(screen.getByText("Prénom")).toBeInTheDocument();
       expect(screen.getByText("Nom")).toBeInTheDocument();
@@ -350,21 +340,19 @@ describe("Phase 8: TABLE Adapter", () => {
     });
 
     it("shows search placeholder from schema", () => {
-      renderSchema(
-        {
-          type: "VIEW",
-          elements: [
-            {
-              type: "TABLE",
-              columns: [{ name: "first_name" }],
-              data: mockData,
-              searchable: true,
-              search_placeholder: "search_contacts",
-            },
-          ],
-        },
-        { translations: { search_contacts: "Search contacts..." } }
-      );
+      renderSchema({
+        type: "VIEW",
+        translations: { en: { search_contacts: "Search contacts..." } },
+        elements: [
+          {
+            type: "TABLE",
+            columns: [{ name: "first_name" }],
+            data: mockData,
+            searchable: true,
+            search_placeholder: "search_contacts",
+          },
+        ],
+      });
 
       expect(screen.getByPlaceholderText("Search contacts...")).toBeInTheDocument();
     });

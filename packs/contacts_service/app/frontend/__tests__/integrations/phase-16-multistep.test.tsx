@@ -1,3 +1,14 @@
+/**
+ * EXCEPTION: Synthetic tests for MULTISTEP component
+ *
+ * Unlike other integration tests that use real backend-generated mocks,
+ * these tests use inline schemas because MULTISTEP is not currently used
+ * in any backend view. We keep these tests to ensure the component works
+ * when we eventually add wizard-style forms.
+ *
+ * When MULTISTEP is added to a real view, migrate these tests to use
+ * the generated mock from `__tests__/mocks/views/`.
+ */
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -22,37 +33,29 @@ function createMockServices(overrides?: Partial<UIServices>): UIServices {
 interface WrapperProps {
   children: ReactNode;
   services?: UIServices;
-  translations?: Record<string, string>;
 }
 
 function TestWrapper({
   children,
   services = createMockServices(),
-  translations = {},
 }: WrapperProps) {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
 
+  // View component handles translations from schema - no manual wiring needed
   return (
     <QueryClientProvider client={queryClient}>
-      <UIProvider
-        services={services}
-        translations={{ views: translations, schemas: {}, common: { required: "This field is required" } }}
-        locale="en"
-      >
+      <UIProvider services={services} locale="en">
         <TooltipProvider>{children}</TooltipProvider>
       </UIProvider>
     </QueryClientProvider>
   );
 }
 
-function renderSchema(
-  schema: UISchema,
-  options?: { translations?: Record<string, string> }
-) {
+function renderSchema(schema: UISchema) {
   return render(
-    <TestWrapper translations={options?.translations}>
+    <TestWrapper>
       <DynamicRenderer schema={schema} />
     </TestWrapper>
   );
@@ -90,26 +93,24 @@ describe("Phase 16: MULTISTEP (Wizard Forms)", () => {
     });
 
     it("MULTISTEP renders step labels in indicator", () => {
-      renderSchema(
-        {
-          type: "VIEW",
-          elements: [
-            {
-              type: "FORM",
-              elements: [
-                {
-                  type: "MULTISTEP",
-                  elements: [
-                    { type: "STEP", label: "personal_info", elements: [{ type: "ALERT", label: "Step 1" }] },
-                    { type: "STEP", label: "contact_info", elements: [{ type: "ALERT", label: "Step 2" }] },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-        { translations: { personal_info: "Personal Info", contact_info: "Contact Info" } }
-      );
+      renderSchema({
+        type: "VIEW",
+        translations: { en: { personal_info: "Personal Info", contact_info: "Contact Info" } },
+        elements: [
+          {
+            type: "FORM",
+            elements: [
+              {
+                type: "MULTISTEP",
+                elements: [
+                  { type: "STEP", label: "personal_info", elements: [{ type: "ALERT", label: "Step 1" }] },
+                  { type: "STEP", label: "contact_info", elements: [{ type: "ALERT", label: "Step 2" }] },
+                ],
+              },
+            ],
+          },
+        ],
+      });
 
       // Step labels appear in both the indicator and step header
       expect(screen.getAllByText("Personal Info").length).toBeGreaterThan(0);

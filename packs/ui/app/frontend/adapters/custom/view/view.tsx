@@ -1,4 +1,4 @@
-import { useState, createContext, useContext, useCallback } from "react";
+import { useState, createContext, useContext, useCallback, useMemo } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   Sheet,
@@ -8,7 +8,7 @@ import {
   SheetDescription,
 } from "@ui/components/sheet";
 import { cn } from "@ui/lib/utils";
-import { useTranslate, useServices } from "@ui/lib/ui-renderer/provider";
+import { useServices, useLocale, UIProvider } from "@ui/lib/ui-renderer/provider";
 import type { ViewProps } from "@ui/lib/ui-renderer/registry";
 import type { UISchema } from "@ui/lib/ui-renderer/types";
 import { DynamicRenderer } from "@ui/lib/ui-renderer/renderer";
@@ -57,15 +57,32 @@ export function View({
   url = "",
   api = {},
   drawers = {},
+  translations = {},
   className,
   children,
 }: ViewProps) {
-  const t = useTranslate();
   const services = useServices();
+  const locale = useLocale();
   const queryClient = useQueryClient();
   const [activeDrawer, setActiveDrawer] = useState<string | null>(null);
   const [drawerData, setDrawerData] = useState<Record<string, unknown> | null>(
     null,
+  );
+
+  // Build translations map for current locale
+  const translationsMap = useMemo(() => {
+    const localeTranslations = translations[locale] || translations["en"] || {};
+    return {
+      views: localeTranslations,
+      schemas: {},
+      common: {},
+    };
+  }, [translations, locale]);
+
+  // Local translate function for this view
+  const t = useCallback(
+    (key: string): string => translationsMap.views[key] || key,
+    [translationsMap],
   );
 
   const drawerConfig = drawers[activeDrawer || ""];
@@ -145,59 +162,61 @@ export function View({
   };
 
   return (
-    <ViewContext.Provider value={viewConfig}>
-      <DrawerContext.Provider
-        value={{
-          openDrawer: handleOpenDrawer,
-          closeDrawer: handleCloseDrawer,
-          drawerData,
-          setDrawerData,
-        }}
-      >
-        <div data-ui="view" className={cn("min-h-screen", className)}>
-          {children}
+    <UIProvider services={services} translations={translationsMap} locale={locale}>
+      <ViewContext.Provider value={viewConfig}>
+        <DrawerContext.Provider
+          value={{
+            openDrawer: handleOpenDrawer,
+            closeDrawer: handleCloseDrawer,
+            drawerData,
+            setDrawerData,
+          }}
+        >
+          <div data-ui="view" className={cn("min-h-screen", className)}>
+            {children}
 
-          <Sheet
-            open={!!activeDrawer}
-            onOpenChange={(open) => !open && handleCloseDrawer()}
-          >
-            <SheetContent
-              className="flex flex-col overflow-y-auto sm:max-w-lg"
-              data-testid={activeDrawer ? `drawer-${activeDrawer}` : undefined}
+            <Sheet
+              open={!!activeDrawer}
+              onOpenChange={(open) => !open && handleCloseDrawer()}
             >
-              {drawerConfig && (
-                <>
-                  <SheetHeader>
-                    {drawerConfig.title && (
-                      <SheetTitle>{t(drawerConfig.title)}</SheetTitle>
-                    )}
-                    {drawerConfig.description ? (
-                      <SheetDescription>
-                        {t(drawerConfig.description)}
-                      </SheetDescription>
-                    ) : (
-                      <SheetDescription className="sr-only">
-                        Drawer content
-                      </SheetDescription>
-                    )}
-                  </SheetHeader>
-                  <div className="flex-1 py-4">
-                    {drawerConfig.elements?.map(
-                      (element: UISchema, index: number) => (
-                        <DynamicRenderer
-                          key={index}
-                          schema={element}
-                          data={drawerData || undefined}
-                        />
-                      ),
-                    )}
-                  </div>
-                </>
-              )}
-            </SheetContent>
-          </Sheet>
-        </div>
-      </DrawerContext.Provider>
-    </ViewContext.Provider>
+              <SheetContent
+                className="flex flex-col overflow-y-auto sm:max-w-lg"
+                data-testid={activeDrawer ? `drawer-${activeDrawer}` : undefined}
+              >
+                {drawerConfig && (
+                  <>
+                    <SheetHeader>
+                      {drawerConfig.title && (
+                        <SheetTitle>{t(drawerConfig.title)}</SheetTitle>
+                      )}
+                      {drawerConfig.description ? (
+                        <SheetDescription>
+                          {t(drawerConfig.description)}
+                        </SheetDescription>
+                      ) : (
+                        <SheetDescription className="sr-only">
+                          Drawer content
+                        </SheetDescription>
+                      )}
+                    </SheetHeader>
+                    <div className="flex-1 py-4">
+                      {drawerConfig.elements?.map(
+                        (element: UISchema, index: number) => (
+                          <DynamicRenderer
+                            key={index}
+                            schema={element}
+                            data={drawerData || undefined}
+                          />
+                        ),
+                      )}
+                    </div>
+                  </>
+                )}
+              </SheetContent>
+            </Sheet>
+          </div>
+        </DrawerContext.Provider>
+      </ViewContext.Provider>
+    </UIProvider>
   );
 }

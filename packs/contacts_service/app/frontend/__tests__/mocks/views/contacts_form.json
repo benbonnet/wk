@@ -226,5 +226,32 @@
       ],
       "classname": "flex flex-col h-full min-h-0"
     }
-  ]
+  ],
+  "url": "/api/v1/workspaces/contacts",
+  "api": {
+    "add_relationship": {
+      "method": "POST",
+      "path": ":id/relationships"
+    },
+    "create": {
+      "method": "POST",
+      "path": ""
+    },
+    "destroy": {
+      "method": "DELETE",
+      "path": ":id"
+    },
+    "index": {
+      "method": "GET",
+      "path": ""
+    },
+    "show": {
+      "method": "GET",
+      "path": ":id"
+    },
+    "update": {
+      "method": "PUT",
+      "path": ":id"
+    }
+  }
 }

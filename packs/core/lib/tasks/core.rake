@@ -88,12 +88,17 @@ def export_pack_views(pack_name, output_dir, silent: false)
     features.each do |feature_slug, config|
       config[:views].each do |view_class|
         next unless view_class.name&.start_with?(pack_module)
-        next unless view_class.respond_to?(:view_config) && view_class.has_view?
+        next unless view_class.respond_to?(:has_view?) && view_class.has_view?
 
         FileUtils.mkdir_p(views_dir)
         view_slug = view_class.name.demodulize.underscore
+
+        # Use Registry.view_config for complete config with derived URL/API
+        view_config = Core::Features::Registry.view_config(namespace, feature_slug, view_slug)
+        next unless view_config
+
         view_file = views_dir.join("#{feature_slug}_#{view_slug}.json")
-        File.write(view_file, JSON.pretty_generate(view_class.view_config))
+        File.write(view_file, JSON.pretty_generate(view_config))
         puts "#{pack_name}: Exported view #{feature_slug}/#{view_slug}" unless silent
       end
     end

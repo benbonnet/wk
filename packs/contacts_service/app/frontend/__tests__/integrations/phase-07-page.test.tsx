@@ -26,22 +26,17 @@ const mockAdapters: AdapterRegistry = {
 
 interface WrapperProps {
   children: ReactNode;
-  translations?: Record<string, string>;
 }
 
-function TestWrapper({ children, translations = {} }: WrapperProps) {
+function TestWrapper({ children }: WrapperProps) {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
 
+  // View component handles translations from schema - no manual wiring needed
   return (
     <QueryClientProvider client={queryClient}>
-      <UIProvider
-        adapters={mockAdapters}
-        services={mockServices}
-        translations={{ views: translations, schemas: {}, common: {} }}
-        locale="en"
-      >
+      <UIProvider adapters={mockAdapters} services={mockServices} locale="en">
         <TooltipProvider>{children}</TooltipProvider>
       </UIProvider>
     </QueryClientProvider>
@@ -288,10 +283,11 @@ describe("Phase 7: PAGE Adapter", () => {
   describe("7.3 Page Translations", () => {
     it("translates title via t()", () => {
       render(
-        <TestWrapper translations={{ page_title: "Translated Title" }}>
+        <TestWrapper>
           <DynamicRenderer
             schema={{
               type: "VIEW",
+              translations: { en: { page_title: "Translated Title" } },
               elements: [
                 {
                   type: "PAGE",
@@ -307,10 +303,11 @@ describe("Phase 7: PAGE Adapter", () => {
 
     it("translates description via t()", () => {
       render(
-        <TestWrapper translations={{ page_desc: "Translated Description" }}>
+        <TestWrapper>
           <DynamicRenderer
             schema={{
               type: "VIEW",
+              translations: { en: { page_desc: "Translated Description" } },
               elements: [
                 {
                   type: "PAGE",
@@ -327,10 +324,11 @@ describe("Phase 7: PAGE Adapter", () => {
 
     it("actions have translated labels", () => {
       render(
-        <TestWrapper translations={{ new_contact: "New Contact" }}>
+        <TestWrapper>
           <DynamicRenderer
             schema={{
               type: "VIEW",
+              translations: { en: { new_contact: "New Contact" } },
               elements: [
                 {
                   type: "PAGE",
@@ -352,7 +350,7 @@ describe("Phase 7: PAGE Adapter", () => {
 
     it("falls back to key when translation missing", () => {
       render(
-        <TestWrapper translations={{}}>
+        <TestWrapper>
           <DynamicRenderer
             schema={{
               type: "VIEW",

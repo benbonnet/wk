@@ -44,6 +44,7 @@ export interface ViewProps extends BaseProps {
   url?: string;
   api?: Record<string, { method: string; path: string }>;
   drawers?: Record<string, { title?: string; elements?: UISchema[] }>;
+  translations?: Record<string, Record<string, string>>;
 }
 
 export interface PageProps extends BaseProps {

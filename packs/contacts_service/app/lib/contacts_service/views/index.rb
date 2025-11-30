@@ -8,16 +8,6 @@ module ContactsService
       frontend_route "/contacts"
 
       view do
-        url "/api/v1/workspaces/contacts"
-
-        api do |a|
-          a.index method: :get, path: ""
-          a.show method: :get, path: ":id"
-          a.create method: :post, path: ""
-          a.update method: :patch, path: ":id"
-          a.destroy method: :delete, path: ":id"
-        end
-
         translations(
           en: {
             page_title: "Contacts",

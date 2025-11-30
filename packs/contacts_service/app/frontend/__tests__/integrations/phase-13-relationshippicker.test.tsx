@@ -34,12 +34,13 @@ const mockRelatedContacts = {
 function createMockServices(overrides?: Partial<UIServices>): UIServices {
   return {
     fetch: vi.fn().mockImplementation((url: string) => {
-      // Table data
+      // Table data (no query params)
       if (url.includes("/api/v1/workspaces/contacts") && !url.includes("?")) {
         return Promise.resolve({ data: mockData.items });
       }
-      // Relationship picker data (search for contacts)
-      if (url.includes("/api/v1/contacts")) {
+      // Relationship picker data (has query params for search/pagination)
+      // Picker derives path from view URL: /api/v1/workspaces + /contacts
+      if (url.includes("/api/v1/workspaces/contacts") && url.includes("?")) {
         return Promise.resolve(mockRelatedContacts);
       }
       return Promise.resolve({ data: [] });
@@ -68,13 +69,11 @@ function TestWrapper({
   services = createMockServices(),
   queryClient = createQueryClient(),
 }: WrapperProps) {
-  const translations = contactsIndexSchema.translations?.en || {};
-
+  // View component handles translations from schema - no manual wiring needed
   return (
     <QueryClientProvider client={queryClient}>
       <UIProvider
         services={services}
-        translations={{ views: translations, schemas: {}, common: {} }}
         locale="en"
       >
         <TooltipProvider>{children}</TooltipProvider>
@@ -239,10 +238,14 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       });
 
       // Verify API was called for the picker data
+      // Picker derives path from view URL: /api/v1/workspaces/contacts
       await waitFor(() => {
         const calls = mockFetch.mock.calls.map((c) => c[0]);
         expect(
-          calls.some((url: string) => url.includes("/api/v1/contacts")),
+          calls.some(
+            (url: string) =>
+              url.includes("/api/v1/workspaces/contacts") && url.includes("?"),
+          ),
         ).toBe(true);
       });
     });
@@ -799,23 +802,32 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
       const mockFetch = vi
         .fn()
         .mockImplementation((url: string, options?: RequestInit) => {
-          // Table data
-          if (url.includes("/api/v1/workspaces/contacts") && !options?.method) {
+          // Table data (no query params, no method = GET)
+          if (
+            url.includes("/api/v1/workspaces/contacts") &&
+            !url.includes("?") &&
+            !options?.method
+          ) {
             return Promise.resolve({ data: mockData.items });
           }
-          // Relationship picker data
+          // Relationship picker data (GET with query params)
           if (
-            url.includes("/api/v1/contacts") &&
+            url.includes("/api/v1/workspaces/contacts") &&
+            url.includes("?") &&
             (!options?.method || options.method === "GET")
           ) {
             return Promise.resolve(mockRelatedContacts);
           }
           // POST to create new item
-          if (url.includes("/api/v1/contacts") && options?.method === "POST") {
+          if (
+            url.includes("/api/v1/workspaces/contacts") &&
+            options?.method === "POST"
+          ) {
             const body = JSON.parse(options.body as string);
+            // Response structure: { data: { id, data }, meta }
             return Promise.resolve({
-              id: 999,
-              data: body.data,
+              data: { id: 999, data: body.data },
+              meta: { created: true },
             });
           }
           return Promise.resolve({ data: [] });

@@ -8,17 +8,6 @@ module RibCheckWorkflow
       frontend_route "/rib-checks"
 
       view do
-        url "/api/v1/workspaces/rib_requests"
-
-        api do |a|
-          a.index method: :get, path: ""
-          a.show method: :get, path: ":id"
-          a.create method: :post, path: ""
-          a.update method: :patch, path: ":id"
-          a.destroy method: :delete, path: ":id"
-          a.cancel method: :post, path: ":id/cancel"
-        end
-
         translations(
           en: {
             page_title: "RIB Requests",
@@ -52,7 +41,22 @@ module RibCheckWorkflow
             completed: "Completed",
             cancelled: "Cancelled",
             individual: "Individual",
-            common: "Common"
+            common: "Common",
+            # Form/drawer translations
+            request_details: "Request Details",
+            notification_settings: "Notification Settings",
+            recipients_section: "Recipients",
+            message_body: "Message",
+            comment: "Internal Comment",
+            end_at: "Deadline",
+            notify_via_email: "Email Notification",
+            notify_via_sms: "SMS Notification",
+            message_body_placeholder: "Enter the message to send to recipients...",
+            comment_placeholder: "Internal notes (not visible to recipients)",
+            save: "Save",
+            saving: "Saving...",
+            add_recipient: "Add Recipient",
+            no_selection: "No recipients selected"
           },
           fr: {
             page_title: "Demandes RIB",
@@ -86,7 +90,22 @@ module RibCheckWorkflow
             completed: "Complete",
             cancelled: "Annule",
             individual: "Individuel",
-            common: "Commun"
+            common: "Commun",
+            # Form/drawer translations
+            request_details: "Details de la Demande",
+            notification_settings: "Parametres de Notification",
+            recipients_section: "Destinataires",
+            message_body: "Message",
+            comment: "Commentaire Interne",
+            end_at: "Echeance",
+            notify_via_email: "Notification Email",
+            notify_via_sms: "Notification SMS",
+            message_body_placeholder: "Entrez le message a envoyer aux destinataires...",
+            comment_placeholder: "Notes internes (non visibles par les destinataires)",
+            save: "Sauvegarder",
+            saving: "Sauvegarde...",
+            add_recipient: "Ajouter un Destinataire",
+            no_selection: "Aucun destinataire selectionne"
           }
         )
 

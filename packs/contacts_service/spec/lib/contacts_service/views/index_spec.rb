@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe ContactsService::Views::Index do
-  subject(:config) { described_class.view_config }
+  subject(:config) { described_class.view_config_raw }
 
   let(:page) { config[:elements]&.find { |e| e[:type] == "PAGE" } }
   let(:group) { page[:elements]&.find { |e| e[:type] == "GROUP" } }

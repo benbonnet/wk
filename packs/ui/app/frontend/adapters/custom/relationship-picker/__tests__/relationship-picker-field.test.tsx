@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { RelationshipPickerField } from "../field";
 import { UIProvider } from "@ui/lib";
+import { ViewContext } from "../../view";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const queryClient = new QueryClient({
@@ -15,11 +16,16 @@ const mockServices = {
   confirm: vi.fn(),
 };
 
+const mockViewConfig = {
+  url: "/api/v1/workspaces/rib_requests",
+  api: {},
+  executeApi: vi.fn(),
+};
+
 const defaultProps = {
   name: "contacts_attributes",
   cardinality: "many" as const,
   relationSchema: "contact",
-  basePath: "/api/v1/contacts",
   columns: [
     { name: "name", kind: "DISPLAY_TEXT", label: "Name" },
     { name: "email", kind: "DISPLAY_TEXT", label: "Email" },
@@ -31,11 +37,10 @@ const defaultProps = {
 
 const wrapper = ({ children }: { children: React.ReactNode }) => (
   <QueryClientProvider client={queryClient}>
-    <UIProvider
-      services={mockServices}
-      locale="en"
-    >
-      {children}
+    <UIProvider services={mockServices} locale="en">
+      <ViewContext.Provider value={mockViewConfig}>
+        {children}
+      </ViewContext.Provider>
     </UIProvider>
   </QueryClientProvider>
 );

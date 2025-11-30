@@ -90,13 +90,21 @@ module Core
         end
 
         def sync_views(feature, views)
+          # Get namespace from feature config
+          namespace = feature.config.dig("namespace")&.to_sym || :workspaces
+
           views.each do |view_class|
             view_slug = view_class.name.demodulize.underscore
 
             existing = ::FeatureView.find_by(slug: view_slug, feature_id: feature.id)
             next if existing
 
-            view_config = view_class.respond_to?(:view_config) && view_class.respond_to?(:has_view?) && view_class.has_view? ? view_class.view_config : nil
+            # Use Registry.view_config for complete config with derived URL/API
+            view_config = if view_class.respond_to?(:has_view?) && view_class.has_view?
+              Core::Features::Registry.view_config(namespace, feature.identifier.to_sym, view_slug)
+            else
+              nil
+            end
 
             ::FeatureView.create!(
               feature_id: feature.id,

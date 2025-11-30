@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe ContactsService::Views::Form do
-  subject(:config) { described_class.view_config }
+  subject(:config) { described_class.view_config_raw }
 
   let(:form) { config[:elements]&.find { |e| e[:type] == "FORM" } }
   let(:wrapper) { form[:elements]&.first }

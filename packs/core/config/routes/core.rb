@@ -6,6 +6,9 @@
 namespace :core, path: "api" do
   namespace :v1 do
     resources :routes, only: [:index]
+    resources :views, only: [] do
+      get ":namespace/:feature/:view_name", action: :show, on: :collection
+    end
 
     scope ":namespace" do
       # Collection routes
