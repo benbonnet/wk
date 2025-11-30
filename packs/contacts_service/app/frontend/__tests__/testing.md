@@ -357,7 +357,7 @@ Test form manages field state and submission.
 ### 9.1 Form Context
 
 ```
-FORM provides FormContext to children
+FORM provides Formik context to children
 FORM children can read values via useField
 FORM children can update values via useField.onChange
 ```

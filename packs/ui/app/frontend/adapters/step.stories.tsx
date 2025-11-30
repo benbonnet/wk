@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { withForm } from "@storybook-decorators";
-import { Step, TextInput } from "@ui/adapters";
+import { Step, FormikAdapter } from "@ui/adapters";
 
 const meta: Meta<typeof Step> = {
   title: "Layouts/Step",
@@ -30,8 +30,8 @@ export const WithSubtitle: Story = {
     active: true,
     children: (
       <div className="space-y-4">
-        <TextInput name="first_name" label="First Name" />
-        <TextInput name="last_name" label="Last Name" />
+        <FormikAdapter type="INPUT_TEXT" name="first_name" label="First Name" />
+        <FormikAdapter type="INPUT_TEXT" name="last_name" label="Last Name" />
       </div>
     ),
   },
@@ -52,9 +52,9 @@ export const WithFormContent: Story = {
     active: true,
     children: (
       <div className="space-y-4">
-        <TextInput name="email" label="Email Address" />
-        <TextInput name="phone" label="Phone Number" />
-        <TextInput name="address" label="Address" />
+        <FormikAdapter type="INPUT_TEXT" name="email" label="Email Address" />
+        <FormikAdapter type="INPUT_TEXT" name="phone" label="Phone Number" />
+        <FormikAdapter type="INPUT_TEXT" name="address" label="Address" />
       </div>
     ),
   },

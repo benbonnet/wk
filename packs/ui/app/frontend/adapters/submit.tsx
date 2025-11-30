@@ -1,7 +1,7 @@
+import { useFormikContext } from "formik";
 import { Button } from "@ui/components/button";
 import { Loader2 } from "lucide-react";
 import { useTranslate } from "@ui/lib/ui-renderer/provider";
-import { useFormContext } from "./custom/form";
 import type { SubmitProps } from "@ui/lib/ui-renderer/registry";
 
 export function Submit({
@@ -10,16 +10,16 @@ export function Submit({
   className,
 }: SubmitProps) {
   const t = useTranslate();
-  const form = useFormContext();
+  const { isSubmitting } = useFormikContext();
 
   return (
     <Button
       data-ui="submit"
       type="submit"
-      disabled={form.isSubmitting}
+      disabled={isSubmitting}
       className={className}
     >
-      {form.isSubmitting ? (
+      {isSubmitting ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           {t(loadingLabel)}

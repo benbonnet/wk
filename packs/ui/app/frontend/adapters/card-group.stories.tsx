@@ -1,13 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { withForm } from "@storybook-decorators";
-import {
-  CardGroup,
-  TextInput,
-  Select,
-  Checkbox,
-  TextDisplay,
-  BadgeDisplay,
-} from "@ui/adapters";
+import { CardGroup, FormikAdapter, DisplayAdapter } from "@ui/adapters";
 
 const meta: Meta<typeof CardGroup> = {
   title: "Layouts/CardGroup",
@@ -26,8 +19,8 @@ export const Default: Story = {
   args: {
     children: (
       <>
-        <TextInput name="name" label="Name" />
-        <TextInput name="email" label="Email" />
+        <FormikAdapter type="INPUT_TEXT" name="name" label="Name" />
+        <FormikAdapter type="INPUT_TEXT" name="email" label="Email" />
       </>
     ),
   },
@@ -38,9 +31,9 @@ export const WithTitle: Story = {
     label: "Account Settings",
     children: (
       <>
-        <TextInput name="username" label="Username" />
-        <TextInput name="email" label="Email Address" />
-        <Checkbox name="notifications" label="Enable notifications" />
+        <FormikAdapter type="INPUT_TEXT" name="username" label="Username" />
+        <FormikAdapter type="INPUT_TEXT" name="email" label="Email Address" />
+        <FormikAdapter type="INPUT_CHECKBOX" name="notifications" label="Enable notifications" />
       </>
     ),
   },
@@ -52,8 +45,8 @@ export const WithDescription: Story = {
     subtitle: "Update your account information below",
     children: (
       <>
-        <TextInput name="username" label="Username" />
-        <TextInput name="email" label="Email" />
+        <FormikAdapter type="INPUT_TEXT" name="username" label="Username" />
+        <FormikAdapter type="INPUT_TEXT" name="email" label="Email" />
       </>
     ),
   },
@@ -64,9 +57,9 @@ export const WithDisplayComponents: Story = {
     label: "User Profile",
     children: (
       <>
-        <TextDisplay name="name" label="Name" data={{ name: "John Doe" }} />
-        <TextDisplay name="email" label="Email" data={{ email: "john@example.com" }} />
-        <BadgeDisplay name="status" label="Status" data={{ status: "active" }} />
+        <DisplayAdapter type="DISPLAY_TEXT" name="name" label="Name" value="John Doe" />
+        <DisplayAdapter type="DISPLAY_TEXT" name="email" label="Email" value="john@example.com" />
+        <DisplayAdapter type="DISPLAY_BADGE" name="status" label="Status" value="active" />
       </>
     ),
   },
@@ -78,7 +71,8 @@ export const WithCustomClassName: Story = {
     className: "shadow-lg border-2 border-blue-200",
     children: (
       <>
-        <Select
+        <FormikAdapter
+          type="INPUT_SELECT"
           name="plan"
           label="Plan"
           options={[
@@ -87,7 +81,7 @@ export const WithCustomClassName: Story = {
             { value: "enterprise", label: "Enterprise" },
           ]}
         />
-        <Checkbox name="annual" label="Annual billing" />
+        <FormikAdapter type="INPUT_CHECKBOX" name="annual" label="Annual billing" />
       </>
     ),
   },
@@ -97,16 +91,16 @@ export const MultipleCards: Story = {
   render: () => (
     <div className="space-y-4">
       <CardGroup label="Personal Information">
-        <TextInput name="first_name" label="First Name" />
-        <TextInput name="last_name" label="Last Name" />
+        <FormikAdapter type="INPUT_TEXT" name="first_name" label="First Name" />
+        <FormikAdapter type="INPUT_TEXT" name="last_name" label="Last Name" />
       </CardGroup>
       <CardGroup label="Contact Information">
-        <TextInput name="email" label="Email" />
-        <TextInput name="phone" label="Phone" />
+        <FormikAdapter type="INPUT_TEXT" name="email" label="Email" />
+        <FormikAdapter type="INPUT_TEXT" name="phone" label="Phone" />
       </CardGroup>
       <CardGroup label="Preferences">
-        <Checkbox name="newsletter" label="Subscribe to newsletter" />
-        <Checkbox name="notifications" label="Email notifications" />
+        <FormikAdapter type="INPUT_CHECKBOX" name="newsletter" label="Subscribe to newsletter" />
+        <FormikAdapter type="INPUT_CHECKBOX" name="notifications" label="Email notifications" />
       </CardGroup>
     </div>
   ),

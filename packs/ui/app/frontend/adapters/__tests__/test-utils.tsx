@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { render, RenderOptions } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Formik } from "formik";
 import { UIProvider } from "@ui/lib/ui-renderer/provider";
 import { TooltipProvider } from "@ui/components/tooltip";
 import type { UIServices } from "@ui/lib/ui-renderer/registry";
@@ -61,6 +62,53 @@ export function renderWithProviders(
   options?: Omit<RenderOptions, "wrapper">,
 ) {
   return render(ui, { wrapper: createWrapper(), ...options });
+}
+
+interface FormikWrapperOptions {
+  initialValues?: Record<string, unknown>;
+}
+
+export function createFormikWrapper(options: FormikWrapperOptions = {}) {
+  const { initialValues = {} } = options;
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: { retry: false },
+    },
+  });
+
+  return function Wrapper({ children }: WrapperProps) {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <UIProvider
+          services={mockServices}
+          translations={mockTranslations}
+          locale="en"
+        >
+          <DrawerContext.Provider value={mockDrawerContext}>
+            <TooltipProvider>
+              <Formik
+                initialValues={initialValues}
+                onSubmit={() => {}}
+              >
+                {children}
+              </Formik>
+            </TooltipProvider>
+          </DrawerContext.Provider>
+        </UIProvider>
+      </QueryClientProvider>
+    );
+  };
+}
+
+export function renderWithFormik(
+  ui: React.ReactElement,
+  options?: Omit<RenderOptions, "wrapper"> & FormikWrapperOptions,
+) {
+  const { initialValues, ...renderOptions } = options || {};
+  return render(ui, {
+    wrapper: createFormikWrapper({ initialValues }),
+    ...renderOptions,
+  });
 }
 
 // Reset mocks before each test

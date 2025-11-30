@@ -1,54 +1,11 @@
 import type { ComponentType } from "react";
-import type {
-  InputProps,
-  DisplayProps,
-  ViewProps,
-  PageProps,
-  DrawerProps,
-  FormProps,
-  TableProps,
-  ShowProps,
-  GroupProps,
-  CardGroupProps,
-  MultistepProps,
-  StepProps,
-  FormArrayProps,
-  DisplayArrayProps,
-  AlertProps,
-  ActionsProps,
-  LinkProps,
-  ButtonProps,
-  DropdownProps,
-  OptionProps,
-  SearchProps,
-  SubmitProps,
-  RelationshipPickerProps,
-} from "@ui/lib/ui-renderer/registry";
 
-// Inputs
-import { TextInput } from "./text-input";
-import { Textarea } from "./textarea";
-import { Select } from "./select";
-import { Checkbox } from "./checkbox";
-import { Checkboxes } from "./checkboxes";
-import { Radios } from "./radios";
-import { DateInput } from "./date-input";
-import { DatetimeInput } from "./datetime-input";
-import { TagsInput } from "./tags-input";
-import { RichTextInput } from "./rich-text-input";
+// Unified adapters
+import { FormikAdapter } from "./formik-adapter";
+import { DisplayAdapter } from "./display-adapter";
 
-// Displays
-import { TextDisplay } from "./text-display";
-import { LongtextDisplay } from "./longtext-display";
-import { NumberDisplay } from "./number-display";
-import { DateDisplay } from "./date-display";
-import { DatetimeDisplay } from "./datetime-display";
-import { BadgeDisplay } from "./badge-display";
-import { TagsDisplay } from "./tags-display";
-import { BooleanDisplay } from "./boolean-display";
-import { SelectDisplay } from "./select-display";
-
-// Layouts (simple)
+// Layouts
+import { View } from "./custom/view";
 import { Page } from "./page";
 import { Drawer } from "./drawer";
 import { Show } from "./show";
@@ -60,6 +17,11 @@ import { DisplayArray } from "./display-array";
 import { Alert } from "./alert";
 import { Actions } from "./actions";
 
+// Custom (complex)
+import { Table } from "./custom/table";
+import { Form, FormArray } from "./custom/form";
+import { RelationshipPicker } from "./custom/relationship-picker";
+
 // Primitives
 import { Button } from "./button";
 import { Link } from "./link";
@@ -68,65 +30,85 @@ import { Option } from "./option";
 import { Search } from "./search";
 import { Submit } from "./submit";
 
-// Custom (complex components)
-import { View } from "./custom/view";
-import { Table } from "./custom/table";
-import { Form } from "./custom/form";
-import { FormArray } from "./custom/form";
-import { RelationshipPicker } from "./custom/relationship-picker";
+// =============================================================================
+// TYPE CONSTANTS
+// =============================================================================
 
-/**
- * Registry mapping schema types (SCREAMING_CASE) to React components (PascalCase)
- * DynamicRenderer uses this to resolve components from schema.type
- */
-export const adapterRegistry = {
-  // Inputs
-  INPUT_TEXT: TextInput as ComponentType<InputProps>,
-  INPUT_TEXTAREA: Textarea as ComponentType<InputProps>,
-  INPUT_SELECT: Select as ComponentType<InputProps>,
-  INPUT_CHECKBOX: Checkbox as ComponentType<InputProps>,
-  INPUT_CHECKBOXES: Checkboxes as ComponentType<InputProps>,
-  INPUT_RADIOS: Radios as ComponentType<InputProps>,
-  INPUT_DATE: DateInput as ComponentType<InputProps>,
-  INPUT_DATETIME: DatetimeInput as ComponentType<InputProps>,
-  INPUT_TAGS: TagsInput as ComponentType<InputProps>,
-  INPUT_AI_RICH_TEXT: RichTextInput as ComponentType<InputProps>,
+export const INPUT_TYPES = [
+  "INPUT_TEXT",
+  "INPUT_TEXTAREA",
+  "INPUT_SELECT",
+  "INPUT_CHECKBOX",
+  "INPUT_CHECKBOXES",
+  "INPUT_RADIOS",
+  "INPUT_DATE",
+  "INPUT_DATETIME",
+  "INPUT_TAGS",
+  "INPUT_AI_RICH_TEXT",
+] as const;
 
-  // Displays
-  DISPLAY_TEXT: TextDisplay as ComponentType<DisplayProps>,
-  DISPLAY_LONGTEXT: LongtextDisplay as ComponentType<DisplayProps>,
-  DISPLAY_NUMBER: NumberDisplay as ComponentType<DisplayProps>,
-  DISPLAY_DATE: DateDisplay as ComponentType<DisplayProps>,
-  DISPLAY_DATETIME: DatetimeDisplay as ComponentType<DisplayProps>,
-  DISPLAY_BADGE: BadgeDisplay as ComponentType<DisplayProps>,
-  DISPLAY_TAGS: TagsDisplay as ComponentType<DisplayProps>,
-  DISPLAY_BOOLEAN: BooleanDisplay as ComponentType<DisplayProps>,
-  DISPLAY_SELECT: SelectDisplay as ComponentType<DisplayProps>,
+export const DISPLAY_TYPES = [
+  "DISPLAY_TEXT",
+  "DISPLAY_LONGTEXT",
+  "DISPLAY_NUMBER",
+  "DISPLAY_DATE",
+  "DISPLAY_DATETIME",
+  "DISPLAY_BADGE",
+  "DISPLAY_TAGS",
+  "DISPLAY_BOOLEAN",
+  "DISPLAY_SELECT",
+] as const;
 
-  // Layouts
-  VIEW: View as ComponentType<ViewProps>,
-  PAGE: Page as ComponentType<PageProps>,
-  DRAWER: Drawer as ComponentType<DrawerProps>,
-  FORM: Form as ComponentType<FormProps>,
-  TABLE: Table as ComponentType<TableProps>,
-  SHOW: Show as ComponentType<ShowProps>,
-  GROUP: Group as ComponentType<GroupProps>,
-  CARD_GROUP: CardGroup as ComponentType<CardGroupProps>,
-  MULTISTEP: Multistep as ComponentType<MultistepProps>,
-  STEP: Step as ComponentType<StepProps>,
-  FORM_ARRAY: FormArray as ComponentType<FormArrayProps>,
-  DISPLAY_ARRAY: DisplayArray as ComponentType<DisplayArrayProps>,
-  ALERT: Alert as ComponentType<AlertProps>,
-  ACTIONS: Actions as ComponentType<ActionsProps>,
+// =============================================================================
+// SUB-REGISTRIES (generated)
+// =============================================================================
 
-  // Primitives
-  BUTTON: Button as ComponentType<ButtonProps>,
-  LINK: Link as ComponentType<LinkProps>,
-  DROPDOWN: Dropdown as ComponentType<DropdownProps>,
-  OPTION: Option as ComponentType<OptionProps>,
-  SEARCH: Search as ComponentType<SearchProps>,
-  SUBMIT: Submit as ComponentType<SubmitProps>,
-  RELATIONSHIP_PICKER: RelationshipPicker as ComponentType<RelationshipPickerProps>,
+const inputAdapters = Object.fromEntries(
+  INPUT_TYPES.map((type) => [type, FormikAdapter])
+) as Record<(typeof INPUT_TYPES)[number], typeof FormikAdapter>;
+
+const displayAdapters = Object.fromEntries(
+  DISPLAY_TYPES.map((type) => [type, DisplayAdapter])
+) as Record<(typeof DISPLAY_TYPES)[number], typeof DisplayAdapter>;
+
+/** Layouts - structural components */
+const layoutAdapters = {
+  VIEW: View,
+  PAGE: Page,
+  DRAWER: Drawer,
+  FORM: Form,
+  TABLE: Table,
+  SHOW: Show,
+  GROUP: Group,
+  CARD_GROUP: CardGroup,
+  MULTISTEP: Multistep,
+  STEP: Step,
+  FORM_ARRAY: FormArray,
+  DISPLAY_ARRAY: DisplayArray,
+  ALERT: Alert,
+  ACTIONS: Actions,
 } as const;
+
+/** Primitives - interactive elements */
+const primitiveAdapters = {
+  BUTTON: Button,
+  LINK: Link,
+  DROPDOWN: Dropdown,
+  OPTION: Option,
+  SEARCH: Search,
+  SUBMIT: Submit,
+  RELATIONSHIP_PICKER: RelationshipPicker,
+} as const;
+
+// =============================================================================
+// MERGED REGISTRY
+// =============================================================================
+
+export const adapterRegistry = {
+  ...inputAdapters,
+  ...displayAdapters,
+  ...layoutAdapters,
+  ...primitiveAdapters,
+} as Record<string, ComponentType<any>>;
 
 export type AdapterType = keyof typeof adapterRegistry;

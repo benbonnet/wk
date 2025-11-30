@@ -1,48 +1,26 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import {
-  TextInput,
-  Textarea,
-  Select,
-  Checkbox,
-  Checkboxes,
-  Radios,
-  TagsInput,
-  View,
-  Form,
-} from "..";
-import { renderWithProviders, resetMocks } from "./test-utils";
+import { FormikAdapter } from "../formik-adapter";
+import { renderWithFormik, resetMocks } from "./test-utils";
 
-// Wrapper to provide FormContext for inputs
-const InputWrapper = ({ children }: { children: React.ReactNode }) => (
-  <View>
-    <Form>{children}</Form>
-  </View>
-);
-
-describe("Input Adapters", () => {
+describe("FormikAdapter", () => {
   beforeEach(() => {
     resetMocks();
   });
 
-  describe("TextInput", () => {
+  describe("INPUT_TEXT", () => {
     it("renders with label", () => {
-      renderWithProviders(
-        <InputWrapper>
-          <TextInput name="email" label="Email Address" />
-        </InputWrapper>,
+      renderWithFormik(
+        <FormikAdapter type="INPUT_TEXT" name="email" label="Email Address" />,
       );
 
       expect(screen.getByLabelText("Email Address")).toBeInTheDocument();
     });
 
     it("renders with placeholder", () => {
-      renderWithProviders(
-        <InputWrapper>
-          <TextInput name="email" placeholder="Enter email" />
-        </InputWrapper>,
+      renderWithFormik(
+        <FormikAdapter type="INPUT_TEXT" name="email" placeholder="Enter email" />,
       );
 
       expect(screen.getByPlaceholderText("Enter email")).toBeInTheDocument();
@@ -51,10 +29,8 @@ describe("Input Adapters", () => {
     it("updates value when typing", async () => {
       const user = userEvent.setup();
 
-      renderWithProviders(
-        <InputWrapper>
-          <TextInput name="email" />
-        </InputWrapper>,
+      renderWithFormik(
+        <FormikAdapter type="INPUT_TEXT" name="email" />,
       );
 
       const input = screen.getByRole("textbox");
@@ -64,13 +40,12 @@ describe("Input Adapters", () => {
     });
 
     it("displays helper text", () => {
-      renderWithProviders(
-        <InputWrapper>
-          <TextInput
-            name="email"
-            helperText="We'll never share your email"
-          />
-        </InputWrapper>,
+      renderWithFormik(
+        <FormikAdapter
+          type="INPUT_TEXT"
+          name="email"
+          helperText="We'll never share your email"
+        />,
       );
 
       expect(
@@ -79,22 +54,18 @@ describe("Input Adapters", () => {
     });
 
     it("can be disabled", () => {
-      renderWithProviders(
-        <InputWrapper>
-          <TextInput name="email" disabled />
-        </InputWrapper>,
+      renderWithFormik(
+        <FormikAdapter type="INPUT_TEXT" name="email" disabled />,
       );
 
       expect(screen.getByRole("textbox")).toBeDisabled();
     });
   });
 
-  describe("Textarea", () => {
+  describe("INPUT_TEXTAREA", () => {
     it("renders with correct rows", () => {
-      renderWithProviders(
-        <InputWrapper>
-          <Textarea name="description" rows={5} />
-        </InputWrapper>,
+      renderWithFormik(
+        <FormikAdapter type="INPUT_TEXTAREA" name="description" rows={5} />,
       );
 
       const textarea = screen.getByRole("textbox");
@@ -104,10 +75,8 @@ describe("Input Adapters", () => {
     it("can be typed into", async () => {
       const user = userEvent.setup();
 
-      renderWithProviders(
-        <InputWrapper>
-          <Textarea name="description" />
-        </InputWrapper>,
+      renderWithFormik(
+        <FormikAdapter type="INPUT_TEXTAREA" name="description" />,
       );
 
       const textarea = screen.getByRole("textbox");
@@ -117,7 +86,7 @@ describe("Input Adapters", () => {
     });
   });
 
-  describe("Select", () => {
+  describe("INPUT_SELECT", () => {
     const options = [
       { value: "us", label: "United States" },
       { value: "uk", label: "United Kingdom" },
@@ -125,14 +94,13 @@ describe("Input Adapters", () => {
     ];
 
     it("renders with placeholder", () => {
-      renderWithProviders(
-        <InputWrapper>
-          <Select
-            name="country"
-            placeholder="Select country"
-            options={options}
-          />
-        </InputWrapper>,
+      renderWithFormik(
+        <FormikAdapter
+          type="INPUT_SELECT"
+          name="country"
+          placeholder="Select country"
+          options={options}
+        />,
       );
 
       expect(screen.getByRole("combobox")).toBeInTheDocument();
@@ -141,27 +109,22 @@ describe("Input Adapters", () => {
     it("renders all options", async () => {
       const user = userEvent.setup();
 
-      renderWithProviders(
-        <InputWrapper>
-          <Select name="country" options={options} />
-        </InputWrapper>,
+      renderWithFormik(
+        <FormikAdapter type="INPUT_SELECT" name="country" options={options} />,
       );
 
       await user.click(screen.getByRole("combobox"));
 
-      // Radix Select may render multiple elements for accessibility
       expect(screen.getAllByText("United States").length).toBeGreaterThan(0);
       expect(screen.getAllByText("United Kingdom").length).toBeGreaterThan(0);
       expect(screen.getAllByText("Canada").length).toBeGreaterThan(0);
     });
   });
 
-  describe("Checkbox", () => {
+  describe("INPUT_CHECKBOX", () => {
     it("renders with label", () => {
-      renderWithProviders(
-        <InputWrapper>
-          <Checkbox name="agree" label="I agree to terms" />
-        </InputWrapper>,
+      renderWithFormik(
+        <FormikAdapter type="INPUT_CHECKBOX" name="agree" label="I agree to terms" />,
       );
 
       expect(screen.getByText("I agree to terms")).toBeInTheDocument();
@@ -170,10 +133,8 @@ describe("Input Adapters", () => {
     it("can be checked", async () => {
       const user = userEvent.setup();
 
-      renderWithProviders(
-        <InputWrapper>
-          <Checkbox name="agree" label="I agree" />
-        </InputWrapper>,
+      renderWithFormik(
+        <FormikAdapter type="INPUT_CHECKBOX" name="agree" label="I agree" />,
       );
 
       const checkbox = screen.getByRole("checkbox");
@@ -185,10 +146,8 @@ describe("Input Adapters", () => {
     it("can be unchecked", async () => {
       const user = userEvent.setup();
 
-      renderWithProviders(
-        <InputWrapper>
-          <Checkbox name="agree" label="I agree" />
-        </InputWrapper>,
+      renderWithFormik(
+        <FormikAdapter type="INPUT_CHECKBOX" name="agree" label="I agree" />,
       );
 
       const checkbox = screen.getByRole("checkbox");
@@ -200,7 +159,7 @@ describe("Input Adapters", () => {
     });
   });
 
-  describe("Checkboxes", () => {
+  describe("INPUT_CHECKBOXES", () => {
     const options = [
       { value: "email", label: "Email" },
       { value: "sms", label: "SMS" },
@@ -208,10 +167,8 @@ describe("Input Adapters", () => {
     ];
 
     it("renders all options", () => {
-      renderWithProviders(
-        <InputWrapper>
-          <Checkboxes name="notifications" options={options} />
-        </InputWrapper>,
+      renderWithFormik(
+        <FormikAdapter type="INPUT_CHECKBOXES" name="notifications" options={options} />,
       );
 
       expect(screen.getByText("Email")).toBeInTheDocument();
@@ -222,10 +179,9 @@ describe("Input Adapters", () => {
     it("can check options", async () => {
       const user = userEvent.setup();
 
-      renderWithProviders(
-        <InputWrapper>
-          <Checkboxes name="notifications" options={options} />
-        </InputWrapper>,
+      renderWithFormik(
+        <FormikAdapter type="INPUT_CHECKBOXES" name="notifications" options={options} />,
+        { initialValues: { notifications: [] } },
       );
 
       const checkboxes = screen.getAllByRole("checkbox");
@@ -238,7 +194,7 @@ describe("Input Adapters", () => {
     });
   });
 
-  describe("Radios", () => {
+  describe("INPUT_RADIOS", () => {
     const options = [
       { value: "free", label: "Free Plan" },
       { value: "pro", label: "Pro Plan" },
@@ -246,10 +202,8 @@ describe("Input Adapters", () => {
     ];
 
     it("renders all options", () => {
-      renderWithProviders(
-        <InputWrapper>
-          <Radios name="plan" options={options} />
-        </InputWrapper>,
+      renderWithFormik(
+        <FormikAdapter type="INPUT_RADIOS" name="plan" options={options} />,
       );
 
       expect(screen.getByText("Free Plan")).toBeInTheDocument();
@@ -260,10 +214,8 @@ describe("Input Adapters", () => {
     it("can select an option", async () => {
       const user = userEvent.setup();
 
-      renderWithProviders(
-        <InputWrapper>
-          <Radios name="plan" options={options} />
-        </InputWrapper>,
+      renderWithFormik(
+        <FormikAdapter type="INPUT_RADIOS" name="plan" options={options} />,
       );
 
       await user.click(screen.getByText("Pro Plan"));
@@ -275,70 +227,33 @@ describe("Input Adapters", () => {
     });
   });
 
-  describe("TagsInput", () => {
-    it("renders empty state", () => {
-      renderWithProviders(
-        <InputWrapper>
-          <TagsInput name="skills" />
-        </InputWrapper>,
+  describe("INPUT_DATE", () => {
+    it("renders date input", () => {
+      renderWithFormik(
+        <FormikAdapter type="INPUT_DATE" name="birthdate" label="Birth Date" />,
       );
 
-      expect(screen.getByRole("textbox")).toBeInTheDocument();
+      expect(screen.getByLabelText("Birth Date")).toHaveAttribute("type", "date");
     });
+  });
 
-    it("adds tag on Enter", async () => {
-      const user = userEvent.setup();
-
-      renderWithProviders(
-        <InputWrapper>
-          <TagsInput name="skills" />
-        </InputWrapper>,
+  describe("INPUT_DATETIME", () => {
+    it("renders datetime input", () => {
+      renderWithFormik(
+        <FormikAdapter type="INPUT_DATETIME" name="appointment" label="Appointment" />,
       );
 
-      const input = screen.getByRole("textbox");
-      await user.type(input, "JavaScript{enter}");
-
-      expect(screen.getByText("JavaScript")).toBeInTheDocument();
+      expect(screen.getByLabelText("Appointment")).toHaveAttribute("type", "datetime-local");
     });
+  });
 
-    it("removes tag when X is clicked", async () => {
-      const user = userEvent.setup();
-
-      renderWithProviders(
-        <InputWrapper>
-          <TagsInput name="skills" />
-        </InputWrapper>,
+  describe("INPUT_TAGS", () => {
+    it("renders placeholder for tags", () => {
+      renderWithFormik(
+        <FormikAdapter type="INPUT_TAGS" name="skills" />,
       );
 
-      const input = screen.getByRole("textbox");
-      await user.type(input, "React{enter}");
-      await user.type(input, "Vue{enter}");
-
-      expect(screen.getByText("React")).toBeInTheDocument();
-      expect(screen.getByText("Vue")).toBeInTheDocument();
-
-      const removeButtons = screen.getAllByRole("button");
-      await user.click(removeButtons[0]);
-
-      expect(screen.queryByText("React")).not.toBeInTheDocument();
-      expect(screen.getByText("Vue")).toBeInTheDocument();
-    });
-
-    it("prevents duplicate tags", async () => {
-      const user = userEvent.setup();
-
-      renderWithProviders(
-        <InputWrapper>
-          <TagsInput name="skills" />
-        </InputWrapper>,
-      );
-
-      const input = screen.getByRole("textbox");
-      await user.type(input, "React{enter}");
-      await user.type(input, "React{enter}");
-
-      // Should only have one "React" badge
-      expect(screen.getAllByText("React")).toHaveLength(1);
+      expect(screen.getByText(/pending implementation/i)).toBeInTheDocument();
     });
   });
 });

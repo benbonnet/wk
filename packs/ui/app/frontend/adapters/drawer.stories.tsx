@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Drawer, TextInput, Select, Textarea } from "@ui/adapters";
+import { Formik } from "formik";
+import { Drawer, FormikAdapter } from "@ui/adapters";
 import { Button } from "@ui/components/button";
 
 const meta: Meta<typeof Drawer> = {
@@ -15,7 +16,7 @@ const meta: Meta<typeof Drawer> = {
 export default meta;
 type Story = StoryObj<typeof Drawer>;
 
-// Wrapper component to manage drawer state
+// Wrapper component to manage drawer state with Formik
 const DrawerDemo = ({
   title,
   description,
@@ -28,17 +29,19 @@ const DrawerDemo = ({
   const [open, setOpen] = useState(false);
 
   return (
-    <div>
-      <Button onClick={() => setOpen(true)}>Open Drawer</Button>
-      <Drawer
-        title={title}
-        description={description}
-        open={open}
-        onClose={() => setOpen(false)}
-      >
-        {children}
-      </Drawer>
-    </div>
+    <Formik initialValues={{}} onSubmit={() => {}}>
+      <div>
+        <Button onClick={() => setOpen(true)}>Open Drawer</Button>
+        <Drawer
+          title={title}
+          description={description}
+          open={open}
+          onClose={() => setOpen(false)}
+        >
+          {children}
+        </Drawer>
+      </div>
+    </Formik>
   );
 };
 
@@ -57,8 +60,8 @@ export const WithDescription: Story = {
       description="Update the contact information below"
     >
       <div className="space-y-4">
-        <TextInput name="name" label="Name" value="John Doe" />
-        <TextInput name="email" label="Email" value="john@example.com" />
+        <FormikAdapter type="INPUT_TEXT" name="name" label="Name" />
+        <FormikAdapter type="INPUT_TEXT" name="email" label="Email" />
       </div>
     </DrawerDemo>
   ),
@@ -71,11 +74,12 @@ export const WithForm: Story = {
       description="Add a new contact to your list"
     >
       <div className="space-y-4">
-        <TextInput name="first_name" label="First Name" />
-        <TextInput name="last_name" label="Last Name" />
-        <TextInput name="email" label="Email" />
-        <TextInput name="phone" label="Phone" />
-        <Select
+        <FormikAdapter type="INPUT_TEXT" name="first_name" label="First Name" />
+        <FormikAdapter type="INPUT_TEXT" name="last_name" label="Last Name" />
+        <FormikAdapter type="INPUT_TEXT" name="email" label="Email" />
+        <FormikAdapter type="INPUT_TEXT" name="phone" label="Phone" />
+        <FormikAdapter
+          type="INPUT_SELECT"
           name="category"
           label="Category"
           options={[
@@ -84,7 +88,7 @@ export const WithForm: Story = {
             { value: "other", label: "Other" },
           ]}
         />
-        <Textarea name="notes" label="Notes" rows={3} />
+        <FormikAdapter type="INPUT_TEXTAREA" name="notes" label="Notes" rows={3} />
         <Button className="w-full">Save Contact</Button>
       </div>
     </DrawerDemo>

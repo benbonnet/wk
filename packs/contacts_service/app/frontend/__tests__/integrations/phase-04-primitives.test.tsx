@@ -1,14 +1,14 @@
+import React, { type ReactNode } from "react";
 import { describe, it, expect, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Formik, Form as FormikForm } from "formik";
 import { UIProvider } from "@ui/lib/ui-renderer/provider";
 import { DynamicRenderer } from "@ui/lib/ui-renderer/renderer";
 import { TooltipProvider } from "@ui/components/tooltip";
-import { FormContext } from "@ui/adapters";
-import type { UIServices, FormContextValue } from "@ui/lib/ui-renderer/registry";
+import type { UIServices } from "@ui/lib/ui-renderer/registry";
 import type { UISchema } from "@ui/lib/ui-renderer/types";
-import type { ReactNode } from "react";
 
 function createMockServices(overrides?: Partial<UIServices>): UIServices {
   return {
@@ -286,45 +286,52 @@ describe("Phase 4: Primitive Adapters", () => {
   });
 
   describe("4.3 Submit", () => {
-    function createMockFormContext(overrides?: Partial<FormContextValue>): FormContextValue {
-      return {
-        values: {},
-        errors: {},
-        touched: {},
-        isSubmitting: false,
-        isDirty: false,
-        setFieldValue: vi.fn(),
-        setFieldError: vi.fn(),
-        setFieldTouched: vi.fn(),
-        handleSubmit: vi.fn(),
-        reset: vi.fn(),
-        ...overrides,
-      };
-    }
-
-    function SubmitWrapper({
+    // Helper to simulate isSubmitting state
+    function SubmittingFormInner({
       children,
-      formContext,
+      setSubmitting,
+      isSubmitting,
     }: {
       children: ReactNode;
-      formContext: FormContextValue;
+      setSubmitting: (val: boolean) => void;
+      isSubmitting: boolean;
+    }) {
+      React.useEffect(() => {
+        if (isSubmitting) {
+          setSubmitting(true);
+        }
+      }, [isSubmitting, setSubmitting]);
+      return <FormikForm>{children}</FormikForm>;
+    }
+
+    function FormikWrapper({
+      children,
+      isSubmitting = false,
+    }: {
+      children: ReactNode;
+      isSubmitting?: boolean;
     }) {
       return (
         <TestWrapper>
-          <FormContext.Provider value={formContext}>
-            {children}
-          </FormContext.Provider>
+          <Formik initialValues={{}} onSubmit={() => {}}>
+            {({ setSubmitting }) => (
+              <SubmittingFormInner
+                setSubmitting={setSubmitting}
+                isSubmitting={isSubmitting}
+              >
+                {children}
+              </SubmittingFormInner>
+            )}
+          </Formik>
         </TestWrapper>
       );
     }
 
     it("renders submit button", () => {
-      const formContext = createMockFormContext();
-
       render(
-        <SubmitWrapper formContext={formContext}>
+        <FormikWrapper>
           <DynamicRenderer schema={{ type: "SUBMIT", label: "Save" }} />
-        </SubmitWrapper>
+        </FormikWrapper>
       );
 
       const button = screen.getByRole("button", { name: "Save" });
@@ -332,50 +339,48 @@ describe("Phase 4: Primitive Adapters", () => {
       expect(button).toHaveAttribute("type", "submit");
     });
 
-    it("shows loading state when form submitting", () => {
-      const formContext = createMockFormContext({ isSubmitting: true });
-
+    it("shows loading state when form submitting", async () => {
       render(
-        <SubmitWrapper formContext={formContext}>
+        <FormikWrapper isSubmitting={true}>
           <DynamicRenderer schema={{ type: "SUBMIT", label: "Save" }} />
-        </SubmitWrapper>
+        </FormikWrapper>
       );
 
-      expect(screen.getByRole("button", { name: /Submitting/i })).toBeInTheDocument();
-      expect(screen.getByRole("button")).toBeDisabled();
+      await waitFor(() => {
+        expect(screen.getByRole("button", { name: /Submitting/i })).toBeInTheDocument();
+        expect(screen.getByRole("button")).toBeDisabled();
+      });
     });
 
-    it("displays custom loadingLabel during submission", () => {
-      const formContext = createMockFormContext({ isSubmitting: true });
-
+    it("displays custom loadingLabel during submission", async () => {
       render(
-        <SubmitWrapper formContext={formContext}>
-          <DynamicRenderer schema={{ type: "SUBMIT", label: "Save", loadingLabel: "Saving..." }} />
-        </SubmitWrapper>
+        <FormikWrapper isSubmitting={true}>
+          <DynamicRenderer
+            schema={{ type: "SUBMIT", label: "Save", loadingLabel: "Saving..." }}
+          />
+        </FormikWrapper>
       );
 
-      expect(screen.getByRole("button", { name: /Saving/i })).toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.getByRole("button", { name: /Saving/i })).toBeInTheDocument();
+      });
     });
 
     it("is enabled when not submitting", () => {
-      const formContext = createMockFormContext({ isSubmitting: false });
-
       render(
-        <SubmitWrapper formContext={formContext}>
+        <FormikWrapper isSubmitting={false}>
           <DynamicRenderer schema={{ type: "SUBMIT", label: "Save" }} />
-        </SubmitWrapper>
+        </FormikWrapper>
       );
 
       expect(screen.getByRole("button")).not.toBeDisabled();
     });
 
     it("uses default label when not provided", () => {
-      const formContext = createMockFormContext();
-
       render(
-        <SubmitWrapper formContext={formContext}>
+        <FormikWrapper>
           <DynamicRenderer schema={{ type: "SUBMIT" }} />
-        </SubmitWrapper>
+        </FormikWrapper>
       );
 
       expect(screen.getByRole("button", { name: "Submit" })).toBeInTheDocument();

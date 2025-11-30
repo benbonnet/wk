@@ -1,3 +1,4 @@
+import { useFormikContext, FieldArray } from "formik";
 import { Button } from "@ui/components/button";
 import { Card, CardContent } from "@ui/components/card";
 import { Plus, Trash2 } from "lucide-react";
@@ -6,7 +7,6 @@ import { useTranslate } from "@ui/lib/ui-renderer/provider";
 import type { FormArrayProps } from "@ui/lib/ui-renderer/registry";
 import type { UISchema } from "@ui/lib/ui-renderer/types";
 import { DynamicRenderer } from "@ui/lib/ui-renderer/renderer";
-import { useFormContext } from "./form";
 
 export function FormArray({
   name,
@@ -17,9 +17,20 @@ export function FormArray({
   className,
 }: FormArrayProps) {
   const t = useTranslate();
-  const form = useFormContext();
+  const { values } = useFormikContext<Record<string, unknown>>();
 
-  const items = (form.getValue(name) as Record<string, unknown>[]) || [];
+  // Get nested value from path like "addresses" or "contacts.children"
+  const getNestedValue = (obj: Record<string, unknown>, path: string): unknown[] => {
+    const parts = path.split(".");
+    let current: unknown = obj;
+    for (const part of parts) {
+      if (current === null || current === undefined) return [];
+      current = (current as Record<string, unknown>)[part];
+    }
+    return (current as unknown[]) || [];
+  };
+
+  const items = getNestedValue(values, name);
 
   const createEmptyItem = () => {
     const item: Record<string, unknown> = {};
@@ -29,52 +40,49 @@ export function FormArray({
     return item;
   };
 
-  const handleAdd = () => {
-    form.setValue(name, [...items, createEmptyItem()]);
-  };
-
-  const handleRemove = (index: number) => {
-    form.setValue(
-      name,
-      items.filter((_, i) => i !== index),
-    );
-  };
-
   return (
-    <div data-ui="form-array" className={cn("space-y-4", className)}>
-      {label && <h3 className="text-sm font-medium">{t(label)}</h3>}
+    <FieldArray name={name}>
+      {({ push, remove }) => (
+        <div data-ui="form-array" className={cn("space-y-4", className)}>
+          {label && <h3 className="text-sm font-medium">{t(label)}</h3>}
 
-      {items.map((_, index) => (
-        <Card key={index} className="relative">
-          <CardContent className="pt-6 pb-4">
-            <div className="space-y-4">
-              {template.map((field: UISchema, fieldIndex: number) => (
-                <DynamicRenderer
-                  key={fieldIndex}
-                  schema={{ ...field, name: `${name}.${index}.${field.name}` }}
-                />
-              ))}
-            </div>
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              className="absolute right-2 top-2 h-8 w-8"
-              onClick={() => handleRemove(index)}
-            >
-              <Trash2 className="h-4 w-4" />
-              <span className="sr-only">
-                {removeLabel ? t(removeLabel) : t("Remove")}
-              </span>
-            </Button>
-          </CardContent>
-        </Card>
-      ))}
+          {items.length === 0 && (
+            <p className="text-sm text-muted-foreground">{t("No items")}</p>
+          )}
 
-      <Button type="button" variant="outline" onClick={handleAdd}>
-        <Plus className="mr-2 h-4 w-4" />
-        {addLabel ? t(addLabel) : t("Add Item")}
-      </Button>
-    </div>
+          {items.map((_, index) => (
+            <Card key={index} className="relative">
+              <CardContent className="pt-6 pb-4">
+                <div className="space-y-4">
+                  {template.map((field: UISchema, fieldIndex: number) => (
+                    <DynamicRenderer
+                      key={fieldIndex}
+                      schema={{ ...field, name: `${name}.${index}.${field.name}` }}
+                    />
+                  ))}
+                </div>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-2 top-2 h-8 w-8"
+                  onClick={() => remove(index)}
+                >
+                  <Trash2 className="h-4 w-4" />
+                  <span className="sr-only">
+                    {removeLabel ? t(removeLabel) : t("Remove")}
+                  </span>
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+
+          <Button type="button" variant="outline" onClick={() => push(createEmptyItem())}>
+            <Plus className="mr-2 h-4 w-4" />
+            {addLabel ? t(addLabel) : t("Add Item")}
+          </Button>
+        </div>
+      )}
+    </FieldArray>
   );
 }

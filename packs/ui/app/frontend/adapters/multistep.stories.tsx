@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { withForm } from "@storybook-decorators";
-import { Multistep, Step, Alert, TextInput, Select, Checkbox } from "@ui/adapters";
+import { Multistep, Step, Alert, FormikAdapter } from "@ui/adapters";
 
 const meta: Meta<typeof Multistep> = {
   title: "Layouts/Multistep",
@@ -40,9 +40,9 @@ export const RegistrationForm: Story = {
         active
       >
         <div className="space-y-4">
-          <TextInput name="first_name" label="First Name" />
-          <TextInput name="last_name" label="Last Name" />
-          <TextInput name="email" label="Email Address" />
+          <FormikAdapter type="INPUT_TEXT" name="first_name" label="First Name" />
+          <FormikAdapter type="INPUT_TEXT" name="last_name" label="Last Name" />
+          <FormikAdapter type="INPUT_TEXT" name="email" label="Email Address" />
         </div>
       </Step>
       <Step
@@ -50,9 +50,9 @@ export const RegistrationForm: Story = {
         label="Account"
       >
         <div className="space-y-4">
-          <TextInput name="username" label="Username" />
-          <TextInput name="password" label="Password" />
-          <TextInput name="confirm_password" label="Confirm Password" />
+          <FormikAdapter type="INPUT_TEXT" name="username" label="Username" />
+          <FormikAdapter type="INPUT_TEXT" name="password" label="Password" />
+          <FormikAdapter type="INPUT_TEXT" name="confirm_password" label="Confirm Password" />
         </div>
       </Step>
       <Step
@@ -60,7 +60,8 @@ export const RegistrationForm: Story = {
         label="Preferences"
       >
         <div className="space-y-4">
-          <Select
+          <FormikAdapter
+            type="INPUT_SELECT"
             name="language"
             label="Preferred Language"
             options={[
@@ -69,8 +70,9 @@ export const RegistrationForm: Story = {
               { value: "es", label: "Spanish" },
             ]}
           />
-          <Checkbox name="newsletter" label="Subscribe to newsletter" />
-          <Checkbox
+          <FormikAdapter type="INPUT_CHECKBOX" name="newsletter" label="Subscribe to newsletter" />
+          <FormikAdapter
+            type="INPUT_CHECKBOX"
             name="notifications"
             label="Enable email notifications"
           />
@@ -100,8 +102,8 @@ export const TwoSteps: Story = {
     <Multistep>
       <Step label="Details" active>
         <div className="space-y-4">
-          <TextInput name="name" label="Name" />
-          <TextInput name="email" label="Email" />
+          <FormikAdapter type="INPUT_TEXT" name="name" label="Name" />
+          <FormikAdapter type="INPUT_TEXT" name="email" label="Email" />
         </div>
       </Step>
       <Step label="Confirm">
@@ -134,9 +136,10 @@ export const OnboardingWizard: Story = {
         label="Profile"
       >
         <div className="space-y-4">
-          <TextInput name="display_name" label="Display Name" />
-          <TextInput name="company" label="Company" />
-          <Select
+          <FormikAdapter type="INPUT_TEXT" name="display_name" label="Display Name" />
+          <FormikAdapter type="INPUT_TEXT" name="company" label="Company" />
+          <FormikAdapter
+            type="INPUT_SELECT"
             name="role"
             label="Your Role"
             options={[
@@ -153,7 +156,8 @@ export const OnboardingWizard: Story = {
         label="Settings"
       >
         <div className="space-y-4">
-          <Select
+          <FormikAdapter
+            type="INPUT_SELECT"
             name="theme"
             label="Theme"
             options={[
@@ -162,7 +166,7 @@ export const OnboardingWizard: Story = {
               { value: "system", label: "System" },
             ]}
           />
-          <Checkbox name="analytics" label="Allow anonymous analytics" />
+          <FormikAdapter type="INPUT_CHECKBOX" name="analytics" label="Allow anonymous analytics" />
         </div>
       </Step>
       <Step

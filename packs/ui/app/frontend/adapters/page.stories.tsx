@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { withForm } from "@storybook-decorators";
-import { Page, CardGroup, TextInput, Select, Checkbox } from "@ui/adapters";
+import { Page, CardGroup, FormikAdapter } from "@ui/adapters";
 import { Button } from "@ui/components/button";
 
 const meta: Meta<typeof Page> = {
@@ -33,8 +33,8 @@ export const WithDescription: Story = {
     description: "Manage your account settings and preferences",
     children: (
       <CardGroup label="General">
-        <TextInput name="name" label="Display Name" value="John Doe" />
-        <TextInput name="email" label="Email" value="john@example.com" />
+        <FormikAdapter type="INPUT_TEXT" name="name" label="Display Name" />
+        <FormikAdapter type="INPUT_TEXT" name="email" label="Email" />
       </CardGroup>
     ),
   },
@@ -63,12 +63,13 @@ export const ComplexPage: Story = {
     children: (
       <div className="space-y-6">
         <CardGroup label="Personal Information">
-          <TextInput name="first_name" label="First Name" />
-          <TextInput name="last_name" label="Last Name" />
-          <TextInput name="email" label="Email Address" />
+          <FormikAdapter type="INPUT_TEXT" name="first_name" label="First Name" />
+          <FormikAdapter type="INPUT_TEXT" name="last_name" label="Last Name" />
+          <FormikAdapter type="INPUT_TEXT" name="email" label="Email Address" />
         </CardGroup>
         <CardGroup label="Preferences">
-          <Select
+          <FormikAdapter
+            type="INPUT_SELECT"
             name="language"
             label="Language"
             options={[
@@ -77,7 +78,8 @@ export const ComplexPage: Story = {
               { value: "es", label: "Spanish" },
             ]}
           />
-          <Select
+          <FormikAdapter
+            type="INPUT_SELECT"
             name="timezone"
             label="Timezone"
             options={[
@@ -88,12 +90,14 @@ export const ComplexPage: Story = {
           />
         </CardGroup>
         <CardGroup label="Notifications">
-          <Checkbox
+          <FormikAdapter
+            type="INPUT_CHECKBOX"
             name="email_notifications"
             label="Email notifications"
           />
-          <Checkbox name="sms_notifications" label="SMS notifications" />
-          <Checkbox
+          <FormikAdapter type="INPUT_CHECKBOX" name="sms_notifications" label="SMS notifications" />
+          <FormikAdapter
+            type="INPUT_CHECKBOX"
             name="push_notifications"
             label="Push notifications"
           />

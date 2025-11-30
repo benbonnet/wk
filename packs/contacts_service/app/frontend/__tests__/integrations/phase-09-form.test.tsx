@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 import {
   View,
   Form,
-  TextInput,
+  FormikAdapter,
   Submit,
 } from "@ui/adapters";
 import { renderWithProviders, resetMocks } from "./test-utils";
@@ -15,16 +15,16 @@ describe("Phase 9: Form Adapter", () => {
   });
 
   describe("9.1 Form Context", () => {
-    it("Form provides FormContext to children", () => {
+    it("Form provides Formik context to children", () => {
       renderWithProviders(
         <View>
           <Form>
-            <TextInput name="email" label="Email" />
+            <FormikAdapter type="INPUT_TEXT" name="email" label="Email" />
           </Form>
         </View>
       );
 
-      // If FormContext wasn't provided, TextInput would throw
+      // If Formik context wasn't provided, FormikAdapter would throw
       expect(screen.getByLabelText("Email")).toBeInTheDocument();
     });
 
@@ -34,7 +34,7 @@ describe("Phase 9: Form Adapter", () => {
       renderWithProviders(
         <View>
           <Form>
-            <TextInput name="email" label="Email" />
+            <FormikAdapter type="INPUT_TEXT" name="email" label="Email" />
           </Form>
         </View>
       );
@@ -50,7 +50,7 @@ describe("Phase 9: Form Adapter", () => {
       renderWithProviders(
         <View>
           <Form>
-            <TextInput name="email" label="Email" />
+            <FormikAdapter type="INPUT_TEXT" name="email" label="Email" />
           </Form>
         </View>
       );
@@ -62,7 +62,7 @@ describe("Phase 9: Form Adapter", () => {
       renderWithProviders(
         <View>
           <Form defaultValues={{ email: "default@example.com" }}>
-            <TextInput name="email" label="Email" />
+            <FormikAdapter type="INPUT_TEXT" name="email" label="Email" />
           </Form>
         </View>
       );
@@ -78,7 +78,7 @@ describe("Phase 9: Form Adapter", () => {
       renderWithProviders(
         <View>
           <Form>
-            <TextInput name="email" label="Email" />
+            <FormikAdapter type="INPUT_TEXT" name="email" label="Email" />
           </Form>
         </View>
       );
@@ -94,7 +94,7 @@ describe("Phase 9: Form Adapter", () => {
       renderWithProviders(
         <View>
           <Form>
-            <TextInput name="email" label="Email" />
+            <FormikAdapter type="INPUT_TEXT" name="email" label="Email" />
           </Form>
         </View>
       );
@@ -113,7 +113,7 @@ describe("Phase 9: Form Adapter", () => {
       const { container } = renderWithProviders(
         <View>
           <Form>
-            <TextInput name="email" label="Email" />
+            <FormikAdapter type="INPUT_TEXT" name="email" label="Email" />
           </Form>
         </View>
       );
@@ -128,7 +128,7 @@ describe("Phase 9: Form Adapter", () => {
       renderWithProviders(
         <View>
           <Form>
-            <TextInput name="email" label="Email" />
+            <FormikAdapter type="INPUT_TEXT" name="email" label="Email" />
             <Submit label="Save" />
           </Form>
         </View>
@@ -151,7 +151,7 @@ describe("Phase 9: Form Adapter", () => {
       renderWithProviders(
         <View>
           <Form onSubmit={onSubmit}>
-            <TextInput name="email" label="Email" />
+            <FormikAdapter type="INPUT_TEXT" name="email" label="Email" />
             <Submit label="Save" />
           </Form>
         </View>
@@ -169,7 +169,7 @@ describe("Phase 9: Form Adapter", () => {
       renderWithProviders(
         <View>
           <Form>
-            <TextInput name="email" label="Email" />
+            <FormikAdapter type="INPUT_TEXT" name="email" label="Email" />
             <Submit label="Save" />
           </Form>
         </View>
@@ -190,9 +190,9 @@ describe("Phase 9: Form Adapter", () => {
       renderWithProviders(
         <View>
           <Form>
-            <TextInput name="firstName" label="First Name" />
-            <TextInput name="lastName" label="Last Name" />
-            <TextInput name="email" label="Email" />
+            <FormikAdapter type="INPUT_TEXT" name="firstName" label="First Name" />
+            <FormikAdapter type="INPUT_TEXT" name="lastName" label="Last Name" />
+            <FormikAdapter type="INPUT_TEXT" name="email" label="Email" />
           </Form>
         </View>
       );
@@ -210,8 +210,8 @@ describe("Phase 9: Form Adapter", () => {
       renderWithProviders(
         <View>
           <Form defaultValues={{ firstName: "Jane", lastName: "Smith" }}>
-            <TextInput name="firstName" label="First Name" />
-            <TextInput name="lastName" label="Last Name" />
+            <FormikAdapter type="INPUT_TEXT" name="firstName" label="First Name" />
+            <FormikAdapter type="INPUT_TEXT" name="lastName" label="Last Name" />
           </Form>
         </View>
       );

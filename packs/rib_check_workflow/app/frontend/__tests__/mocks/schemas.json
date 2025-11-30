@@ -31,21 +31,12 @@
           },
           "request_type": {
             "type": "string",
-            "enum": [
-              "individual",
-              "common"
-            ],
+            "enum": ["individual", "common"],
             "description": "Request type"
           },
           "status": {
             "type": "string",
-            "enum": [
-              "draft",
-              "pending",
-              "partial",
-              "completed",
-              "cancelled"
-            ],
+            "enum": ["draft", "pending", "partial", "completed", "cancelled"],
             "description": "Status"
           },
           "created_at": {
@@ -61,10 +52,7 @@
             "format": "date-time"
           }
         },
-        "required": [
-          "request_type",
-          "status"
-        ],
+        "required": ["request_type", "status"],
         "additionalProperties": false,
         "strict": true
       }

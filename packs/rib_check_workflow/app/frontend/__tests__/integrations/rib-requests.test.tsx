@@ -1,5 +1,19 @@
-import { describe, it, expect, vi, beforeEach, beforeAll, afterEach } from "vitest";
-import { render, screen, waitFor, within, cleanup } from "@testing-library/react";
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  beforeAll,
+  afterEach,
+} from "vitest";
+import {
+  render,
+  screen,
+  waitFor,
+  within,
+  cleanup,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MemoryRouter } from "react-router";
@@ -99,14 +113,18 @@ describe("RIB Requests Integration", () => {
 
       render(
         <TestWrapper services={services} locale="en">
-          <ViewPage namespace="workspaces" feature="rib_check_requests" view="index" />
-        </TestWrapper>
+          <ViewPage
+            namespace="workspaces"
+            feature="rib_check_requests"
+            view="index"
+          />
+        </TestWrapper>,
       );
 
       await waitFor(() => {
         expect(mockedAxios.get).toHaveBeenCalledWith(
           "/api/v1/views/workspaces/rib_check_requests/index",
-          expect.any(Object)
+          expect.any(Object),
         );
       });
     });
@@ -117,8 +135,12 @@ describe("RIB Requests Integration", () => {
 
       render(
         <TestWrapper services={services} locale="en">
-          <ViewPage namespace="workspaces" feature="rib_check_requests" view="index" />
-        </TestWrapper>
+          <ViewPage
+            namespace="workspaces"
+            feature="rib_check_requests"
+            view="index"
+          />
+        </TestWrapper>,
       );
 
       expect(screen.getByText("Loading...")).toBeInTheDocument();
@@ -131,8 +153,12 @@ describe("RIB Requests Integration", () => {
 
       render(
         <TestWrapper services={services} locale="en">
-          <ViewPage namespace="workspaces" feature="rib_check_requests" view="index" />
-        </TestWrapper>
+          <ViewPage
+            namespace="workspaces"
+            feature="rib_check_requests"
+            view="index"
+          />
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -145,12 +171,18 @@ describe("RIB Requests Integration", () => {
 
       render(
         <TestWrapper services={services} locale="en">
-          <ViewPage namespace="workspaces" feature="rib_check_requests" view="index" />
-        </TestWrapper>
+          <ViewPage
+            namespace="workspaces"
+            feature="rib_check_requests"
+            view="index"
+          />
+        </TestWrapper>,
       );
 
       await waitFor(() => {
-        expect(screen.getByText("Manage RIB collection requests")).toBeInTheDocument();
+        expect(
+          screen.getByText("Manage RIB collection requests"),
+        ).toBeInTheDocument();
       });
     });
 
@@ -159,12 +191,18 @@ describe("RIB Requests Integration", () => {
 
       render(
         <TestWrapper services={services} locale="en">
-          <ViewPage namespace="workspaces" feature="rib_check_requests" view="index" />
-        </TestWrapper>
+          <ViewPage
+            namespace="workspaces"
+            feature="rib_check_requests"
+            view="index"
+          />
+        </TestWrapper>,
       );
 
       await waitFor(() => {
-        expect(screen.getByRole("button", { name: "New Request" })).toBeInTheDocument();
+        expect(
+          screen.getByRole("button", { name: "New Request" }),
+        ).toBeInTheDocument();
       });
     });
 
@@ -173,8 +211,12 @@ describe("RIB Requests Integration", () => {
 
       render(
         <TestWrapper services={services} locale="en">
-          <ViewPage namespace="workspaces" feature="rib_check_requests" view="index" />
-        </TestWrapper>
+          <ViewPage
+            namespace="workspaces"
+            feature="rib_check_requests"
+            view="index"
+          />
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -193,12 +235,18 @@ describe("RIB Requests Integration", () => {
 
       render(
         <TestWrapper services={services} locale="en">
-          <ViewPage namespace="workspaces" feature="rib_check_requests" view="index" />
-        </TestWrapper>
+          <ViewPage
+            namespace="workspaces"
+            feature="rib_check_requests"
+            view="index"
+          />
+        </TestWrapper>,
       );
 
       await waitFor(() => {
-        expect(screen.getByRole("button", { name: "New Request" })).toBeInTheDocument();
+        expect(
+          screen.getByRole("button", { name: "New Request" }),
+        ).toBeInTheDocument();
       });
 
       await user.click(screen.getByRole("button", { name: "New Request" }));
@@ -215,8 +263,12 @@ describe("RIB Requests Integration", () => {
 
       render(
         <TestWrapper services={services} locale="en">
-          <ViewPage namespace="workspaces" feature="rib_check_requests" view="index" />
-        </TestWrapper>
+          <ViewPage
+            namespace="workspaces"
+            feature="rib_check_requests"
+            view="index"
+          />
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -238,12 +290,18 @@ describe("RIB Requests Integration", () => {
 
       render(
         <TestWrapper services={services} locale="en">
-          <ViewPage namespace="workspaces" feature="rib_check_requests" view="index" />
-        </TestWrapper>
+          <ViewPage
+            namespace="workspaces"
+            feature="rib_check_requests"
+            view="index"
+          />
+        </TestWrapper>,
       );
 
       await waitFor(() => {
-        expect(screen.getByRole("button", { name: "New Request" })).toBeInTheDocument();
+        expect(
+          screen.getByRole("button", { name: "New Request" }),
+        ).toBeInTheDocument();
       });
 
       await user.click(screen.getByRole("button", { name: "New Request" }));
@@ -252,7 +310,9 @@ describe("RIB Requests Integration", () => {
         const drawer = screen.getByTestId("drawer-new_drawer");
         // Group labels (translated via View component)
         expect(within(drawer).getByText("Request Details")).toBeInTheDocument();
-        expect(within(drawer).getByText("Notification Settings")).toBeInTheDocument();
+        expect(
+          within(drawer).getByText("Notification Settings"),
+        ).toBeInTheDocument();
         // Field labels (from view translations: status -> "Status", request_type -> "Type")
         expect(within(drawer).getByLabelText("Status")).toBeInTheDocument();
         expect(within(drawer).getByLabelText("Type")).toBeInTheDocument();
@@ -266,8 +326,12 @@ describe("RIB Requests Integration", () => {
 
       render(
         <TestWrapper services={services} locale="fr">
-          <ViewPage namespace="workspaces" feature="rib_check_requests" view="index" />
-        </TestWrapper>
+          <ViewPage
+            namespace="workspaces"
+            feature="rib_check_requests"
+            view="index"
+          />
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -280,12 +344,18 @@ describe("RIB Requests Integration", () => {
 
       render(
         <TestWrapper services={services} locale="fr">
-          <ViewPage namespace="workspaces" feature="rib_check_requests" view="index" />
-        </TestWrapper>
+          <ViewPage
+            namespace="workspaces"
+            feature="rib_check_requests"
+            view="index"
+          />
+        </TestWrapper>,
       );
 
       await waitFor(() => {
-        expect(screen.getByText("Gerer les demandes de collecte RIB")).toBeInTheDocument();
+        expect(
+          screen.getByText("Gerer les demandes de collecte RIB"),
+        ).toBeInTheDocument();
       });
     });
 
@@ -294,12 +364,18 @@ describe("RIB Requests Integration", () => {
 
       render(
         <TestWrapper services={services} locale="fr">
-          <ViewPage namespace="workspaces" feature="rib_check_requests" view="index" />
-        </TestWrapper>
+          <ViewPage
+            namespace="workspaces"
+            feature="rib_check_requests"
+            view="index"
+          />
+        </TestWrapper>,
       );
 
       await waitFor(() => {
-        expect(screen.getByRole("button", { name: "Nouvelle Demande" })).toBeInTheDocument();
+        expect(
+          screen.getByRole("button", { name: "Nouvelle Demande" }),
+        ).toBeInTheDocument();
       });
     });
 
@@ -308,8 +384,12 @@ describe("RIB Requests Integration", () => {
 
       render(
         <TestWrapper services={services} locale="fr">
-          <ViewPage namespace="workspaces" feature="rib_check_requests" view="index" />
-        </TestWrapper>
+          <ViewPage
+            namespace="workspaces"
+            feature="rib_check_requests"
+            view="index"
+          />
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -327,15 +407,23 @@ describe("RIB Requests Integration", () => {
 
       render(
         <TestWrapper services={services} locale="fr">
-          <ViewPage namespace="workspaces" feature="rib_check_requests" view="index" />
-        </TestWrapper>
+          <ViewPage
+            namespace="workspaces"
+            feature="rib_check_requests"
+            view="index"
+          />
+        </TestWrapper>,
       );
 
       await waitFor(() => {
-        expect(screen.getByRole("button", { name: "Nouvelle Demande" })).toBeInTheDocument();
+        expect(
+          screen.getByRole("button", { name: "Nouvelle Demande" }),
+        ).toBeInTheDocument();
       });
 
-      await user.click(screen.getByRole("button", { name: "Nouvelle Demande" }));
+      await user.click(
+        screen.getByRole("button", { name: "Nouvelle Demande" }),
+      );
 
       await waitFor(() => {
         const drawer = screen.getByTestId("drawer-new_drawer");
@@ -352,13 +440,19 @@ describe("RIB Requests Integration", () => {
 
       render(
         <TestWrapper services={services}>
-          <ViewPage namespace="workspaces" feature="rib_check_requests" view="index" />
-        </TestWrapper>
+          <ViewPage
+            namespace="workspaces"
+            feature="rib_check_requests"
+            view="index"
+          />
+        </TestWrapper>,
       );
 
       await waitFor(() => {
         expect(screen.getByText("Please submit your RIB")).toBeInTheDocument();
-        expect(screen.getByText("RIB collection for payroll")).toBeInTheDocument();
+        expect(
+          screen.getByText("RIB collection for payroll"),
+        ).toBeInTheDocument();
       });
 
       expect(services.fetch).toHaveBeenCalled();
@@ -372,19 +466,27 @@ describe("RIB Requests Integration", () => {
 
       render(
         <TestWrapper services={services}>
-          <ViewPage namespace="workspaces" feature="rib_check_requests" view="index" />
-        </TestWrapper>
+          <ViewPage
+            namespace="workspaces"
+            feature="rib_check_requests"
+            view="index"
+          />
+        </TestWrapper>,
       );
 
       await waitFor(() => {
-        expect(screen.getByRole("button", { name: "New Request" })).toBeInTheDocument();
+        expect(
+          screen.getByRole("button", { name: "New Request" }),
+        ).toBeInTheDocument();
       });
 
       await user.click(screen.getByRole("button", { name: "New Request" }));
 
       await waitFor(() => {
         const drawer = screen.getByTestId("drawer-new_drawer");
-        expect(within(drawer).getByRole("button", { name: /save/i })).toBeInTheDocument();
+        expect(
+          within(drawer).getByRole("button", { name: /save/i }),
+        ).toBeInTheDocument();
       });
     });
   });
@@ -396,8 +498,12 @@ describe("RIB Requests Integration", () => {
 
       render(
         <TestWrapper services={services}>
-          <ViewPage namespace="workspaces" feature="rib_check_requests" view="index" />
-        </TestWrapper>
+          <ViewPage
+            namespace="workspaces"
+            feature="rib_check_requests"
+            view="index"
+          />
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -417,19 +523,26 @@ describe("RIB Requests Integration", () => {
     it("submitting form calls API and shows toast", async () => {
       const user = userEvent.setup();
       const services = createMockServices();
-      services.fetch = vi.fn()
+      services.fetch = vi
+        .fn()
         .mockResolvedValueOnce(mockTableData)
         .mockResolvedValueOnce({ data: { id: 3 } })
         .mockResolvedValueOnce(mockTableData);
 
       render(
         <TestWrapper services={services}>
-          <ViewPage namespace="workspaces" feature="rib_check_requests" view="index" />
-        </TestWrapper>
+          <ViewPage
+            namespace="workspaces"
+            feature="rib_check_requests"
+            view="index"
+          />
+        </TestWrapper>,
       );
 
       await waitFor(() => {
-        expect(screen.getByRole("button", { name: "New Request" })).toBeInTheDocument();
+        expect(
+          screen.getByRole("button", { name: "New Request" }),
+        ).toBeInTheDocument();
       });
 
       await user.click(screen.getByRole("button", { name: "New Request" }));

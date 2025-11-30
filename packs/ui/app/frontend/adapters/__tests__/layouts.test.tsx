@@ -12,8 +12,8 @@ import {
   Actions,
   Alert,
   Button,
-  TextInput,
-  TextDisplay,
+  FormikAdapter,
+  DisplayAdapter,
 } from "..";
 import { renderWithProviders, resetMocks } from "./test-utils";
 
@@ -106,7 +106,7 @@ describe("Layout Adapters", () => {
       renderWithProviders(
         <View>
           <Form onSubmit={onSubmit} defaultValues={{ email: "" }}>
-            <TextInput name="email" label="Email" />
+            <FormikAdapter type="INPUT_TEXT" name="email" label="Email" />
             <button type="submit">Submit</button>
           </Form>
         </View>,
@@ -127,8 +127,8 @@ describe("Layout Adapters", () => {
       renderWithProviders(
         <View>
           <Show record={record}>
-            <TextDisplay name="name" label="Name" />
-            <TextDisplay name="email" label="Email" />
+            <DisplayAdapter type="DISPLAY_TEXT" name="name" label="Name" value={record.name} />
+            <DisplayAdapter type="DISPLAY_TEXT" name="email" label="Email" value={record.email} />
           </Show>
         </View>,
       );

@@ -52,10 +52,16 @@ export function createWrapper(locale = "en", queryClient?: QueryClient) {
 
 export function renderWithProviders(
   ui: React.ReactElement,
-  options?: Omit<RenderOptions, "wrapper"> & { locale?: string; queryClient?: QueryClient },
+  options?: Omit<RenderOptions, "wrapper"> & {
+    locale?: string;
+    queryClient?: QueryClient;
+  },
 ) {
   const { locale = "en", queryClient, ...renderOptions } = options || {};
-  return render(ui, { wrapper: createWrapper(locale, queryClient), ...renderOptions });
+  return render(ui, {
+    wrapper: createWrapper(locale, queryClient),
+    ...renderOptions,
+  });
 }
 
 export function resetMocks() {

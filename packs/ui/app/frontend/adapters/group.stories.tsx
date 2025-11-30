@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { withForm } from "@storybook-decorators";
-import { Group, TextInput, Select } from "@ui/adapters";
+import { Group, FormikAdapter } from "@ui/adapters";
 
 const meta: Meta<typeof Group> = {
   title: "Layouts/Group",
@@ -19,8 +19,8 @@ export const Default: Story = {
   args: {
     children: (
       <>
-        <TextInput name="first_name" label="First Name" />
-        <TextInput name="last_name" label="Last Name" />
+        <FormikAdapter type="INPUT_TEXT" name="first_name" label="First Name" />
+        <FormikAdapter type="INPUT_TEXT" name="last_name" label="Last Name" />
       </>
     ),
   },
@@ -31,9 +31,9 @@ export const WithLabel: Story = {
     label: "Personal Information",
     children: (
       <>
-        <TextInput name="first_name" label="First Name" />
-        <TextInput name="last_name" label="Last Name" />
-        <TextInput name="email" label="Email" />
+        <FormikAdapter type="INPUT_TEXT" name="first_name" label="First Name" />
+        <FormikAdapter type="INPUT_TEXT" name="last_name" label="Last Name" />
+        <FormikAdapter type="INPUT_TEXT" name="email" label="Email" />
       </>
     ),
   },
@@ -45,8 +45,8 @@ export const WithSubtitle: Story = {
     subtitle: "Please provide your personal details",
     children: (
       <>
-        <TextInput name="first_name" label="First Name" />
-        <TextInput name="last_name" label="Last Name" />
+        <FormikAdapter type="INPUT_TEXT" name="first_name" label="First Name" />
+        <FormikAdapter type="INPUT_TEXT" name="last_name" label="Last Name" />
       </>
     ),
   },
@@ -58,8 +58,8 @@ export const Horizontal: Story = {
     direction: "HORIZONTAL",
     children: (
       <>
-        <TextInput name="first_name" label="First Name" />
-        <TextInput name="last_name" label="Last Name" />
+        <FormikAdapter type="INPUT_TEXT" name="first_name" label="First Name" />
+        <FormikAdapter type="INPUT_TEXT" name="last_name" label="Last Name" />
       </>
     ),
   },
@@ -71,8 +71,8 @@ export const WithCustomClassName: Story = {
     className: "bg-slate-50 p-4 rounded-lg",
     children: (
       <>
-        <TextInput name="email" label="Email" />
-        <TextInput name="phone" label="Phone" />
+        <FormikAdapter type="INPUT_TEXT" name="email" label="Email" />
+        <FormikAdapter type="INPUT_TEXT" name="phone" label="Phone" />
       </>
     ),
   },
@@ -82,11 +82,12 @@ export const NestedGroups: Story = {
   render: () => (
     <Group label="Profile">
       <Group label="Personal">
-        <TextInput name="name" label="Full Name" />
-        <TextInput name="email" label="Email" />
+        <FormikAdapter type="INPUT_TEXT" name="name" label="Full Name" />
+        <FormikAdapter type="INPUT_TEXT" name="email" label="Email" />
       </Group>
       <Group label="Preferences">
-        <Select
+        <FormikAdapter
+          type="INPUT_SELECT"
           name="language"
           label="Language"
           options={[

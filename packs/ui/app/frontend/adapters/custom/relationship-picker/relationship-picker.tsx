@@ -1,5 +1,5 @@
 import { cn } from "@ui/lib/utils";
-import { useField } from "../form";
+import { useField } from "formik";
 import { RelationshipPickerField } from "./field";
 import type { RelationshipPickerProps } from "@ui/lib/ui-renderer/registry";
 
@@ -22,7 +22,7 @@ export function RelationshipPicker({
   searchPlaceholder,
   className,
 }: ExtendedRelationshipPickerProps) {
-  const field = useField(name);
+  const [field, , helpers] = useField(name);
 
   return (
     <div data-ui="relationship-picker" className={cn("space-y-3", className)}>
@@ -38,7 +38,7 @@ export function RelationshipPicker({
         columns={columns}
         template={template}
         value={field.value}
-        onChange={field.onChange}
+        onChange={(value) => helpers.setValue(value)}
       />
     </div>
   );

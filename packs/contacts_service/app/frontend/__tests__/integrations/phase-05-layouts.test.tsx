@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {
@@ -11,8 +11,8 @@ import {
   Actions,
   Alert,
   Button,
-  TextInput,
-  TextDisplay,
+  FormikAdapter,
+  DisplayAdapter,
 } from "@ui/adapters";
 import { renderWithProviders, resetMocks } from "./test-utils";
 
@@ -148,8 +148,8 @@ describe("Phase 5: Layout Adapters", () => {
       renderWithProviders(
         <View>
           <Show record={record}>
-            <TextDisplay name="name" label="Name" />
-            <TextDisplay name="email" label="Email" />
+            <DisplayAdapter type="DISPLAY_TEXT" name="name" label="Name" value={record.name} />
+            <DisplayAdapter type="DISPLAY_TEXT" name="email" label="Email" value={record.email} />
           </Show>
         </View>
       );
@@ -171,11 +171,11 @@ describe("Phase 5: Layout Adapters", () => {
       renderWithProviders(
         <View>
           <Show record={{}}>
-            <TextDisplay name="name" label="Name" />
+            <DisplayAdapter type="DISPLAY_TEXT" name="name" label="Name" value={null} />
           </Show>
         </View>
       );
-      // Should show empty state
+      // Should show dash for null value
       expect(screen.getByText("—")).toBeInTheDocument();
     });
   });
@@ -227,7 +227,7 @@ describe("Phase 5: Layout Adapters", () => {
       renderWithProviders(
         <View>
           <Form>
-            <TextInput name="email" label="Email" />
+            <FormikAdapter type="INPUT_TEXT" name="email" label="Email" />
           </Form>
         </View>
       );

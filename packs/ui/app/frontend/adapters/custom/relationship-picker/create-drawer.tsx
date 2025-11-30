@@ -1,4 +1,5 @@
-import { useState, useCallback, type FC } from "react";
+import { type FC } from "react";
+import { Formik, Form as FormikForm, useFormikContext } from "formik";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Sheet,
@@ -11,7 +12,6 @@ import { Button } from "@ui/components/button";
 import { useServices, useTranslate } from "@ui/lib/ui-renderer/provider";
 import { DynamicRenderer } from "@ui/lib/ui-renderer/renderer";
 import type { UISchema } from "@ui/lib/ui-renderer/types";
-import { FormContext } from "../form";
 
 interface RelationshipCreateDrawerProps {
   open: boolean;
@@ -28,6 +28,7 @@ interface RelationshipCreateDrawerProps {
  *
  * Nested drawer for creating new items.
  * POSTs to API and returns created item with ID.
+ * Uses Formik for form state management.
  */
 export const RelationshipCreateDrawer: FC<RelationshipCreateDrawerProps> = ({
   open,
@@ -36,48 +37,18 @@ export const RelationshipCreateDrawer: FC<RelationshipCreateDrawerProps> = ({
   template,
   basePath,
   onSuccess,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _ns = "common",
 }) => {
   const t = useTranslate();
   const services = useServices();
   const queryClient = useQueryClient();
 
-  // Form state management
-  const [values, setValuesState] = useState<Record<string, unknown>>({});
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [touched, setTouchedState] = useState<Record<string, boolean>>({});
-
-  const setValue = useCallback((fieldName: string, value: unknown) => {
-    setValuesState((prev) => ({ ...prev, [fieldName]: value }));
-    // Clear error when value changes
-    setErrors((prev) => {
-      const next = { ...prev };
-      delete next[fieldName];
-      return next;
-    });
-  }, []);
-
-  const setError = useCallback((fieldName: string, error: string) => {
-    setErrors((prev) => ({ ...prev, [fieldName]: error }));
-  }, []);
-
-  const setTouched = useCallback((fieldName: string) => {
-    setTouchedState((prev) => ({ ...prev, [fieldName]: true }));
-  }, []);
-
-  const getValue = useCallback(
-    (fieldName: string) => values[fieldName],
-    [values],
-  );
-  const getError = useCallback(
-    (fieldName: string) => errors[fieldName],
-    [errors],
-  );
-  const isTouched = useCallback(
-    (fieldName: string) => touched[fieldName] || false,
-    [touched],
-  );
+  // Build initial values from template
+  const initialValues: Record<string, unknown> = {};
+  template.forEach((field) => {
+    if (field.name) {
+      initialValues[field.name] = "";
+    }
+  });
 
   const createMutation = useMutation({
     mutationFn: async (formValues: Record<string, unknown>) => {
@@ -92,35 +63,14 @@ export const RelationshipCreateDrawer: FC<RelationshipCreateDrawerProps> = ({
       queryClient.invalidateQueries({
         queryKey: ["relationship-picker", basePath],
       });
-      // Reset form
-      setValuesState({});
-      setErrors({});
-      setTouchedState({});
       // Response structure: { data: { id, data: {...} }, meta }
-      // Extract the created item and flatten it
       const item = response.data;
       onSuccess({ id: item.id, ...item.data });
     },
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (values: Record<string, unknown>) => {
     createMutation.mutate(values);
-  };
-
-  // Form context value
-  const formContextValue = {
-    values,
-    errors,
-    touched,
-    isSubmitting: createMutation.isPending,
-    isDirty: Object.keys(values).length > 0,
-    setValue,
-    setError,
-    setTouched,
-    getValue,
-    getError,
-    isTouched,
   };
 
   return (
@@ -137,18 +87,44 @@ export const RelationshipCreateDrawer: FC<RelationshipCreateDrawerProps> = ({
           </SheetDescription>
         </SheetHeader>
         <div className="flex-1 overflow-y-auto p-4">
-          <FormContext.Provider value={formContextValue}>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {template.map((element, index) => (
-                <DynamicRenderer key={index} schema={element} data={{}} />
-              ))}
-              <Button type="submit" disabled={createMutation.isPending}>
-                {createMutation.isPending ? t("saving") : t("add")}
-              </Button>
-            </form>
-          </FormContext.Provider>
+          <Formik
+            initialValues={initialValues}
+            onSubmit={handleSubmit}
+            enableReinitialize
+          >
+            <CreateDrawerForm
+              template={template}
+              isSubmitting={createMutation.isPending}
+              t={t}
+            />
+          </Formik>
         </div>
       </SheetContent>
     </Sheet>
   );
 };
+
+interface CreateDrawerFormProps {
+  template: UISchema[];
+  isSubmitting: boolean;
+  t: (key: string) => string;
+}
+
+function CreateDrawerForm({ template, isSubmitting, t }: CreateDrawerFormProps) {
+  const { submitForm } = useFormikContext();
+
+  return (
+    <FormikForm className="space-y-4">
+      {template.map((element, index) => (
+        <DynamicRenderer key={index} schema={element} data={{}} />
+      ))}
+      <Button
+        type="button"
+        onClick={submitForm}
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? t("saving") : t("add")}
+      </Button>
+    </FormikForm>
+  );
+}
