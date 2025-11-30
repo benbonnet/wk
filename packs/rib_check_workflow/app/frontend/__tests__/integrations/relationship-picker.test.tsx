@@ -180,13 +180,13 @@ describe("RelationshipPicker Integration", () => {
           "/api/v1/workspaces/contacts",
           expect.objectContaining({
             method: "POST",
-            body: JSON.stringify({
+            data: {
               data: {
                 first_name: "Bob",
                 last_name: "Smith",
                 email: "bob@example.com",
               },
-            }),
+            },
           }),
         );
       });

@@ -54,7 +54,7 @@ export const RelationshipCreateDrawer: FC<RelationshipCreateDrawerProps> = ({
     mutationFn: async (formValues: Record<string, unknown>) => {
       const response = await services.fetch(basePath, {
         method: "POST",
-        body: JSON.stringify({ data: formValues }),
+        data: { data: formValues },
       });
       return response;
     },
