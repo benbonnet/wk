@@ -7,7 +7,7 @@ import {
   FormikAdapter,
   Submit,
 } from "@ui/adapters";
-import { renderWithProviders, resetMocks } from "./test-utils";
+import { renderWithProviders, resetMocks, mockServices } from "./test-utils";
 
 describe("Phase 9: Form Adapter", () => {
   beforeEach(() => {
@@ -218,6 +218,44 @@ describe("Phase 9: Form Adapter", () => {
 
       expect(screen.getByLabelText("First Name")).toHaveValue("Jane");
       expect(screen.getByLabelText("Last Name")).toHaveValue("Smith");
+    });
+  });
+
+  describe("9.6 Form API Submission", () => {
+    it("Form sends data property (not body) for axios compatibility", async () => {
+      const user = userEvent.setup();
+      const mockFetch = mockServices.fetch as ReturnType<typeof vi.fn>;
+      mockFetch.mockResolvedValue({ data: { id: 1 } });
+
+      renderWithProviders(
+        <View
+          url="/api/v1/contacts"
+          api={{ create: { method: "POST", path: "" } }}
+        >
+          <Form action="create">
+            <FormikAdapter type="INPUT_TEXT" name="email" label="Email" />
+            <Submit label="Save" />
+          </Form>
+        </View>
+      );
+
+      await user.type(screen.getByLabelText("Email"), "test@example.com");
+      await user.click(screen.getByRole("button", { name: "Save" }));
+
+      await waitFor(() => {
+        expect(mockFetch).toHaveBeenCalledWith(
+          "/api/v1/contacts",
+          expect.objectContaining({
+            method: "POST",
+            data: { data: { email: "test@example.com" } },
+          }),
+        );
+      });
+
+      // Verify body is NOT used (axios uses data, not body)
+      const calls = mockFetch.mock.calls;
+      const postCall = calls.find((call) => call[1]?.method === "POST");
+      expect(postCall?.[1]).not.toHaveProperty("body");
     });
   });
 });

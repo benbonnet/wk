@@ -131,7 +131,7 @@ export function View({
       try {
         const result = await services.fetch(fullUrl, {
           method: endpoint.method,
-          body,
+          data: body,
         });
 
         if (result?.data) {
