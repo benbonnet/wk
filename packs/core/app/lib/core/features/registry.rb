@@ -45,6 +45,24 @@ module Core
           @all = nil
         end
 
+        # Returns all routable views for frontend routing
+        def frontend_routes
+          all.flat_map do |namespace, features|
+            features.flat_map do |feature_slug, config|
+              (config[:views] || []).filter_map do |view_class|
+                next unless view_class.respond_to?(:routable?) && view_class.routable?
+
+                {
+                  path: view_class.frontend_route,
+                  namespace: namespace.to_s,
+                  feature: feature_slug.to_s,
+                  view: view_slug(view_class)
+                }
+              end
+            end
+          end
+        end
+
         # Export for frontend mocks
         def to_mock_data
           all.map do |namespace, features|

@@ -18,6 +18,18 @@ module Ui
           end
         end
 
+        def frontend_route(path = nil)
+          if path
+            @frontend_route = path
+          else
+            @frontend_route
+          end
+        end
+
+        def routable?
+          frontend_route.present?
+        end
+
         def view(&block)
           @view_block = block
         end

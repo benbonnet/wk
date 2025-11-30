@@ -5,6 +5,8 @@
 
 namespace :core, path: "api" do
   namespace :v1 do
+    resources :routes, only: [:index]
+
     scope ":namespace" do
       # Collection routes
       get    ":feature",              to: "resources#index"
