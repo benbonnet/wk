@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_29_065359) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_01_110324) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -278,8 +278,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_29_065359) do
     t.string "api_secret"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "status", default: "active", null: false
+    t.datetime "invited_at"
+    t.bigint "invite_id"
     t.index ["api_key"], name: "index_workspace_users_on_api_key", unique: true
     t.index ["api_secret"], name: "index_workspace_users_on_api_secret", unique: true
+    t.index ["invite_id"], name: "index_workspace_users_on_invite_id"
+    t.index ["status"], name: "index_workspace_users_on_status"
     t.index ["user_id"], name: "index_workspace_users_on_user_id"
     t.index ["workspace_id", "user_id"], name: "index_workspace_users_on_workspace_id_and_user_id", unique: true
     t.index ["workspace_id"], name: "index_workspace_users_on_workspace_id"
@@ -325,6 +330,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_29_065359) do
   add_foreign_key "items", "workspaces"
   add_foreign_key "schemas", "workspaces"
   add_foreign_key "workflow_entries", "workflow_executions", column: "execution_id"
+  add_foreign_key "workspace_users", "invites", on_delete: :nullify
   add_foreign_key "workspace_users", "users"
   add_foreign_key "workspace_users", "workspaces"
 end

@@ -1,0 +1,92 @@
+[
+  {
+    "slug": "workspace-member",
+    "title": "Workspace Member",
+    "schema": {
+      "name": "WorkspaceMembersService::WorkspaceMemberSchema",
+      "description": "User membership in a workspace",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User email"
+          },
+          "name": {
+            "type": "string",
+            "description": "User name"
+          },
+          "login": {
+            "type": "string",
+            "description": "User login"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "admin",
+              "manager",
+              "editor"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "blocked",
+              "pending"
+            ]
+          },
+          "avatar_url": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "email",
+          "role",
+          "status"
+        ],
+        "additionalProperties": false,
+        "strict": true
+      }
+    },
+    "relationships": [],
+    "translations": {
+      "en": {
+        "email": "Email",
+        "name": "Name",
+        "login": "Username",
+        "role": "Role",
+        "status": "Status",
+        "avatar_url": "Avatar",
+        "admin": "Admin",
+        "manager": "Manager",
+        "editor": "Editor",
+        "active": "Active",
+        "blocked": "Blocked",
+        "pending": "Pending"
+      },
+      "fr": {
+        "email": "Email",
+        "name": "Nom",
+        "login": "Identifiant",
+        "role": "Role",
+        "status": "Statut",
+        "avatar_url": "Avatar",
+        "admin": "Admin",
+        "manager": "Manager",
+        "editor": "Editeur",
+        "active": "Actif",
+        "blocked": "Bloque",
+        "pending": "En attente"
+      }
+    }
+  }
+]

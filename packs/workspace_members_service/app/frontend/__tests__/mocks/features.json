@@ -1,0 +1,57 @@
+[
+  {
+    "namespace": "workspaces",
+    "slug": "workspace_members",
+    "schema": "workspace-member",
+    "tools": [
+      {
+        "name": "Index",
+        "route": {
+          "method": "get",
+          "scope": "collection",
+          "action": null
+        }
+      },
+      {
+        "name": "Create",
+        "route": {
+          "method": "post",
+          "scope": "collection",
+          "action": null
+        }
+      },
+      {
+        "name": "Update",
+        "route": {
+          "method": "put",
+          "scope": "member",
+          "action": null
+        }
+      },
+      {
+        "name": "Destroy",
+        "route": {
+          "method": "delete",
+          "scope": "member",
+          "action": null
+        }
+      },
+      {
+        "name": "Block",
+        "route": {
+          "method": "post",
+          "scope": "member",
+          "action": "block"
+        }
+      },
+      {
+        "name": "ResendInvite",
+        "route": {
+          "method": "post",
+          "scope": "member",
+          "action": "resend_invite"
+        }
+      }
+    ]
+  }
+]

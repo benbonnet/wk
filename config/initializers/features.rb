@@ -52,6 +52,19 @@ Rails.application.config.to_prepare do
       tools ItemsService::Tools::Create,
             ItemsService::Tools::Update
     end
+
+    # Workspace Members
+    feature :workspace_members, namespace: :workspaces, schema: WorkspaceMembersService::WorkspaceMemberSchema do
+      tools WorkspaceMembersService::Tools::Index,
+            WorkspaceMembersService::Tools::Create,
+            WorkspaceMembersService::Tools::Update,
+            WorkspaceMembersService::Tools::Destroy,
+            WorkspaceMembersService::Tools::Block,
+            WorkspaceMembersService::Tools::ResendInvite
+
+      views WorkspaceMembersService::Views::Index,
+            WorkspaceMembersService::Views::Form
+    end
   end
 
   # Reload relationships after all schemas registered
