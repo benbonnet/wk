@@ -23,7 +23,7 @@ import { DynamicRenderer } from "@ui/lib/ui-renderer/renderer";
 import { ViewContext } from "@ui/adapters";
 import type { UIServices } from "@ui/lib/ui-renderer/registry";
 
-import formSchema from "../mocks/views/rib_check_requests_form.json";
+import formSchema from "../mocks/views/rib_checks_form.json";
 
 beforeAll(() => {
   global.ResizeObserver = class ResizeObserver {
@@ -66,11 +66,7 @@ function TestWrapper({ children, services, queryClient }: TestWrapperProps) {
       <MemoryRouter>
         <UIProvider
           services={services}
-          translations={{
-            views: formSchema.translations.en,
-            schemas: {},
-            common: {},
-          }}
+          translations={formSchema.translations}
           locale="en"
         >
           <TooltipProvider>

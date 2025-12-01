@@ -1,29 +1,45 @@
 {
   "type": "VIEW",
   "translations": {
-    "en": {
-      "request_details": "Request Details",
-      "notification_settings": "Notification Settings",
-      "recipients_section": "Recipients",
-      "draft": "Draft",
-      "pending": "Pending",
-      "partial": "Partial",
-      "completed": "Completed",
-      "cancelled": "Cancelled",
-      "individual": "Individual",
-      "common": "Common"
+    "global": {
+      "en": {
+        "confirm_title": "Confirm this action?",
+        "confirm_description": "This action cannot be undone. This will permanently archive this record.",
+        "confirm_cancel": "Cancel",
+        "confirm_ok": "Confirm"
+      },
+      "fr": {
+        "confirm_title": "Confirmer cette action?",
+        "confirm_description": "Cette action est irreversible. Cet enregistrement sera archivé definitivement.",
+        "confirm_cancel": "Annuler",
+        "confirm_ok": "Confirmer"
+      }
     },
-    "fr": {
-      "request_details": "Details de la Demande",
-      "notification_settings": "Parametres de Notification",
-      "recipients_section": "Destinataires",
-      "draft": "Brouillon",
-      "pending": "En attente",
-      "partial": "Partiel",
-      "completed": "Complete",
-      "cancelled": "Annule",
-      "individual": "Individuel",
-      "common": "Commun"
+    "views": {
+      "en": {
+        "request_details": "Request Details",
+        "notification_settings": "Notification Settings",
+        "recipients_section": "Recipients",
+        "draft": "Draft",
+        "pending": "Pending",
+        "partial": "Partial",
+        "completed": "Completed",
+        "cancelled": "Cancelled",
+        "individual": "Individual",
+        "common": "Common"
+      },
+      "fr": {
+        "request_details": "Details de la Demande",
+        "notification_settings": "Parametres de Notification",
+        "recipients_section": "Destinataires",
+        "draft": "Brouillon",
+        "pending": "En attente",
+        "partial": "Partiel",
+        "completed": "Complete",
+        "cancelled": "Annule",
+        "individual": "Individuel",
+        "common": "Commun"
+      }
     }
   },
   "elements": [

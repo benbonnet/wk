@@ -57,7 +57,8 @@ module Core
           return nil unless view_class&.respond_to?(:has_view?) && view_class.has_view?
 
           # Get raw config from view (layout, translations, drawers - no URL/API)
-          config = view_class.view_config_raw
+          # Deep dup to avoid mutating the memoized original
+          config = view_class.view_config_raw.deep_dup
 
           # Inject URL from Registry (single source of truth)
           config[:url] = "#{API_PREFIX}/#{namespace}/#{feature}"

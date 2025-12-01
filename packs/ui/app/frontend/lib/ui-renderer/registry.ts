@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import type { UISchema, UISchemaColumn, Option, Rule } from "./types";
+import type { UISchema, UISchemaColumn, Option, Rule, TranslationsMap } from "./types";
 
 // ============================================
 // BASE PROPS
@@ -43,8 +43,8 @@ export interface DisplayProps extends BaseProps {
 export interface ViewProps extends BaseProps {
   url?: string;
   api?: Record<string, { method: string; path: string }>;
-  drawers?: Record<string, { title?: string; elements?: UISchema[] }>;
-  translations?: Record<string, Record<string, string>>;
+  drawers?: Record<string, { title?: string; description?: string; elements?: UISchema[] }>;
+  translations?: TranslationsMap;
 }
 
 export interface PageProps extends BaseProps {
@@ -226,7 +226,7 @@ export interface UIServices {
 
 export interface UIContextValue {
   services: UIServices;
-  translations?: Record<string, Record<string, string>>;
+  translations?: TranslationsMap;
   locale: string;
   t: (key: string) => string;
 }

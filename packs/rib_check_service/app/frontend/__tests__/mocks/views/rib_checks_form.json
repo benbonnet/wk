@@ -1,41 +1,57 @@
 {
   "type": "VIEW",
   "translations": {
-    "en": {
-      "request_details": "Request Details",
-      "notification_settings": "Notification Settings",
-      "recipients_section": "Recipients",
-      "message_body_placeholder": "Enter the message to send to recipients...",
-      "comment_placeholder": "Internal notes (not visible to recipients)",
-      "save": "Save",
-      "saving": "Saving...",
-      "add_recipient": "Add Recipient",
-      "remove_recipient": "Remove",
-      "draft": "Draft",
-      "pending": "Pending",
-      "partial": "Partial",
-      "completed": "Completed",
-      "cancelled": "Cancelled",
-      "individual": "Individual",
-      "common": "Common"
+    "global": {
+      "en": {
+        "confirm_title": "Confirm this action?",
+        "confirm_description": "This action cannot be undone. This will permanently archive this record.",
+        "confirm_cancel": "Cancel",
+        "confirm_ok": "Confirm"
+      },
+      "fr": {
+        "confirm_title": "Confirmer cette action?",
+        "confirm_description": "Cette action est irreversible. Cet enregistrement sera archivé definitivement.",
+        "confirm_cancel": "Annuler",
+        "confirm_ok": "Confirmer"
+      }
     },
-    "fr": {
-      "request_details": "Details de la Demande",
-      "notification_settings": "Parametres de Notification",
-      "recipients_section": "Destinataires",
-      "message_body_placeholder": "Entrez le message a envoyer aux destinataires...",
-      "comment_placeholder": "Notes internes (non visibles par les destinataires)",
-      "save": "Sauvegarder",
-      "saving": "Sauvegarde...",
-      "add_recipient": "Ajouter un Destinataire",
-      "remove_recipient": "Supprimer",
-      "draft": "Brouillon",
-      "pending": "En attente",
-      "partial": "Partiel",
-      "completed": "Complete",
-      "cancelled": "Annule",
-      "individual": "Individuel",
-      "common": "Commun"
+    "views": {
+      "en": {
+        "request_details": "Request Details",
+        "notification_settings": "Notification Settings",
+        "recipients_section": "Recipients",
+        "message_body_placeholder": "Enter the message to send to recipients...",
+        "comment_placeholder": "Internal notes (not visible to recipients)",
+        "save": "Save",
+        "saving": "Saving...",
+        "add_recipient": "Add Recipient",
+        "remove_recipient": "Remove",
+        "draft": "Draft",
+        "pending": "Pending",
+        "partial": "Partial",
+        "completed": "Completed",
+        "cancelled": "Cancelled",
+        "individual": "Individual",
+        "common": "Common"
+      },
+      "fr": {
+        "request_details": "Details de la Demande",
+        "notification_settings": "Parametres de Notification",
+        "recipients_section": "Destinataires",
+        "message_body_placeholder": "Entrez le message a envoyer aux destinataires...",
+        "comment_placeholder": "Notes internes (non visibles par les destinataires)",
+        "save": "Sauvegarder",
+        "saving": "Sauvegarde...",
+        "add_recipient": "Ajouter un Destinataire",
+        "remove_recipient": "Supprimer",
+        "draft": "Brouillon",
+        "pending": "En attente",
+        "partial": "Partiel",
+        "completed": "Complete",
+        "cancelled": "Annule",
+        "individual": "Individuel",
+        "common": "Commun"
+      }
     }
   },
   "elements": [

@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { UIProvider } from "@ui/lib/ui-renderer/provider";
 import { TooltipProvider } from "@ui/components/tooltip";
 import type { UIServices } from "@ui/lib/ui-renderer/registry";
-import indexSchema from "../mocks/views/rib_check_requests_index.json";
+import indexSchema from "../mocks/views/rib_checks_index.json";
 import type { UISchema } from "@ui/lib/ui-renderer/types";
 
 export const mockServices: UIServices = {
@@ -15,7 +15,7 @@ export const mockServices: UIServices = {
 };
 
 export const schema = indexSchema as unknown as UISchema;
-export const getTranslations = () => schema.translations || {};
+export const getTranslations = () => schema.translations || { global: {}, views: {} };
 
 export function createQueryClient() {
   return new QueryClient({
@@ -28,7 +28,7 @@ interface WrapperProps {
 }
 
 export function createWrapper(locale = "en", queryClient?: QueryClient) {
-  const translations = getTranslations()[locale] || {};
+  const translations = getTranslations();
   const qc = queryClient || createQueryClient();
 
   return function Wrapper({ children }: WrapperProps) {
@@ -36,11 +36,7 @@ export function createWrapper(locale = "en", queryClient?: QueryClient) {
       <QueryClientProvider client={qc}>
         <UIProvider
           services={mockServices}
-          translations={{
-            views: translations,
-            schemas: {},
-            common: {},
-          }}
+          translations={translations}
           locale={locale}
         >
           <TooltipProvider>{children}</TooltipProvider>

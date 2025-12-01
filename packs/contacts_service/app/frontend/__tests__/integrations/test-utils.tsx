@@ -54,18 +54,14 @@ const queryClient = new QueryClient({
 });
 
 export function createWrapper(locale = "en") {
-  const translations = getTranslations()[locale] || {};
+  const translations = getTranslations();
 
   return function Wrapper({ children }: WrapperProps) {
     return (
       <QueryClientProvider client={queryClient}>
         <UIProvider
           services={mockServices}
-          translations={{
-            views: translations,
-            schemas: {},
-            common: {},
-          }}
+          translations={translations}
           locale={locale}
         >
           <DrawerContext.Provider value={mockDrawerContext}>

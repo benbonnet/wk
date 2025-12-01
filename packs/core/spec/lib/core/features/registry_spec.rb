@@ -200,10 +200,30 @@ RSpec.describe Core::Features::Registry do
       expect(config[:api].keys).to include(:index, :show, :create)
     end
 
-    it "includes raw view config (translations, elements)" do
+    it "includes elements from view" do
       config = described_class.view_config(:workspaces, :test_contacts, :index)
-      expect(config[:translations]).to be_present
       expect(config[:elements]).to be_present
+    end
+
+    it "structures translations with global and views keys" do
+      config = described_class.view_config(:workspaces, :test_contacts, :index)
+      expect(config[:translations]).to have_key(:global)
+      expect(config[:translations]).to have_key(:views)
+    end
+
+    it "nests view translations by locale" do
+      config = described_class.view_config(:workspaces, :test_contacts, :index)
+      expect(config[:translations][:views]).to have_key(:en)
+      expect(config[:translations][:views][:en][:title]).to eq("Test")
+    end
+
+    it "includes global translations from I18n" do
+      config = described_class.view_config(:workspaces, :test_contacts, :index)
+      expect(config[:translations][:global]).to be_a(Hash)
+      # Global translations keyed by locale
+      I18n.available_locales.each do |locale|
+        expect(config[:translations][:global]).to have_key(locale)
+      end
     end
 
     it "returns nil for non-existent view" do

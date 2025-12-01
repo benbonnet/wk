@@ -1,41 +1,57 @@
 {
   "type": "VIEW",
   "translations": {
-    "en": {
-      "basic_info": "Basic Information",
-      "contact_info": "Contact Information",
-      "professional_info": "Professional Information",
-      "personal_info": "Personal Information",
-      "tags_section": "Tags",
-      "addresses_section": "Addresses",
-      "emails_section": "Emails",
-      "phones_section": "Phones",
-      "male": "Male",
-      "female": "Female",
-      "other": "Other",
-      "prefer_not_to_say": "Prefer not to say",
-      "email_address": "Email",
-      "phone_number": "Phone",
-      "label": "Label",
-      "is_primary": "Primary"
+    "global": {
+      "en": {
+        "confirm_title": "Confirm this action?",
+        "confirm_description": "This action cannot be undone. This will permanently archive this record.",
+        "confirm_cancel": "Cancel",
+        "confirm_ok": "Confirm"
+      },
+      "fr": {
+        "confirm_title": "Confirmer cette action?",
+        "confirm_description": "Cette action est irreversible. Cet enregistrement sera archivé definitivement.",
+        "confirm_cancel": "Annuler",
+        "confirm_ok": "Confirmer"
+      }
     },
-    "fr": {
-      "basic_info": "Informations de Base",
-      "contact_info": "Coordonnées",
-      "professional_info": "Informations Professionnelles",
-      "personal_info": "Informations Personnelles",
-      "tags_section": "Tags",
-      "addresses_section": "Adresses",
-      "emails_section": "Emails",
-      "phones_section": "Téléphones",
-      "male": "Homme",
-      "female": "Femme",
-      "other": "Autre",
-      "prefer_not_to_say": "Préfère ne pas dire",
-      "email_address": "Email",
-      "phone_number": "Téléphone",
-      "label": "Libellé",
-      "is_primary": "Principal"
+    "views": {
+      "en": {
+        "basic_info": "Basic Information",
+        "contact_info": "Contact Information",
+        "professional_info": "Professional Information",
+        "personal_info": "Personal Information",
+        "tags_section": "Tags",
+        "addresses_section": "Addresses",
+        "emails_section": "Emails",
+        "phones_section": "Phones",
+        "male": "Male",
+        "female": "Female",
+        "other": "Other",
+        "prefer_not_to_say": "Prefer not to say",
+        "email_address": "Email",
+        "phone_number": "Phone",
+        "label": "Label",
+        "is_primary": "Primary"
+      },
+      "fr": {
+        "basic_info": "Informations de Base",
+        "contact_info": "Coordonnées",
+        "professional_info": "Informations Professionnelles",
+        "personal_info": "Informations Personnelles",
+        "tags_section": "Tags",
+        "addresses_section": "Adresses",
+        "emails_section": "Emails",
+        "phones_section": "Téléphones",
+        "male": "Homme",
+        "female": "Femme",
+        "other": "Autre",
+        "prefer_not_to_say": "Préfère ne pas dire",
+        "email_address": "Email",
+        "phone_number": "Téléphone",
+        "label": "Libellé",
+        "is_primary": "Principal"
+      }
     }
   },
   "elements": [

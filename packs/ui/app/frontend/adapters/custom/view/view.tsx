@@ -75,20 +75,8 @@ export function View({
     null,
   );
 
-  // Build translations map - supports both old and new format
-  // Old format from schema.translations: { en: { key: "value" }, fr: { key: "valeur" } }
-  // New format from backend: { global: { en: {...} }, views: { en: {...} } }
-  const translationsMap = useMemo(() => {
-    // Check if new format (has global or views at top level)
-    if (translations.global || translations.views) {
-      return translations as { global: Record<string, Record<string, string>>; views: Record<string, Record<string, string>> };
-    }
-    // Old format - wrap in new structure
-    return {
-      global: {},
-      views: translations as Record<string, Record<string, string>>,
-    };
-  }, [translations]);
+  // Translations format: { global: { locale: {...} }, views: { locale: {...} } }
+  const translationsMap = translations as { global: Record<string, Record<string, string>>; views: Record<string, Record<string, string>> };
 
   // Local translate function for this view
   const t = useCallback(
