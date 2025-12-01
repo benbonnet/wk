@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from "react";
-import { Formik, Form as FormikForm, useFormikContext } from "formik";
+import { Formik, Form as FormikForm, useFormikContext, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import { cn } from "@ui/lib/utils";
 import { useTranslate } from "@ui/lib/ui-renderer/provider";
@@ -9,6 +9,17 @@ import { useViewConfig, useDrawer } from "../view";
 
 interface ExtendedFormProps extends FormProps {
   elements?: UISchema[];
+}
+
+// Type for API error response
+interface ApiError {
+  response?: {
+    status?: number;
+    data?: {
+      error?: string;
+      details?: Record<string, string[] | Record<string, unknown>>;
+    };
+  };
 }
 
 export function Form({
@@ -56,7 +67,10 @@ export function Form({
     return Yup.object().shape(buildSchema(elements));
   }, [elements, t]);
 
-  const handleSubmit = async (values: Record<string, unknown>) => {
+  const handleSubmit = async (
+    values: Record<string, unknown>,
+    { setErrors }: FormikHelpers<Record<string, unknown>>
+  ) => {
     try {
       const formAction = action || "save";
       const record = use_record && drawerData ? drawerData : values;
@@ -70,7 +84,25 @@ export function Form({
 
       if (onSubmit) await onSubmit(values);
     } catch (error) {
-      console.error("Form submission error:", error);
+      const apiError = error as ApiError;
+
+      // Handle 422 validation errors from backend
+      if (apiError.response?.status === 422 && apiError.response?.data?.details) {
+        const details = apiError.response.data.details;
+        // Transform backend errors to Formik format (first message only for each field)
+        const formikErrors: Record<string, string | Record<string, unknown>> = {};
+        for (const [field, messages] of Object.entries(details)) {
+          if (Array.isArray(messages) && messages.length > 0 && typeof messages[0] === "string") {
+            formikErrors[field] = messages[0];
+          } else if (typeof messages === "object") {
+            // Nested errors (addresses_attributes, spouse_attributes, etc.)
+            formikErrors[field] = messages as Record<string, unknown>;
+          }
+        }
+        setErrors(formikErrors);
+      } else {
+        console.error("Form submission error:", error);
+      }
     }
   };
 

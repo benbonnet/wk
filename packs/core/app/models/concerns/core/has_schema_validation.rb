@@ -11,6 +11,32 @@ module Core
       validate :validate_data_against_schema, if: -> { data.present? && schema_slug.present? }
     end
 
+    # Public: Get Formik-compatible error structure
+    def structured_errors
+      return {} unless schema_slug && data
+
+      schema_class = Core::Schema::Registry.find(schema_slug)
+      return {} unless schema_class
+
+      json_schema = schema_class.new.to_json_schema[:schema]
+      return {} unless json_schema
+
+      clean_data = data.to_h.reject { |k, _| k.to_s.end_with?("_attributes") }
+
+      raw_errors = JSON::Validator.fully_validate(
+        json_schema.deep_stringify_keys,
+        clean_data.deep_stringify_keys,
+        strict: false,
+        validate_schema: false,
+        errors_as_objects: true
+      )
+
+      Core::Validation::ErrorTransformer.call(raw_errors)
+    rescue StandardError => e
+      Rails.logger.error("Schema validation error: #{e.message}")
+      {}
+    end
+
     private
 
       def validate_schema_slug_exists
@@ -21,39 +47,16 @@ module Core
       end
 
       def validate_data_against_schema
-        schema_class = Core::Schema::Registry.find(schema_slug)
-        return unless schema_class
+        structured = structured_errors
+        return if structured.empty?
 
-        json_schema = schema_class.new.to_json_schema[:schema]
-        return unless json_schema
+        # Add errors to ActiveRecord for standard Rails flow
+        structured.each do |field, messages|
+          # Skip nested (arrays/hashes) - only add flat fields to AR errors
+          next unless messages.is_a?(Array) && messages.all? { |m| m.is_a?(String) }
 
-        # Strip nested attributes before validation
-        clean_data = data.to_h.reject { |k, _| k.to_s.end_with?("_attributes") }
-
-        validation_errors = JSON::Validator.fully_validate(
-          json_schema.deep_stringify_keys,
-          clean_data.deep_stringify_keys,
-          strict: false,
-          validate_schema: false
-        )
-
-        validation_errors.each do |error|
-          # Parse JSON Schema errors and extract field name
-          # Format 1: "The property '#/' did not contain a required property of 'first_name'"
-          # Format 2: "The property '#/first_name' of type string did not match..."
-          if (match = error.match(/required property of '([^']+)'/))
-            field = match[1].to_sym
-            errors.add(field, "is required")
-          elsif (match = error.match(/'#\/([^']+)'/)) && match[1].present?
-            field = match[1].to_sym
-            message = error.gsub(/'#\/[^']+'\s*/, "").strip
-            errors.add(field, message)
-          else
-            errors.add(:base, error)
-          end
+          messages.each { |msg| errors.add(field.to_sym, msg) }
         end
-      rescue JSON::Schema::ValidationError => e
-        errors.add(:base, "Schema validation error: #{e.message}")
       end
   end
 end

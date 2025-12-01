@@ -103,16 +103,17 @@ RSpec.describe "Contacts API", type: :request do
             details: { type: :object }
           }
 
-        # Send flat data with email but missing required first_name and last_name
-        let(:body) { { email: "test@example.com" } }
+        # Send flat data with company but missing required first_name and last_name
+        let(:body) { { company: "Acme Corp" } }
 
         run_test! do |response|
           body = JSON.parse(response.body)
           expect(body["error"]).to eq("Validation failed")
-          # TODO: Implement backend-errors blueprint (19.backend-errors.md) to get:
-          # expect(body["details"]).to have_key("first_name")
-          # Currently returns data validation since empty hash triggers presence validation
-          expect(body["details"]).to be_present
+          # Now returns Rails-style errors from ErrorSerializer
+          expect(body["details"]).to have_key("first_name")
+          expect(body["details"]["first_name"]).to include("can't be blank")
+          expect(body["details"]).to have_key("last_name")
+          expect(body["details"]["last_name"]).to include("can't be blank")
         end
       end
     end

@@ -76,7 +76,7 @@ module Core
         end
 
         def validation_errors(record)
-          record.errors.to_hash(full_messages: false)
+          Core::Validation::ErrorSerializer.call(record)
         end
 
         def tool_params
