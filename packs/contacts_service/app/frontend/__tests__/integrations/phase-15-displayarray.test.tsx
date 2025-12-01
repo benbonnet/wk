@@ -112,7 +112,7 @@ describe("Phase 15: DISPLAY_ARRAY (Read-only Arrays)", () => {
       renderSchema(
         {
           type: "VIEW",
-          translations: { en: { addresses_label: "Shipping Addresses" } },
+          translations: { global: {}, views: { en: { addresses_label: "Shipping Addresses" } } },
           elements: [
             {
               type: "SHOW",
@@ -138,7 +138,7 @@ describe("Phase 15: DISPLAY_ARRAY (Read-only Arrays)", () => {
       renderSchema(
         {
           type: "VIEW",
-          translations: { en: { no_items: "Nothing to display" } },
+          translations: { global: {}, views: { en: { no_items: "Nothing to display" } } },
           elements: [
             {
               type: "SHOW",

@@ -1,0 +1,6 @@
+fr:
+  ui:
+    confirm_title: "Confirmer cette action?"
+    confirm_description: "Cette action est irreversible. Cet enregistrement sera archivé definitivement."
+    confirm_cancel: "Annuler"
+    confirm_ok: "Confirmer"

@@ -287,7 +287,7 @@ describe("Phase 7: PAGE Adapter", () => {
           <DynamicRenderer
             schema={{
               type: "VIEW",
-              translations: { en: { page_title: "Translated Title" } },
+              translations: { global: {}, views: { en: { page_title: "Translated Title" } } },
               elements: [
                 {
                   type: "PAGE",
@@ -307,7 +307,7 @@ describe("Phase 7: PAGE Adapter", () => {
           <DynamicRenderer
             schema={{
               type: "VIEW",
-              translations: { en: { page_desc: "Translated Description" } },
+              translations: { global: {}, views: { en: { page_desc: "Translated Description" } } },
               elements: [
                 {
                   type: "PAGE",
@@ -328,7 +328,7 @@ describe("Phase 7: PAGE Adapter", () => {
           <DynamicRenderer
             schema={{
               type: "VIEW",
-              translations: { en: { new_contact: "New Contact" } },
+              translations: { global: {}, views: { en: { new_contact: "New Contact" } } },
               elements: [
                 {
                   type: "PAGE",

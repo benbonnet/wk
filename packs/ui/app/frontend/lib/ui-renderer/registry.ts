@@ -138,7 +138,13 @@ export interface LinkProps extends BaseProps {
   api?: string;
   variant?: "primary" | "secondary" | "ghost" | "destructive";
   icon?: string;
-  confirm?: string;
+  confirm?: {
+    title?: string;
+    description: string;
+    variant?: "default" | "destructive";
+    cancel_label?: string;
+    confirm_label?: string;
+  };
   notification?: { success?: string; error?: string };
 }
 
@@ -161,7 +167,13 @@ export interface OptionProps extends BaseProps {
   opens?: string;
   api?: string;
   icon?: string;
-  confirm?: string;
+  confirm?: {
+    title?: string;
+    description: string;
+    variant?: "default" | "destructive";
+    cancel_label?: string;
+    confirm_label?: string;
+  };
   variant?: "primary" | "secondary" | "ghost" | "destructive";
 }
 
@@ -189,6 +201,15 @@ export interface RelationshipPickerProps extends BaseProps {
 // SERVICES
 // ============================================
 
+export interface ConfirmOptions {
+  title?: string;
+  description: string;
+  icon?: string;
+  variant?: "default" | "destructive";
+  cancelLabel?: string;
+  confirmLabel?: string;
+}
+
 export interface UIServices {
   fetch: (url: string, options?: RequestInit) => Promise<Response>;
   navigate: (path: string) => void;
@@ -196,7 +217,7 @@ export interface UIServices {
     message: string | { type: string; message: string },
     type?: "success" | "error",
   ) => void;
-  confirm: (message: string) => Promise<boolean>;
+  confirm: (options: ConfirmOptions) => Promise<boolean>;
 }
 
 // ============================================
@@ -207,5 +228,5 @@ export interface UIContextValue {
   services: UIServices;
   translations?: Record<string, Record<string, string>>;
   locale: string;
-  t: (key: string, namespace?: string) => string;
+  t: (key: string) => string;
 }

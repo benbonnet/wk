@@ -87,7 +87,7 @@ describe("Phase 8: TABLE Adapter", () => {
     it("translates column labels", () => {
       renderSchema({
         type: "VIEW",
-        translations: { en: { first_name: "Prénom", last_name: "Nom" } },
+        translations: { global: {}, views: { en: { first_name: "Prénom", last_name: "Nom" } } },
         elements: [
           {
             type: "TABLE",
@@ -342,7 +342,7 @@ describe("Phase 8: TABLE Adapter", () => {
     it("shows search placeholder from schema", () => {
       renderSchema({
         type: "VIEW",
-        translations: { en: { search_contacts: "Search contacts..." } },
+        translations: { global: {}, views: { en: { search_contacts: "Search contacts..." } } },
         elements: [
           {
             type: "TABLE",

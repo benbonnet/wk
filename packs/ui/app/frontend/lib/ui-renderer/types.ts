@@ -114,9 +114,8 @@ export interface UISchemaColumn {
 // ============================================
 
 export interface TranslationsMap {
-  schemas: Record<string, Record<string, string>>;
-  views: Record<string, Record<string, string>>;
-  common: Record<string, string>;
+  global: Record<string, Record<string, string>>; // from config/locales/*.yml
+  views: Record<string, Record<string, string>>; // from view DSL
 }
 
 export type Translations = Record<string, TranslationsMap>;
@@ -159,7 +158,13 @@ export interface UISchemaInterface {
   variant?: "primary" | "secondary" | "ghost" | "destructive";
   icon?: string;
   opens?: string;
-  confirm?: string;
+  confirm?: {
+    title?: string;
+    description: string;
+    variant?: "default" | "destructive";
+    cancel_label?: string;
+    confirm_label?: string;
+  };
   api?: string | Record<string, { method: string; path: string }>;
   notification?: { success?: string; error?: string; _ns?: string };
 

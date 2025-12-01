@@ -95,7 +95,7 @@ describe("Phase 16: MULTISTEP (Wizard Forms)", () => {
     it("MULTISTEP renders step labels in indicator", () => {
       renderSchema({
         type: "VIEW",
-        translations: { en: { personal_info: "Personal Info", contact_info: "Contact Info" } },
+        translations: { global: {}, views: { en: { personal_info: "Personal Info", contact_info: "Contact Info" } } },
         elements: [
           {
             type: "FORM",

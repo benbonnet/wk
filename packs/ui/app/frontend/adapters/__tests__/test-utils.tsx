@@ -16,9 +16,8 @@ export const mockServices: UIServices = {
 };
 
 export const mockTranslations = {
-  schemas: {},
+  global: {},
   views: {},
-  common: {},
 };
 
 interface WrapperProps {

@@ -176,19 +176,41 @@ RSpec.describe "RIB Checks", type: :system do
   end
 
   describe "Cancel action" do
-    it "shows confirmation dialog"
-    it "cancels request when confirmed"
-    it "updates status to 'cancelled'"
-    it "shows success notification"
-    it "does not cancel when dialog dismissed"
+    describe "confirmation dialog" do
+      it "shows confirmation dialog when clicking cancel"
+      it "displays dialog title"
+      it "displays dialog description"
+      it "displays cancel button with correct label"
+      it "displays confirm button with correct label"
+      it "shows destructive variant styling"
+    end
+
+    describe "behavior" do
+      it "cancels request when confirmed"
+      it "updates status to 'cancelled'"
+      it "shows success notification"
+      it "does not cancel when dialog dismissed"
+      it "closes dialog after cancel button clicked"
+    end
   end
 
   describe "Delete action" do
-    it "shows confirmation dialog"
-    it "soft deletes request when confirmed"
-    it "removes record from table"
-    it "shows success notification"
-    it "does not delete when dialog dismissed"
+    describe "confirmation dialog" do
+      it "shows confirmation dialog when clicking delete"
+      it "displays dialog title"
+      it "displays dialog description"
+      it "displays cancel button with correct label"
+      it "displays confirm button with correct label"
+      it "shows destructive variant styling"
+    end
+
+    describe "behavior" do
+      it "soft deletes request when confirmed"
+      it "removes record from table"
+      it "shows success notification"
+      it "does not delete when dialog dismissed"
+      it "closes dialog after cancel button clicked"
+    end
   end
 
   describe "Recipients relationship picker" do

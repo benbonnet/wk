@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo, type ReactNode } from "react";
+import { createContext, useContext, useMemo, useCallback, type ReactNode } from "react";
 import type { UIServices, UIContextValue } from "./registry";
 import type { TranslationsMap } from "./types";
 
@@ -19,25 +19,22 @@ export function UIProvider({
   translations,
   locale = DEFAULT_LOCALE,
 }: UIProviderProps) {
-  const t = useMemo(() => {
-    return (key: string, namespace?: string): string => {
+  const t = useCallback(
+    (key: string): string => {
       if (!translations) return key;
 
-      if (translations.views?.[key]) {
-        return translations.views[key];
-      }
+      // Try views first (view-specific translations)
+      const viewValue = translations.views?.[locale]?.[key];
+      if (viewValue) return viewValue;
 
-      if (translations.common?.[key]) {
-        return translations.common[key];
-      }
-
-      if (namespace && translations.schemas?.[namespace]?.[key]) {
-        return translations.schemas[namespace][key];
-      }
+      // Fall back to global (from config/locales/*.yml)
+      const globalValue = translations.global?.[locale]?.[key];
+      if (globalValue) return globalValue;
 
       return key;
-    };
-  }, [translations]);
+    },
+    [translations, locale]
+  );
 
   const value = useMemo<UIContextValue>(
     () => ({
@@ -64,7 +61,7 @@ export function useServices(): UIServices {
   return useUI().services;
 }
 
-export function useTranslate(): (key: string, namespace?: string) => string {
+export function useTranslate(): (key: string) => string {
   return useUI().t;
 }
 

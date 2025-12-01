@@ -38,7 +38,13 @@ export function Link({
 
   const handleClick = async () => {
     if (confirmMessage) {
-      const confirmed = await services.confirm(t(confirmMessage));
+      const confirmed = await services.confirm({
+        title: t(confirmMessage.title || "confirm_title"),
+        description: t(confirmMessage.description),
+        variant: confirmMessage.variant,
+        cancelLabel: t(confirmMessage.cancel_label || "confirm_cancel"),
+        confirmLabel: t(confirmMessage.confirm_label || "confirm_ok"),
+      });
       if (!confirmed) return;
     }
 

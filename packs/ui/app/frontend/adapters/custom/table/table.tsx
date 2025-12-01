@@ -332,7 +332,13 @@ function RowActionsDropdown({
     e.stopPropagation();
 
     if (action.confirm) {
-      const confirmed = await services.confirm(t(action.confirm));
+      const confirmed = await services.confirm({
+        title: t(action.confirm.title || "confirm_title"),
+        description: t(action.confirm.description),
+        variant: action.confirm.variant,
+        cancelLabel: t(action.confirm.cancel_label || "confirm_cancel"),
+        confirmLabel: t(action.confirm.confirm_label || "confirm_ok"),
+      });
       if (!confirmed) return;
     }
 

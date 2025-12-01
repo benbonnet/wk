@@ -169,7 +169,7 @@ describe("Phase 10: VIEW Adapter", () => {
 
       renderSchema({
         type: "VIEW",
-        translations: { en: { edit_contact: "Edit Contact" } },
+        translations: { global: {}, views: { en: { edit_contact: "Edit Contact" } } },
         drawers: {
           edit_drawer: {
             title: "edit_contact",

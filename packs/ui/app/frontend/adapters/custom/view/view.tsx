@@ -75,20 +75,31 @@ export function View({
     null,
   );
 
-  // Build translations map for current locale
+  // Build translations map - supports both old and new format
+  // Old format from schema.translations: { en: { key: "value" }, fr: { key: "valeur" } }
+  // New format from backend: { global: { en: {...} }, views: { en: {...} } }
   const translationsMap = useMemo(() => {
-    const localeTranslations = translations[locale] || translations["en"] || {};
+    // Check if new format (has global or views at top level)
+    if (translations.global || translations.views) {
+      return translations as { global: Record<string, Record<string, string>>; views: Record<string, Record<string, string>> };
+    }
+    // Old format - wrap in new structure
     return {
-      views: localeTranslations,
-      schemas: {},
-      common: {},
+      global: {},
+      views: translations as Record<string, Record<string, string>>,
     };
-  }, [translations, locale]);
+  }, [translations]);
 
   // Local translate function for this view
   const t = useCallback(
-    (key: string): string => translationsMap.views[key] || key,
-    [translationsMap],
+    (key: string): string => {
+      const viewValue = translationsMap.views?.[locale]?.[key];
+      if (viewValue) return viewValue;
+      const globalValue = translationsMap.global?.[locale]?.[key];
+      if (globalValue) return globalValue;
+      return key;
+    },
+    [translationsMap, locale],
   );
 
   const drawerConfig = drawers[activeDrawer || ""];

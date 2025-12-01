@@ -65,6 +65,12 @@ module Core
           # Inject API from tools in same feature
           config[:api] = derive_api_for_feature(namespace, feature)
 
+          # Restructure translations: { global: from_i18n, views: from_view_dsl }
+          config[:translations] = {
+            global: global_translations,
+            views: config[:translations]
+          }
+
           config
         end
 
@@ -160,6 +166,14 @@ module Core
 
           def view_slug(view_class)
             view_class.name.demodulize.underscore
+          end
+
+          def global_translations
+            result = {}
+            I18n.available_locales.each do |locale|
+              result[locale] = I18n.t("ui", locale: locale, default: {})
+            end
+            result
           end
       end
     end

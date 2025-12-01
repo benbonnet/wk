@@ -29,14 +29,13 @@ const mockViewConfig = {
 
 interface WrapperOptions {
   translations?: {
-    views?: Record<string, string>;
-    schemas?: Record<string, Record<string, string>>;
-    common?: Record<string, string>;
+    global?: Record<string, Record<string, string>>;
+    views?: Record<string, Record<string, string>>;
   };
 }
 
 function createWrapper(options: WrapperOptions = {}) {
-  const { translations = { views: {}, schemas: {}, common: {} } } = options;
+  const { translations = { global: {}, views: {} } } = options;
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
@@ -307,9 +306,8 @@ describe("Table", () => {
         },
         {
           translations: {
-            views: { Yes: "Oui", No: "Non" },
-            schemas: {},
-            common: {},
+            global: {},
+            views: { en: { Yes: "Oui", No: "Non" } },
           },
         }
       );

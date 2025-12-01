@@ -44,7 +44,7 @@ function TestWrapper({
     <QueryClientProvider client={queryClient}>
       <UIProvider
         services={services}
-        translations={{ views: translations, schemas: {}, common: {} }}
+        translations={{ global: {}, views: { en: translations } }}
         locale="en"
       >
         <TooltipProvider>{children}</TooltipProvider>
@@ -396,7 +396,7 @@ describe("Phase 11: API Integration", () => {
               type: "LINK",
               label: "Delete",
               href: "/delete",
-              confirm: "Are you sure you want to delete?",
+              confirm: { description: "Are you sure you want to delete?" },
             },
           ],
         },
@@ -405,7 +405,9 @@ describe("Phase 11: API Integration", () => {
 
       await user.click(screen.getByRole("button", { name: "Delete" }));
 
-      expect(mockConfirm).toHaveBeenCalledWith("Are you sure you want to delete?");
+      expect(mockConfirm).toHaveBeenCalledWith(expect.objectContaining({
+        description: "Are you sure you want to delete?",
+      }));
     });
 
     it("Confirm cancel prevents API call", async () => {
@@ -427,7 +429,7 @@ describe("Phase 11: API Integration", () => {
               type: "LINK",
               label: "Delete",
               href: "/delete",
-              confirm: "Are you sure?",
+              confirm: { description: "Are you sure?" },
             },
           ],
         },
@@ -460,7 +462,7 @@ describe("Phase 11: API Integration", () => {
               type: "LINK",
               label: "Delete",
               href: "/delete",
-              confirm: "Are you sure?",
+              confirm: { description: "Are you sure?" },
             },
           ],
         },

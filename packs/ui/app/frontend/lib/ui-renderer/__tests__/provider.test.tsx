@@ -17,9 +17,14 @@ const mockServices: UIServices = {
 };
 
 const mockTranslations = {
-  schemas: { contact: { first_name: "First Name", last_name: "Last Name" } },
-  views: { page_title: "Contacts", new_contact: "New Contact" },
-  common: { save: "Save", cancel: "Cancel" },
+  global: {
+    en: { confirm_title: "Global Confirm", confirm_cancel: "Cancel" },
+    fr: { confirm_title: "Confirmer", confirm_cancel: "Annuler" },
+  },
+  views: {
+    en: { page_title: "Contacts", confirm_title: "View Confirm" },
+    fr: { page_title: "Contacts FR" },
+  },
 };
 
 describe("UIProvider", () => {
@@ -94,40 +99,30 @@ describe("UIProvider", () => {
   });
 
   describe("useTranslate", () => {
-    it("translates view keys", () => {
+    it("returns view translation when key exists in views", () => {
       const TestComponent = () => {
         const t = useTranslate();
-        return <div data-testid="result">{t("page_title")}</div>;
+        return <div data-testid="result">{t("confirm_title")}</div>;
       };
 
       render(<TestComponent />, { wrapper });
 
-      expect(screen.getByTestId("result").textContent).toBe("Contacts");
+      // views takes precedence over global
+      expect(screen.getByTestId("result").textContent).toBe("View Confirm");
     });
 
-    it("translates common keys", () => {
+    it("falls back to global when key not in views", () => {
       const TestComponent = () => {
         const t = useTranslate();
-        return <div data-testid="result">{t("save")}</div>;
+        return <div data-testid="result">{t("confirm_cancel")}</div>;
       };
 
       render(<TestComponent />, { wrapper });
 
-      expect(screen.getByTestId("result").textContent).toBe("Save");
+      expect(screen.getByTestId("result").textContent).toBe("Cancel");
     });
 
-    it("translates schema keys with namespace", () => {
-      const TestComponent = () => {
-        const t = useTranslate();
-        return <div data-testid="result">{t("first_name", "contact")}</div>;
-      };
-
-      render(<TestComponent />, { wrapper });
-
-      expect(screen.getByTestId("result").textContent).toBe("First Name");
-    });
-
-    it("returns key when translation not found", () => {
+    it("returns key when not found in views or global", () => {
       const TestComponent = () => {
         const t = useTranslate();
         return <div data-testid="result">{t("unknown_key")}</div>;
@@ -156,6 +151,27 @@ describe("UIProvider", () => {
       render(<TestComponent />, { wrapper: noTranslationsWrapper });
 
       expect(screen.getByTestId("result").textContent).toBe("page_title");
+    });
+
+    it("respects locale for translations", () => {
+      const frWrapper = ({ children }: { children: React.ReactNode }) => (
+        <UIProvider
+          services={mockServices}
+          translations={mockTranslations}
+          locale="fr"
+        >
+          {children}
+        </UIProvider>
+      );
+
+      const TestComponent = () => {
+        const t = useTranslate();
+        return <div data-testid="result">{t("page_title")}</div>;
+      };
+
+      render(<TestComponent />, { wrapper: frWrapper });
+
+      expect(screen.getByTestId("result").textContent).toBe("Contacts FR");
     });
   });
 });

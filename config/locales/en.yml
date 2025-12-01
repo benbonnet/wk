@@ -29,3 +29,8 @@
 
 en:
   hello: "Hello world"
+  ui:
+    confirm_title: "Confirm this action?"
+    confirm_description: "This action cannot be undone. This will permanently archive this record."
+    confirm_cancel: "Cancel"
+    confirm_ok: "Confirm"
