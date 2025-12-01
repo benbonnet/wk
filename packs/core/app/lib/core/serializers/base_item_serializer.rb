@@ -16,6 +16,29 @@ module Core
         item.updated_at&.iso8601
       end
 
+      # Helper: get target items for a relationship type (uses preloaded data)
+      # Available as both class and instance method for use in attribute blocks
+      def self.relationship_items(item, type)
+        item.outgoing_relationships
+          .select { |r| r.relationship_type == type.to_s }
+          .filter_map(&:target_item)
+      end
+
+      # Helper: count relationships of a type (uses preloaded data, no query)
+      def self.relationship_count(item, type)
+        item.outgoing_relationships
+          .count { |r| r.relationship_type == type.to_s }
+      end
+
+      # Instance method delegates to class method
+      def relationship_items(item, type)
+        self.class.relationship_items(item, type)
+      end
+
+      def relationship_count(item, type)
+        self.class.relationship_count(item, type)
+      end
+
       # Subclasses call `flatten_data_fields` to add flattened attributes
       # and `flatten_relationships` to add *_attributes
       class << self
@@ -49,15 +72,14 @@ module Core
               attr_name = "#{rel_name}_attributes".to_sym
 
               attribute attr_name do |item|
-                rel_records = ItemRelationship
-                  .where(source_item_id: item.id, relationship_type: rel_name.to_s)
-                  .includes(:target_item)
+                # Use preloaded outgoing_relationships, filter in Ruby
+                rels = item.outgoing_relationships.select { |r| r.relationship_type == rel_name.to_s }
 
                 if cardinality == :one
-                  target = rel_records.first&.target_item
+                  target = rels.first&.target_item
                   target ? { "id" => target.id }.merge(target.data || {}) : nil
                 else
-                  rel_records.filter_map do |r|
+                  rels.filter_map do |r|
                     next unless r.target_item
                     { "id" => r.target_item.id }.merge(r.target_item.data || {})
                   end

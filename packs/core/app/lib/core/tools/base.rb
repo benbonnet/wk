@@ -55,11 +55,11 @@ module Core
         end
 
         def find_item(id)
-          items.find_by(id:)
+          items.includes(outgoing_relationships: :target_item).find_by(id:)
         end
 
         def find_item!(id)
-          items.find(id)
+          items.includes(outgoing_relationships: :target_item).find(id)
         rescue ActiveRecord::RecordNotFound
           raise NotFoundError, "#{self.class.schema_slug} not found: #{id}"
         end

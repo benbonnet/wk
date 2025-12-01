@@ -53,6 +53,7 @@ group(:test) do
   gem("rspec-rails", "~> 6.1")
   gem("shoulda-matchers", "~> 5.3")
   gem("test-prof", "~> 1.0")
+  gem("n_plus_one_control", "~> 0.7")
   gem("webmock")
 end
 

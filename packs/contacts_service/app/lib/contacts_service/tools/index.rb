@@ -26,6 +26,7 @@ module ContactsService
         records = query.order(created_at: :desc)
                        .offset((page.to_i - 1) * per_page.to_i)
                        .limit(per_page.to_i)
+                       .includes(outgoing_relationships: :target_item)
 
         {
           data: ContactSerializer.new(records).to_h,
