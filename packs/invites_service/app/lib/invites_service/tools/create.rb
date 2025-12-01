@@ -3,7 +3,7 @@
 module InvitesService
   module Tools
     class Create < Core::Tools::Base
-      description "Create an invite to share items between users"
+      description "Create an invite"
       # No route - workflow only
 
       params do
@@ -13,8 +13,10 @@ module InvitesService
       def execute(
         user_id:,
         workspace_id:,
-        inviter_id:,
-        invitee_id:,
+        invitee_email:,
+        invitee_phone: nil,
+        source_type: nil,
+        source_id: nil,
         recipient_workspace_id: nil,
         status: "pending",
         item_ids: [],
@@ -25,8 +27,11 @@ module InvitesService
         ActiveRecord::Base.transaction do
           invite = Invite.create!(
             workspace_id:,
-            inviter_id:,
-            invitee_id:,
+            inviter_id: user_id,
+            invitee_email: invitee_email.to_s.downcase.strip,
+            invitee_phone: invitee_phone&.strip,
+            source_type:,
+            source_id:,
             recipient_workspace_id:,
             status:
           )

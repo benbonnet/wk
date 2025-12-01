@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_01_110324) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_01_131840) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -146,17 +146,23 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_01_110324) do
 
   create_table "invites", force: :cascade do |t|
     t.bigint "inviter_id", null: false
-    t.bigint "invitee_id", null: false
+    t.bigint "invitee_id"
     t.bigint "recipient_workspace_id"
     t.string "status", default: "pending", null: false
     t.string "auth_link_hash", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "workspace_id", null: false
+    t.string "invitee_email"
+    t.string "invitee_phone"
+    t.string "source_type"
+    t.bigint "source_id"
     t.index ["auth_link_hash"], name: "index_invites_on_auth_link_hash", unique: true
+    t.index ["invitee_email"], name: "index_invites_on_invitee_email"
     t.index ["invitee_id"], name: "index_invites_on_invitee_id"
     t.index ["inviter_id"], name: "index_invites_on_inviter_id"
     t.index ["recipient_workspace_id"], name: "index_invites_on_recipient_workspace_id"
+    t.index ["source_type", "source_id"], name: "index_invites_on_source_type_and_source_id"
     t.index ["status"], name: "index_invites_on_status"
     t.index ["workspace_id"], name: "index_invites_on_workspace_id"
   end

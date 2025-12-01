@@ -4,7 +4,8 @@ module InvitesService
   class InviteSerializer
     include Alba::Resource
 
-    attributes :id, :inviter_id, :invitee_id, :recipient_workspace_id, :status, :auth_link_hash
+    attributes :id, :inviter_id, :invitee_id, :invitee_email, :invitee_phone,
+               :source_type, :source_id, :recipient_workspace_id, :status, :auth_link_hash
 
     attribute :created_at do |invite|
       invite.created_at&.iso8601

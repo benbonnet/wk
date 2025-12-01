@@ -178,21 +178,36 @@ export const RelationshipPickerDrawer: FC<RelationshipPickerDrawerProps> = ({
     setCreateDrawerOpen(false);
   };
 
-  // Handle confirm - return selected items (data is now flat)
+  // Handle confirm - return selected items with id and display columns only
+  // Backend only needs id for linking, but field.tsx needs column values for display
   const handleConfirm = () => {
     const selected: AttributePayload[] = [];
+    const columnNames = columns.map((col) => col.name);
 
     // Add selected items from fetched data (skip if already in createdItems to avoid duplicates)
     for (const item of data) {
       if (selectedIds.has(item.id) && !createdItems.has(item.id)) {
-        selected.push(item);
+        // Only include id and display columns
+        const payload: AttributePayload = { id: item.id };
+        for (const colName of columnNames) {
+          if (item[colName] !== undefined) {
+            payload[colName] = item[colName];
+          }
+        }
+        selected.push(payload);
       }
     }
 
     // Add newly created items that are selected
     for (const [id, item] of createdItems) {
       if (selectedIds.has(id)) {
-        selected.push(item);
+        const payload: AttributePayload = { id };
+        for (const colName of columnNames) {
+          if (item[colName] !== undefined) {
+            payload[colName] = item[colName];
+          }
+        }
+        selected.push(payload);
       }
     }
 

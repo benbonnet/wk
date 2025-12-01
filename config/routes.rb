@@ -25,6 +25,7 @@ Rails.application.routes.draw do
 
   # Load pack routes
   draw(:core)
+  draw(:invites_service)
 
   # SPA routes (authenticated)
   get "/app", to: "spa#index", as: :spa_root

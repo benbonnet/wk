@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class AuthController < ApplicationController
+  include InvitesService::InviteLinking
+
   def authenticate
     redirect_post(
       user_auth0_omniauth_authorize_path,
@@ -15,6 +17,8 @@ class AuthController < ApplicationController
     user.update_columns(last_login_at: Time.current)
     sign_in(user)
     session[:workspace_id] = workspace.id
+
+    link_pending_invite(user)
 
     redirect_to(spa_root_path)
   end
