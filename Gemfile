@@ -55,6 +55,9 @@ group(:test) do
   gem("test-prof", "~> 1.0")
   gem("n_plus_one_control", "~> 0.7")
   gem("webmock")
+  gem("capybara", "~> 3.40")
+  gem("selenium-webdriver", "~> 4.27")
+  gem("rack_session_access", "~> 0.2")
 end
 
 group :development do

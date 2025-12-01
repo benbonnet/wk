@@ -14,6 +14,12 @@
 #
 # See https://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
+  # Fix for Rails 8 / Devise 4.9.4 compatibility issue with Capybara system tests
+  # See: https://github.com/heartcombo/devise/issues/5752
+  config.before(:suite) do
+    Rails.application.try(:reload_routes_unless_loaded)
+  end
+
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.

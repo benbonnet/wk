@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from "react";
-import { Formik, Form as FormikForm, useFormikContext, FormikHelpers } from "formik";
+import { Formik, Form as FormikForm, useFormikContext } from "formik";
+import type { FormikHelpers } from "formik";
 import * as Yup from "yup";
 import { cn } from "@ui/lib/utils";
 import { useTranslate } from "@ui/lib/ui-renderer/provider";

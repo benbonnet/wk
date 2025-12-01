@@ -22,7 +22,8 @@ module Ui
             label: options[:label],
             sortable: options[:sortable],
             hideable: options[:hideable],
-            filterable: options[:filterable]
+            filterable: options[:filterable],
+            options: options[:options]
           }.compact
         end
 

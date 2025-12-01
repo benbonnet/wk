@@ -106,6 +106,7 @@ export interface UISchemaColumn {
   sortable?: boolean;
   hideable?: boolean;
   filterable?: boolean;
+  options?: Option[];
 }
 
 // ============================================

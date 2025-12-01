@@ -142,8 +142,17 @@ export function Table({
           const value = getValue();
           if (value == null)
             return <span className="text-muted-foreground">—</span>;
-          if (typeof value === "boolean") return value ? "Yes" : "No";
+          if (typeof value === "boolean") return value ? t("Yes") : t("No");
           if (value instanceof Date) return value.toLocaleDateString();
+
+          // Handle select/badge types with options - translate the label
+          if (col.options && col.options.length > 0) {
+            const matchedOption = col.options.find((o) => o.value === value);
+            if (matchedOption) {
+              return t(matchedOption.label);
+            }
+          }
+
           return String(value);
         },
       });
