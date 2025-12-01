@@ -15,6 +15,7 @@ RSpec.describe ContactsService::Views::Form do
 
   describe "form groups" do
     it { expect(wrapper[:elements]).to include(a_hash_including(type: "GROUP", label: "basic_info")) }
+    it { expect(wrapper[:elements]).to include(a_hash_including(type: "GROUP", label: "contact_info")) }
     it { expect(wrapper[:elements]).to include(a_hash_including(type: "GROUP", label: "professional_info")) }
     it { expect(wrapper[:elements]).to include(a_hash_including(type: "GROUP", label: "personal_info")) }
   end
@@ -29,9 +30,55 @@ RSpec.describe ContactsService::Views::Form do
     it "has last_name field" do
       expect(basic_info[:elements]).to include(a_hash_including(name: "last_name", type: "INPUT_TEXT"))
     end
+  end
 
-    it "has email field" do
-      expect(basic_info[:elements]).to include(a_hash_including(name: "email"))
+  describe "emails form_array" do
+    let(:contact_info) { wrapper[:elements]&.find { |e| e[:type] == "GROUP" && e[:label] == "contact_info" } }
+    let(:emails) { contact_info[:elements]&.find { |e| e[:type] == "FORM_ARRAY" && e[:name] == "emails_attributes" } }
+
+    it { expect(emails).to be_present }
+    it { expect(emails).to include(label: "emails", addLabel: "add_email", removeLabel: "remove") }
+
+    it "has template fields" do
+      expect(emails[:template]).to include(
+        a_hash_including(name: "address", type: "INPUT_TEXT"),
+        a_hash_including(name: "label", type: "INPUT_TEXT"),
+        a_hash_including(name: "is_primary", type: "INPUT_CHECKBOX")
+      )
+    end
+  end
+
+  describe "phones form_array" do
+    let(:contact_info) { wrapper[:elements]&.find { |e| e[:type] == "GROUP" && e[:label] == "contact_info" } }
+    let(:phones) { contact_info[:elements]&.find { |e| e[:type] == "FORM_ARRAY" && e[:name] == "phones_attributes" } }
+
+    it { expect(phones).to be_present }
+    it { expect(phones).to include(label: "phones", addLabel: "add_phone", removeLabel: "remove") }
+
+    it "has template fields" do
+      expect(phones[:template]).to include(
+        a_hash_including(name: "number", type: "INPUT_TEXT"),
+        a_hash_including(name: "label", type: "INPUT_TEXT"),
+        a_hash_including(name: "is_primary", type: "INPUT_CHECKBOX")
+      )
+    end
+  end
+
+  describe "addresses form_array" do
+    let(:addresses_group) { wrapper[:elements]&.find { |e| e[:type] == "GROUP" && e[:label] == "addresses" } }
+    let(:addresses) { addresses_group[:elements]&.find { |e| e[:type] == "FORM_ARRAY" && e[:name] == "addresses_attributes" } }
+
+    it { expect(addresses).to be_present }
+    it { expect(addresses).to include(addLabel: "add_address", removeLabel: "remove") }
+
+    it "has template fields" do
+      expect(addresses[:template]).to include(
+        a_hash_including(name: "label", type: "INPUT_TEXT"),
+        a_hash_including(name: "address_line_1", type: "INPUT_TEXT"),
+        a_hash_including(name: "city", type: "INPUT_TEXT"),
+        a_hash_including(name: "postal_code", type: "INPUT_TEXT"),
+        a_hash_including(name: "country", type: "INPUT_TEXT")
+      )
     end
   end
 
@@ -50,23 +97,6 @@ RSpec.describe ContactsService::Views::Form do
     it "has last_name field" do
       expect(spouse[:elements]).to include(
         a_hash_including(name: "spouse_attributes.last_name", type: "INPUT_TEXT", label: "last_name")
-      )
-    end
-  end
-
-  describe "addresses relationship" do
-    let(:addresses) { wrapper[:elements]&.find { |e| e[:type] == "FORM_ARRAY" && e[:name] == "addresses_attributes" } }
-
-    it { expect(addresses).to be_present }
-    it { expect(addresses).to include(label: "addresses", addLabel: "add_address", removeLabel: "remove_address") }
-
-    it "has template fields" do
-      expect(addresses[:template]).to include(
-        a_hash_including(name: "label", type: "INPUT_TEXT"),
-        a_hash_including(name: "address_line_1", type: "INPUT_TEXT"),
-        a_hash_including(name: "city", type: "INPUT_TEXT"),
-        a_hash_including(name: "postal_code", type: "INPUT_TEXT"),
-        a_hash_including(name: "country", type: "INPUT_TEXT")
       )
     end
   end
@@ -95,37 +125,34 @@ RSpec.describe ContactsService::Views::Form do
     it { expect(config[:translations]).to have_key(:fr) }
 
     it "includes group label translations" do
-      expect(config[:translations][:en]).to include(basic_info: "Basic Information", professional_info: "Professional Information")
+      expect(config[:translations][:en]).to include(
+        basic_info: "Basic Information",
+        contact_info: "Contact Information",
+        professional_info: "Professional Information"
+      )
     end
 
     it "includes button translations" do
       expect(config[:translations][:en]).to include(save: "Save", saving: "Saving...")
     end
 
-    it "includes spouse relationship translations" do
-      expect(config[:translations][:en]).to include(spouse: "Spouse")
-    end
-
-    it "includes addresses relationship translations" do
-      expect(config[:translations][:en]).to include(addresses: "Addresses", add_address: "Add Address", remove_address: "Remove")
-    end
-
-    it "includes address field translations" do
+    it "includes email/phone translations" do
       expect(config[:translations][:en]).to include(
-        label: "Label",
-        address_line_1: "Address Line 1",
-        city: "City",
-        postal_code: "Postal Code",
-        country: "Country"
+        emails: "Emails",
+        add_email: "Add Email",
+        phones: "Phones",
+        add_phone: "Add Phone",
+        is_primary: "Primary"
       )
     end
 
-    it "includes french relationship translations" do
+    it "includes french translations" do
       expect(config[:translations][:fr]).to include(
-        spouse: "Conjoint(e)",
-        addresses: "Adresses",
-        add_address: "Ajouter une adresse",
-        remove_address: "Supprimer"
+        emails: "Emails",
+        add_email: "Ajouter un email",
+        phones: "Téléphones",
+        add_phone: "Ajouter un téléphone",
+        is_primary: "Principal"
       )
     end
   end

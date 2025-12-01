@@ -30,7 +30,8 @@ export function DynamicRenderer({ schema, data = {}, active }: DynamicRendererPr
 
   // Extract schema fields and spread the rest as props
   // Pass type to unified adapters (InputAdapter, DisplayAdapter)
-  const { type, elements, template, rules: _rules, ...props } = schema;
+  const { type, elements, template, rules: _, ...props } = schema;
+  void _; // satisfy linter
 
   // Apply disabled state from rules
   const effectiveProps = enabled ? { ...props, type } : { ...props, type, disabled: true };

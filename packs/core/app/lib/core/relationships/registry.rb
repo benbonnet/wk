@@ -30,6 +30,10 @@ module Core
           @all = nil
         end
 
+        def clear!
+          @all = nil
+        end
+
         private
 
           def build

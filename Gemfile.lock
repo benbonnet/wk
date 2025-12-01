@@ -1,18 +1,3 @@
-GIT
-  remote: https://github.com/getnvoi/durable_workflows.git
-  revision: 15b378fa666cae905e902b9997f32a2521ee2c0b
-  branch: main
-  specs:
-    durable_workflow (0.1.0)
-      async (~> 2.21)
-      dry-struct (~> 1.6)
-      dry-types (~> 1.7)
-      faraday (>= 2.0)
-      json_schemer (~> 2.0)
-      mcp (~> 0.1)
-      rack (>= 2.0)
-      ruby_llm (~> 1.0)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -94,12 +79,6 @@ GEM
       activerecord (>= 6.0.0)
       activesupport (>= 6.0.0)
     ast (2.4.3)
-    async (2.34.0)
-      console (~> 1.29)
-      fiber-annotation
-      io-event (~> 1.11)
-      metrics (~> 0.12)
-      traces (~> 0.18)
     base64 (0.3.0)
     bcrypt (3.1.20)
     bcrypt_pbkdf (1.1.1)
@@ -137,10 +116,6 @@ GEM
       sorbet-runtime
     concurrent-ruby (1.3.5)
     connection_pool (2.5.4)
-    console (1.34.2)
-      fiber-annotation
-      fiber-local (~> 1.1)
-      json
     constant_resolver (0.3.0)
     crack (1.0.1)
       bigdecimal
@@ -167,28 +142,6 @@ GEM
     dotenv (3.1.8)
     drb (2.2.3)
     dry-cli (1.3.0)
-    dry-core (1.1.0)
-      concurrent-ruby (~> 1.0)
-      logger
-      zeitwerk (~> 2.6)
-    dry-inflector (1.2.0)
-    dry-logic (1.6.0)
-      bigdecimal
-      concurrent-ruby (~> 1.0)
-      dry-core (~> 1.1)
-      zeitwerk (~> 2.6)
-    dry-struct (1.8.0)
-      dry-core (~> 1.1)
-      dry-types (~> 1.8, >= 1.8.2)
-      ice_nine (~> 0.11)
-      zeitwerk (~> 2.6)
-    dry-types (1.8.3)
-      bigdecimal (~> 3.0)
-      concurrent-ruby (~> 1.0)
-      dry-core (~> 1.0)
-      dry-inflector (~> 1.0)
-      dry-logic (~> 1.4)
-      zeitwerk (~> 2.6)
     ed25519 (1.4.0)
     erb (6.0.0)
     erubi (1.13.1)
@@ -211,16 +164,11 @@ GEM
     faraday-retry (2.3.2)
       faraday (~> 2.0)
     ffaker (2.25.0)
-    fiber-annotation (0.2.0)
-    fiber-local (1.1.0)
-      fiber-storage
-    fiber-storage (1.0.1)
     fugit (1.12.1)
       et-orbi (~> 1.4)
       raabro (~> 1.4)
     globalid (1.3.0)
       activesupport (>= 6.1)
-    hana (1.3.7)
     hashdiff (1.2.1)
     hashie (5.0.0)
     http-accept (1.7.0)
@@ -228,10 +176,8 @@ GEM
       domain_name (~> 0.5)
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
-    ice_nine (0.11.2)
     iniparse (1.5.0)
     io-console (0.8.1)
-    io-event (1.11.2)
     irb (1.15.3)
       pp (>= 0.6.0)
       rdoc (>= 4.0.0)
@@ -243,12 +189,6 @@ GEM
     json-schema (6.0.0)
       addressable (~> 2.8)
       bigdecimal (~> 3.1)
-    json_rpc_handler (0.1.1)
-    json_schemer (2.4.0)
-      bigdecimal
-      hana (~> 1.3)
-      regexp_parser (~> 2.0)
-      simpleidn (~> 0.2)
     jwt (3.1.2)
       base64
     kamal (2.8.2)
@@ -275,10 +215,6 @@ GEM
       net-pop
       net-smtp
     marcel (1.1.0)
-    mcp (0.4.0)
-      json-schema (>= 4.1)
-      json_rpc_handler (~> 0.1)
-    metrics (0.15.0)
     mime-types (3.7.0)
       logger
       mime-types-data (~> 3.2025, >= 3.2025.0507)
@@ -539,7 +475,6 @@ GEM
     securerandom (0.4.1)
     shoulda-matchers (5.3.0)
       activesupport (>= 5.2.0)
-    simpleidn (0.2.3)
     smart_properties (1.17.0)
     snaky_hash (2.0.3)
       hashie (>= 0.1.0, < 6)
@@ -575,7 +510,6 @@ GEM
     thruster (0.1.16-arm64-darwin)
     thruster (0.1.16-x86_64-linux)
     timeout (0.4.4)
-    traces (0.18.2)
     tsort (0.2.0)
     tty-color (0.6.0)
     tty-cursor (0.7.1)
@@ -643,7 +577,6 @@ DEPENDENCIES
   debug (>= 1.0.0)
   devise (~> 4.9)
   dotenv
-  durable_workflow!
   factory_bot_rails (~> 6.4.4)
   ffaker
   jbuilder

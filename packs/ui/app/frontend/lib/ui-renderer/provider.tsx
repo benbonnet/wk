@@ -4,6 +4,8 @@ import type { TranslationsMap } from "./types";
 
 const UIContext = createContext<UIContextValue | null>(null);
 
+export const DEFAULT_LOCALE = "fr";
+
 interface UIProviderProps {
   children: ReactNode;
   services: UIServices;
@@ -15,7 +17,7 @@ export function UIProvider({
   children,
   services,
   translations,
-  locale = "en",
+  locale = DEFAULT_LOCALE,
 }: UIProviderProps) {
   const t = useMemo(() => {
     return (key: string, namespace?: string): string => {

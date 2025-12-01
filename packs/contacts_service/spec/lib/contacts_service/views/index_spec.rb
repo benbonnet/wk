@@ -21,7 +21,7 @@ RSpec.describe ContactsService::Views::Index do
 
     it "has table columns matching schema fields" do
       column_names = table[:columns].map { |c| c[:name].to_sym }
-      expect(column_names).to include(:first_name, :last_name, :email, :phone)
+      expect(column_names).to include(:first_name, :last_name, :company, :job_title)
     end
   end
 

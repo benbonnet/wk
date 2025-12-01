@@ -203,7 +203,7 @@ describe("Phase 11: API Integration", () => {
       await waitFor(() => {
         expect(mockFetch).toHaveBeenCalledWith("/api/contacts", {
           method: "POST",
-          body: { data: { name: "Test Contact" } },
+          data: { data: { name: "Test Contact" } },
         });
       });
     });
@@ -241,7 +241,7 @@ describe("Phase 11: API Integration", () => {
       await waitFor(() => {
         expect(mockFetch).toHaveBeenCalledWith("/api/contacts", {
           method: "POST",
-          body: { data: { name: "New Contact" } },
+          data: { data: { name: "New Contact" } },
         });
       });
     });

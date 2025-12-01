@@ -3,6 +3,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@ui/components/card";
 import { cn } from "@ui/lib/utils";
 import { useTranslate } from "@ui/lib/ui-renderer/provider";
 import type { ShowProps } from "@ui/lib/ui-renderer/registry";
+import { useDrawerData } from "@ui/adapters/custom/view";
 
 interface ShowContextValue {
   data: Record<string, unknown>;
@@ -31,9 +32,14 @@ export function Show({
   children,
 }: ExtendedShowProps) {
   const t = useTranslate();
+  const drawerData = useDrawerData();
 
-  // Use data from DynamicRenderer context, fallback to record prop
-  const showData = data ?? record ?? {};
+  // drawerData is { id, data: {...} } structure from table row
+  // Extract the nested data, or use the whole object if no nested data
+  const contextData = drawerData?.data ?? drawerData;
+
+  // Priority: drawerData (from context) > data prop > record prop
+  const showData = contextData ?? data ?? record ?? {};
 
   return (
     <ShowContext.Provider value={{ data: showData }}>

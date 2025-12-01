@@ -1,0 +1,212 @@
+{
+  "type": "VIEW",
+  "translations": {
+    "en": {
+      "request_details": "Request Details",
+      "notification_settings": "Notification Settings",
+      "recipients_section": "Recipients",
+      "message_body_placeholder": "Enter the message to send to recipients...",
+      "comment_placeholder": "Internal notes (not visible to recipients)",
+      "save": "Save",
+      "saving": "Saving...",
+      "add_recipient": "Add Recipient",
+      "remove_recipient": "Remove",
+      "draft": "Draft",
+      "pending": "Pending",
+      "partial": "Partial",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "individual": "Individual",
+      "common": "Common"
+    },
+    "fr": {
+      "request_details": "Details de la Demande",
+      "notification_settings": "Parametres de Notification",
+      "recipients_section": "Destinataires",
+      "message_body_placeholder": "Entrez le message a envoyer aux destinataires...",
+      "comment_placeholder": "Notes internes (non visibles par les destinataires)",
+      "save": "Sauvegarder",
+      "saving": "Sauvegarde...",
+      "add_recipient": "Ajouter un Destinataire",
+      "remove_recipient": "Supprimer",
+      "draft": "Brouillon",
+      "pending": "En attente",
+      "partial": "Partiel",
+      "completed": "Complete",
+      "cancelled": "Annule",
+      "individual": "Individuel",
+      "common": "Commun"
+    }
+  },
+  "elements": [
+    {
+      "type": "FORM",
+      "elements": [
+        {
+          "type": "GROUP",
+          "elements": [
+            {
+              "type": "GROUP",
+              "label": "request_details",
+              "elements": [
+                {
+                  "type": "INPUT_SELECT",
+                  "name": "status",
+                  "label": "status",
+                  "options": [
+                    {
+                      "label": "draft",
+                      "value": "draft"
+                    },
+                    {
+                      "label": "pending",
+                      "value": "pending"
+                    },
+                    {
+                      "label": "partial",
+                      "value": "partial"
+                    },
+                    {
+                      "label": "completed",
+                      "value": "completed"
+                    },
+                    {
+                      "label": "cancelled",
+                      "value": "cancelled"
+                    }
+                  ]
+                },
+                {
+                  "type": "INPUT_SELECT",
+                  "name": "request_type",
+                  "label": "request_type",
+                  "options": [
+                    {
+                      "label": "individual",
+                      "value": "individual"
+                    },
+                    {
+                      "label": "common",
+                      "value": "common"
+                    }
+                  ]
+                },
+                {
+                  "type": "INPUT_DATETIME",
+                  "name": "end_at",
+                  "label": "end_at"
+                },
+                {
+                  "type": "INPUT_TEXTAREA",
+                  "name": "message_body",
+                  "label": "message_body",
+                  "placeholder": "message_body_placeholder"
+                },
+                {
+                  "type": "INPUT_TEXTAREA",
+                  "name": "comment",
+                  "label": "comment",
+                  "placeholder": "comment_placeholder"
+                }
+              ]
+            },
+            {
+              "type": "GROUP",
+              "label": "notification_settings",
+              "elements": [
+                {
+                  "type": "INPUT_CHECKBOX",
+                  "name": "notify_via_email",
+                  "label": "notify_via_email"
+                },
+                {
+                  "type": "INPUT_CHECKBOX",
+                  "name": "notify_via_sms",
+                  "label": "notify_via_sms"
+                }
+              ]
+            },
+            {
+              "type": "RELATIONSHIP_PICKER",
+              "name": "recipients_attributes",
+              "cardinality": "many",
+              "relationSchema": "contact",
+              "columns": [
+                {
+                  "name": "first_name",
+                  "type": "DISPLAY_TEXT"
+                },
+                {
+                  "name": "last_name",
+                  "type": "DISPLAY_TEXT"
+                },
+                {
+                  "name": "email",
+                  "type": "DISPLAY_TEXT"
+                }
+              ],
+              "template": [
+                {
+                  "type": "INPUT_TEXT",
+                  "name": "first_name",
+                  "label": "first_name"
+                },
+                {
+                  "type": "INPUT_TEXT",
+                  "name": "last_name",
+                  "label": "last_name"
+                },
+                {
+                  "type": "INPUT_TEXT",
+                  "name": "email",
+                  "label": "email"
+                }
+              ]
+            }
+          ],
+          "classname": "flex flex-col flex-shrink min-h-0 overflow-y-scroll p-6 space-y-12"
+        },
+        {
+          "type": "GROUP",
+          "elements": [
+            {
+              "type": "SUBMIT",
+              "label": "save",
+              "loadingLabel": "saving",
+              "classname": "w-full justify-center"
+            }
+          ],
+          "classname": "flex-shrink-0 py-3 px-6 border-t bg-white"
+        }
+      ],
+      "classname": "flex flex-col h-full min-h-0"
+    }
+  ],
+  "url": "/api/v1/workspaces/rib_checks",
+  "api": {
+    "index": {
+      "method": "GET",
+      "path": ""
+    },
+    "show": {
+      "method": "GET",
+      "path": ":id"
+    },
+    "create": {
+      "method": "POST",
+      "path": ""
+    },
+    "update": {
+      "method": "PUT",
+      "path": ":id"
+    },
+    "destroy": {
+      "method": "DELETE",
+      "path": ":id"
+    },
+    "cancel": {
+      "method": "POST",
+      "path": ":id/cancel"
+    }
+  }
+}

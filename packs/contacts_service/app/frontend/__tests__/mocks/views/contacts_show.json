@@ -3,25 +3,39 @@
   "translations": {
     "en": {
       "basic_info": "Basic Information",
+      "contact_info": "Contact Information",
       "professional_info": "Professional Information",
       "personal_info": "Personal Information",
       "tags_section": "Tags",
       "addresses_section": "Addresses",
+      "emails_section": "Emails",
+      "phones_section": "Phones",
       "male": "Male",
       "female": "Female",
       "other": "Other",
-      "prefer_not_to_say": "Prefer not to say"
+      "prefer_not_to_say": "Prefer not to say",
+      "email_address": "Email",
+      "phone_number": "Phone",
+      "label": "Label",
+      "is_primary": "Primary"
     },
     "fr": {
       "basic_info": "Informations de Base",
+      "contact_info": "Coordonnées",
       "professional_info": "Informations Professionnelles",
       "personal_info": "Informations Personnelles",
       "tags_section": "Tags",
       "addresses_section": "Adresses",
+      "emails_section": "Emails",
+      "phones_section": "Téléphones",
       "male": "Homme",
       "female": "Femme",
       "other": "Autre",
-      "prefer_not_to_say": "Prefere ne pas dire"
+      "prefer_not_to_say": "Préfère ne pas dire",
+      "email_address": "Email",
+      "phone_number": "Téléphone",
+      "label": "Libellé",
+      "is_primary": "Principal"
     }
   },
   "elements": [
@@ -39,13 +53,59 @@
             },
             {
               "type": "DISPLAY_TEXT",
-              "name": "middle_name",
-              "label": "middle_name"
-            },
-            {
-              "type": "DISPLAY_TEXT",
               "name": "last_name",
               "label": "last_name"
+            }
+          ],
+          "className": "space-y-4"
+        },
+        {
+          "type": "GROUP",
+          "label": "contact_info",
+          "elements": [
+            {
+              "type": "DISPLAY_ARRAY",
+              "name": "emails",
+              "template": [
+                {
+                  "type": "DISPLAY_TEXT",
+                  "name": "address",
+                  "label": "email_address"
+                },
+                {
+                  "type": "DISPLAY_TEXT",
+                  "name": "label",
+                  "label": "label"
+                },
+                {
+                  "type": "DISPLAY_BOOLEAN",
+                  "name": "is_primary",
+                  "label": "is_primary"
+                }
+              ],
+              "label": "emails_section"
+            },
+            {
+              "type": "DISPLAY_ARRAY",
+              "name": "phones",
+              "template": [
+                {
+                  "type": "DISPLAY_TEXT",
+                  "name": "number",
+                  "label": "phone_number"
+                },
+                {
+                  "type": "DISPLAY_TEXT",
+                  "name": "label",
+                  "label": "label"
+                },
+                {
+                  "type": "DISPLAY_BOOLEAN",
+                  "name": "is_primary",
+                  "label": "is_primary"
+                }
+              ],
+              "label": "phones_section"
             }
           ],
           "className": "space-y-4"
@@ -98,16 +158,6 @@
               "type": "DISPLAY_DATE",
               "name": "date_of_birth",
               "label": "date_of_birth"
-            },
-            {
-              "type": "DISPLAY_TEXT",
-              "name": "place_of_birth",
-              "label": "place_of_birth"
-            },
-            {
-              "type": "DISPLAY_TEXT",
-              "name": "nationality",
-              "label": "nationality"
             }
           ],
           "className": "space-y-4"
@@ -128,6 +178,11 @@
           "type": "DISPLAY_ARRAY",
           "name": "addresses",
           "template": [
+            {
+              "type": "DISPLAY_TEXT",
+              "name": "label",
+              "label": "label"
+            },
             {
               "type": "DISPLAY_TEXT",
               "name": "address_line_1",
@@ -157,18 +212,6 @@
   ],
   "url": "/api/v1/workspaces/contacts",
   "api": {
-    "add_relationship": {
-      "method": "POST",
-      "path": ":id/relationships"
-    },
-    "create": {
-      "method": "POST",
-      "path": ""
-    },
-    "destroy": {
-      "method": "DELETE",
-      "path": ":id"
-    },
     "index": {
       "method": "GET",
       "path": ""
@@ -177,9 +220,21 @@
       "method": "GET",
       "path": ":id"
     },
+    "create": {
+      "method": "POST",
+      "path": ""
+    },
     "update": {
       "method": "PUT",
       "path": ":id"
+    },
+    "destroy": {
+      "method": "DELETE",
+      "path": ":id"
+    },
+    "add_relationship": {
+      "method": "POST",
+      "path": ":id/relationships"
     }
   }
 }

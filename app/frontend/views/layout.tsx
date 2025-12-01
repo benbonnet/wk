@@ -1,5 +1,5 @@
 import { Outlet } from "react-router";
-import { GalleryVerticalEnd, SquareTerminal, User } from "lucide-react";
+import { GalleryVerticalEnd, SquareTerminal, User, Users } from "lucide-react";
 
 import { useAuth } from "../hooks/use-auth";
 import {
@@ -32,10 +32,17 @@ const dropdownOptions: WorkspaceOption[] = [
 
 const menuOptions: MenuOption[] = [
   {
+    title: "CRM",
+    url: "#",
+    icon: Users,
+    isActive: true,
+    items: [{ title: "Contacts", url: "/contacts" }],
+  },
+  {
     title: "Applications",
     url: "#",
     icon: SquareTerminal,
-    isActive: true,
+    isActive: false,
     items: [{ title: "RIB Checks", url: "/rib-checks" }],
   },
 ];

@@ -823,10 +823,10 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
             url.includes("/api/v1/workspaces/contacts") &&
             options?.method === "POST"
           ) {
-            const body = JSON.parse(options.body as string);
+            const body = (options as { data?: { data?: unknown } }).data;
             // Response structure: { data: { id, data }, meta }
             return Promise.resolve({
-              data: { id: 999, data: body.data },
+              data: { id: 999, data: body?.data },
               meta: { created: true },
             });
           }

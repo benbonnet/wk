@@ -6,7 +6,20 @@ module Core
       include Alba::Resource
       include Typelizer::DSL
 
-      attributes :id, :data, :workspace_id, :created_by_id, :updated_by_id, :schema_slug, :tool_slug
+      attributes :id, :workspace_id, :created_by_id, :updated_by_id, :schema_slug, :tool_slug
+
+      # Merge relationships into data as *_attributes for form consumption
+      attribute :data do |item|
+        base_data = item.data || {}
+        relationships = load_relationships(item)
+
+        # Add relationships as *_attributes
+        relationships.each do |rel_name, rel_data|
+          base_data["#{rel_name}_attributes"] = rel_data
+        end
+
+        base_data
+      end
 
       attribute :created_at do |item|
         item.created_at&.iso8601
@@ -18,11 +31,6 @@ module Core
 
       attribute :deleted_at do |item|
         item.deleted_at&.iso8601
-      end
-
-      # Include relationships based on schema definition
-      attribute :relationships do |item|
-        load_relationships(item)
       end
 
       private

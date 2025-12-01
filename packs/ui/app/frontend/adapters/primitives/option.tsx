@@ -1,8 +1,9 @@
+import { useContext } from "react";
 import { DropdownMenuItem } from "@ui/components/dropdown-menu";
 import * as Icons from "lucide-react";
 import { cn } from "@ui/lib/utils";
 import { useTranslate, useServices } from "@ui/lib/ui-renderer/provider";
-import { useDrawer } from "../custom/view";
+import { DrawerContext } from "../custom/view";
 import type { OptionProps } from "@ui/lib/ui-renderer/registry";
 
 export function Option({
@@ -18,7 +19,9 @@ export function Option({
 }: OptionProps) {
   const t = useTranslate();
   const services = useServices();
-  const { openDrawer } = useDrawer();
+  // Safe access - returns null if outside View context
+  const drawerContext = useContext(DrawerContext);
+  const openDrawer = drawerContext?.openDrawer;
 
   const IconComponent = icon
     ? (Icons as Record<string, React.ComponentType<{ className?: string }>>)[
@@ -32,7 +35,7 @@ export function Option({
       if (!confirmed) return;
     }
 
-    if (opens) {
+    if (opens && openDrawer) {
       openDrawer(opens, data);
     } else if (href) {
       const resolvedHref = href.replace(/:(\w+)/g, (_, key) =>

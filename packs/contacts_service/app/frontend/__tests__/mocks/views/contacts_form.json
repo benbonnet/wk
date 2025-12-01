@@ -5,6 +5,7 @@
       "basic_info": "Basic Information",
       "professional_info": "Professional Information",
       "personal_info": "Personal Information",
+      "contact_info": "Contact Information",
       "first_name_placeholder": "Enter first name",
       "last_name_placeholder": "Enter last name",
       "company_placeholder": "Enter company",
@@ -14,18 +15,30 @@
       "spouse": "Spouse",
       "addresses": "Addresses",
       "add_address": "Add Address",
-      "remove_address": "Remove",
+      "emails": "Emails",
+      "add_email": "Add Email",
+      "phones": "Phones",
+      "add_phone": "Add Phone",
+      "remove": "Remove",
       "label": "Label",
       "address_line_1": "Address Line 1",
       "city": "City",
       "postal_code": "Postal Code",
-      "country": "Country"
+      "country": "Country",
+      "email_address": "Email Address",
+      "phone_number": "Phone Number",
+      "is_primary": "Primary",
+      "male": "Male",
+      "female": "Female",
+      "other": "Other",
+      "prefer_not_to_say": "Prefer not to say"
     },
     "fr": {
       "basic_info": "Informations de Base",
       "professional_info": "Informations Professionnelles",
       "personal_info": "Informations Personnelles",
-      "first_name_placeholder": "Entrez le prenom",
+      "contact_info": "Coordonnées",
+      "first_name_placeholder": "Entrez le prénom",
       "last_name_placeholder": "Entrez le nom",
       "company_placeholder": "Entrez l'entreprise",
       "job_title_placeholder": "Entrez le poste",
@@ -34,12 +47,23 @@
       "spouse": "Conjoint(e)",
       "addresses": "Adresses",
       "add_address": "Ajouter une adresse",
-      "remove_address": "Supprimer",
+      "emails": "Emails",
+      "add_email": "Ajouter un email",
+      "phones": "Téléphones",
+      "add_phone": "Ajouter un téléphone",
+      "remove": "Supprimer",
       "label": "Libellé",
       "address_line_1": "Ligne d'adresse 1",
       "city": "Ville",
       "postal_code": "Code postal",
-      "country": "Pays"
+      "country": "Pays",
+      "email_address": "Adresse Email",
+      "phone_number": "Numéro de Téléphone",
+      "is_primary": "Principal",
+      "male": "Homme",
+      "female": "Femme",
+      "other": "Autre",
+      "prefer_not_to_say": "Ne souhaite pas préciser"
     }
   },
   "elements": [
@@ -64,16 +88,60 @@
                   "name": "last_name",
                   "label": "last_name",
                   "placeholder": "last_name_placeholder"
+                }
+              ]
+            },
+            {
+              "type": "GROUP",
+              "label": "contact_info",
+              "elements": [
+                {
+                  "type": "FORM_ARRAY",
+                  "name": "emails_attributes",
+                  "template": [
+                    {
+                      "type": "INPUT_TEXT",
+                      "name": "address",
+                      "label": "email_address"
+                    },
+                    {
+                      "type": "INPUT_TEXT",
+                      "name": "label",
+                      "label": "label"
+                    },
+                    {
+                      "type": "INPUT_CHECKBOX",
+                      "name": "is_primary",
+                      "label": "is_primary"
+                    }
+                  ],
+                  "addLabel": "add_email",
+                  "removeLabel": "remove",
+                  "label": "emails"
                 },
                 {
-                  "type": "INPUT_TEXT",
-                  "name": "email",
-                  "label": "email"
-                },
-                {
-                  "type": "INPUT_TEXT",
-                  "name": "phone",
-                  "label": "phone"
+                  "type": "FORM_ARRAY",
+                  "name": "phones_attributes",
+                  "template": [
+                    {
+                      "type": "INPUT_TEXT",
+                      "name": "number",
+                      "label": "phone_number"
+                    },
+                    {
+                      "type": "INPUT_TEXT",
+                      "name": "label",
+                      "label": "label"
+                    },
+                    {
+                      "type": "INPUT_CHECKBOX",
+                      "name": "is_primary",
+                      "label": "is_primary"
+                    }
+                  ],
+                  "addLabel": "add_phone",
+                  "removeLabel": "remove",
+                  "label": "phones"
                 }
               ]
             },
@@ -131,6 +199,45 @@
             },
             {
               "type": "GROUP",
+              "label": "addresses",
+              "elements": [
+                {
+                  "type": "FORM_ARRAY",
+                  "name": "addresses_attributes",
+                  "template": [
+                    {
+                      "type": "INPUT_TEXT",
+                      "name": "label",
+                      "label": "label"
+                    },
+                    {
+                      "type": "INPUT_TEXT",
+                      "name": "address_line_1",
+                      "label": "address_line_1"
+                    },
+                    {
+                      "type": "INPUT_TEXT",
+                      "name": "city",
+                      "label": "city"
+                    },
+                    {
+                      "type": "INPUT_TEXT",
+                      "name": "postal_code",
+                      "label": "postal_code"
+                    },
+                    {
+                      "type": "INPUT_TEXT",
+                      "name": "country",
+                      "label": "country"
+                    }
+                  ],
+                  "addLabel": "add_address",
+                  "removeLabel": "remove"
+                }
+              ]
+            },
+            {
+              "type": "GROUP",
               "name": "spouse_attributes",
               "label": "spouse",
               "elements": [
@@ -143,40 +250,6 @@
                   "type": "INPUT_TEXT",
                   "name": "spouse_attributes.last_name",
                   "label": "last_name"
-                }
-              ]
-            },
-            {
-              "type": "FORM_ARRAY",
-              "name": "addresses_attributes",
-              "label": "addresses",
-              "addLabel": "add_address",
-              "removeLabel": "remove_address",
-              "template": [
-                {
-                  "type": "INPUT_TEXT",
-                  "name": "label",
-                  "label": "label"
-                },
-                {
-                  "type": "INPUT_TEXT",
-                  "name": "address_line_1",
-                  "label": "address_line_1"
-                },
-                {
-                  "type": "INPUT_TEXT",
-                  "name": "city",
-                  "label": "city"
-                },
-                {
-                  "type": "INPUT_TEXT",
-                  "name": "postal_code",
-                  "label": "postal_code"
-                },
-                {
-                  "type": "INPUT_TEXT",
-                  "name": "country",
-                  "label": "country"
                 }
               ]
             },
@@ -229,18 +302,6 @@
   ],
   "url": "/api/v1/workspaces/contacts",
   "api": {
-    "add_relationship": {
-      "method": "POST",
-      "path": ":id/relationships"
-    },
-    "create": {
-      "method": "POST",
-      "path": ""
-    },
-    "destroy": {
-      "method": "DELETE",
-      "path": ":id"
-    },
     "index": {
       "method": "GET",
       "path": ""
@@ -249,9 +310,21 @@
       "method": "GET",
       "path": ":id"
     },
+    "create": {
+      "method": "POST",
+      "path": ""
+    },
     "update": {
       "method": "PUT",
       "path": ":id"
+    },
+    "destroy": {
+      "method": "DELETE",
+      "path": ":id"
+    },
+    "add_relationship": {
+      "method": "POST",
+      "path": ":id/relationships"
     }
   }
 }

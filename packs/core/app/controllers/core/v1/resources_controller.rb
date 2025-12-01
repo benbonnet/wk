@@ -81,7 +81,10 @@ module Core
 
         def tool_params
           permitted = Tools::RailsParameters.permit_structure(@tool_class)
-          params.permit(*permitted).to_h.deep_symbolize_keys
+          # Also permit routing params to silence warnings (they're used in before_actions)
+          params.permit(:namespace, :feature, :action_name, *permitted).to_h
+            .except("namespace", "feature", "action_name")
+            .deep_symbolize_keys
         end
     end
   end

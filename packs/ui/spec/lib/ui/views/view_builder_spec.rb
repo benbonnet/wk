@@ -76,7 +76,8 @@ RSpec.describe Ui::Views::ViewBuilder do
 
       expect(builder.elements.first).to include(
         type: "FORM_ARRAY",
-        name: "tags",
+        name: "tags_attributes",
+        label: "Tags",
         template: have_attributes(length: 1)
       )
     end

@@ -1,4 +1,4 @@
-import { UIProvider } from "@ui/lib";
+import { UIProvider, DEFAULT_LOCALE } from "@ui/lib";
 import type { UIServices } from "@ui/lib";
 import { useNavigate } from "react-router";
 import axios from "axios";
@@ -12,7 +12,7 @@ interface AppUIProviderProps {
 export function AppUIProvider({
   children,
   translations,
-  locale = "en",
+  locale = DEFAULT_LOCALE,
 }: AppUIProviderProps) {
   const navigate = useNavigate();
 

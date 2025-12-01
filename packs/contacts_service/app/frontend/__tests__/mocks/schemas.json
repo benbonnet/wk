@@ -18,13 +18,6 @@
             "description": "Last name",
             "maxLength": 255
           },
-          "email": {
-            "type": "string",
-            "format": "email"
-          },
-          "phone": {
-            "type": "string"
-          },
           "company": {
             "type": "string"
           },
@@ -113,24 +106,24 @@
       "en": {
         "first_name": "First Name",
         "last_name": "Last Name",
-        "email": "Email Address",
-        "phone": "Phone Number",
         "company": "Company",
         "job_title": "Job Title",
         "spouse": "Spouse",
         "children": "Children",
-        "addresses": "Addresses"
+        "addresses": "Addresses",
+        "emails": "Emails",
+        "phones": "Phones"
       },
       "fr": {
         "first_name": "Prénom",
         "last_name": "Nom",
-        "email": "Adresse e-mail",
-        "phone": "Numéro de téléphone",
         "company": "Entreprise",
         "job_title": "Poste",
         "spouse": "Conjoint(e)",
         "children": "Enfants",
-        "addresses": "Adresses"
+        "addresses": "Adresses",
+        "emails": "Emails",
+        "phones": "Téléphones"
       }
     }
   }

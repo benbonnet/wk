@@ -5,11 +5,15 @@ module Core
     class Registry
       class << self
         def all
-          @all ||= Set.new
+          @all ||= []
+        end
+
+        def clear!
+          @all = []
         end
 
         def register(schema_class)
-          all.add(schema_class)
+          all << schema_class unless all.include?(schema_class)
         end
 
         def find(slug)

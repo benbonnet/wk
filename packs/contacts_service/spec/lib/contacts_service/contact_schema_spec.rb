@@ -22,11 +22,6 @@ RSpec.describe ContactsService::ContactSchema do
       expect(properties[:last_name]).to include(type: "string", maxLength: 255)
     end
 
-    it "has email with format" do
-      expect(properties[:email]).to include(format: "email")
-    end
-
-    it { expect(properties).to have_key(:phone) }
     it { expect(properties).to have_key(:company) }
     it { expect(properties).to have_key(:job_title) }
 
@@ -115,8 +110,6 @@ RSpec.describe ContactsService::ContactSchema do
       expect(translations[:en]).to include(
         first_name: "First Name",
         last_name: "Last Name",
-        email: "Email Address",
-        phone: "Phone Number",
         company: "Company",
         job_title: "Job Title"
       )
@@ -127,7 +120,7 @@ RSpec.describe ContactsService::ContactSchema do
     end
 
     it "includes field translations in french" do
-      expect(translations[:fr]).to include(first_name: "Prénom", last_name: "Nom", email: "Adresse e-mail")
+      expect(translations[:fr]).to include(first_name: "Prénom", last_name: "Nom", company: "Entreprise")
     end
 
     it "includes relationship translations in french" do

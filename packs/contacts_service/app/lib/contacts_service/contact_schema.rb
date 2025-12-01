@@ -8,8 +8,6 @@ module ContactsService
     # Basic fields
     string :first_name, description: "First name", max_length: 255
     string :last_name, description: "Last name", max_length: 255
-    string :email, format: "email", required: false
-    string :phone, required: false
     string :company, required: false
     string :job_title, required: false
     string :gender, enum: %w[male female other prefer_not_to_say], required: false
@@ -35,24 +33,24 @@ module ContactsService
       en: {
         first_name: "First Name",
         last_name: "Last Name",
-        email: "Email Address",
-        phone: "Phone Number",
         company: "Company",
         job_title: "Job Title",
         spouse: "Spouse",
         children: "Children",
-        addresses: "Addresses"
+        addresses: "Addresses",
+        emails: "Emails",
+        phones: "Phones"
       },
       fr: {
         first_name: "Prénom",
         last_name: "Nom",
-        email: "Adresse e-mail",
-        phone: "Numéro de téléphone",
         company: "Entreprise",
         job_title: "Poste",
         spouse: "Conjoint(e)",
         children: "Enfants",
-        addresses: "Adresses"
+        addresses: "Adresses",
+        emails: "Emails",
+        phones: "Téléphones"
       }
     )
   end

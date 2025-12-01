@@ -1,0 +1,57 @@
+[
+  {
+    "namespace": "workspaces",
+    "slug": "rib_checks",
+    "schema": "rib_request",
+    "tools": [
+      {
+        "name": "Index",
+        "route": {
+          "method": "get",
+          "scope": "collection",
+          "action": null
+        }
+      },
+      {
+        "name": "Show",
+        "route": {
+          "method": "get",
+          "scope": "member",
+          "action": null
+        }
+      },
+      {
+        "name": "Create",
+        "route": {
+          "method": "post",
+          "scope": "collection",
+          "action": null
+        }
+      },
+      {
+        "name": "Update",
+        "route": {
+          "method": "put",
+          "scope": "member",
+          "action": null
+        }
+      },
+      {
+        "name": "Destroy",
+        "route": {
+          "method": "delete",
+          "scope": "member",
+          "action": null
+        }
+      },
+      {
+        "name": "Cancel",
+        "route": {
+          "method": "post",
+          "scope": "member",
+          "action": "cancel"
+        }
+      }
+    ]
+  }
+]

@@ -1,7 +1,8 @@
+import { useContext } from "react";
 import { Button } from "@ui/components/button";
 import * as Icons from "lucide-react";
 import { useTranslate, useServices } from "@ui/lib/ui-renderer/provider";
-import { useDrawer } from "../custom/view";
+import { DrawerContext } from "../custom/view";
 import type { LinkProps } from "@ui/lib/ui-renderer/registry";
 
 const variantMap = {
@@ -25,7 +26,9 @@ export function Link({
 }: LinkProps) {
   const t = useTranslate();
   const services = useServices();
-  const { openDrawer } = useDrawer();
+  // Safe access - returns null if outside View context
+  const drawerContext = useContext(DrawerContext);
+  const openDrawer = drawerContext?.openDrawer;
 
   const IconComponent = icon
     ? (Icons as Record<string, React.ComponentType<{ className?: string }>>)[
@@ -39,7 +42,7 @@ export function Link({
       if (!confirmed) return;
     }
 
-    if (opens) {
+    if (opens && openDrawer) {
       openDrawer(opens, data);
     } else if (href) {
       const resolvedHref = href.replace(/:(\w+)/g, (_, key) =>

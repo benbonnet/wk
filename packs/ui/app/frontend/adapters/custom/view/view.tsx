@@ -47,6 +47,12 @@ export function useDrawer() {
   return ctx;
 }
 
+/** Safe version that returns null when outside View context */
+export function useDrawerData(): Record<string, unknown> | null {
+  const ctx = useContext(DrawerContext);
+  return ctx?.drawerData ?? null;
+}
+
 export function useViewConfig() {
   const ctx = useContext(ViewContext);
   if (!ctx) throw new Error("useViewConfig must be used within View");
@@ -202,11 +208,7 @@ export function View({
                     <div className="flex-1 py-4">
                       {drawerConfig.elements?.map(
                         (element: UISchema, index: number) => (
-                          <DynamicRenderer
-                            key={index}
-                            schema={element}
-                            data={drawerData || undefined}
-                          />
+                          <DynamicRenderer key={index} schema={element} />
                         ),
                       )}
                     </div>

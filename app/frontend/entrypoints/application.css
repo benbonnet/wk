@@ -122,5 +122,10 @@
   body {
     @apply bg-background text-foreground;
   }
-}
 
+  button,
+  a,
+  [role="menuitem"] {
+    @apply !cursor-pointer;
+  }
+}

@@ -11,6 +11,7 @@ export {
   useServices,
   useTranslate,
   useLocale,
+  DEFAULT_LOCALE,
 } from "./provider";
 
 // Renderer

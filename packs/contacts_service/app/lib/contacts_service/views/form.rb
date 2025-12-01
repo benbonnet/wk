@@ -13,6 +13,7 @@ module ContactsService
             basic_info: "Basic Information",
             professional_info: "Professional Information",
             personal_info: "Personal Information",
+            contact_info: "Contact Information",
             first_name_placeholder: "Enter first name",
             last_name_placeholder: "Enter last name",
             company_placeholder: "Enter company",
@@ -22,18 +23,30 @@ module ContactsService
             spouse: "Spouse",
             addresses: "Addresses",
             add_address: "Add Address",
-            remove_address: "Remove",
+            emails: "Emails",
+            add_email: "Add Email",
+            phones: "Phones",
+            add_phone: "Add Phone",
+            remove: "Remove",
             label: "Label",
             address_line_1: "Address Line 1",
             city: "City",
             postal_code: "Postal Code",
-            country: "Country"
+            country: "Country",
+            email_address: "Email Address",
+            phone_number: "Phone Number",
+            is_primary: "Primary",
+            male: "Male",
+            female: "Female",
+            other: "Other",
+            prefer_not_to_say: "Prefer not to say"
           },
           fr: {
             basic_info: "Informations de Base",
             professional_info: "Informations Professionnelles",
             personal_info: "Informations Personnelles",
-            first_name_placeholder: "Entrez le prenom",
+            contact_info: "Coordonnées",
+            first_name_placeholder: "Entrez le prénom",
             last_name_placeholder: "Entrez le nom",
             company_placeholder: "Entrez l'entreprise",
             job_title_placeholder: "Entrez le poste",
@@ -42,12 +55,23 @@ module ContactsService
             spouse: "Conjoint(e)",
             addresses: "Adresses",
             add_address: "Ajouter une adresse",
-            remove_address: "Supprimer",
+            emails: "Emails",
+            add_email: "Ajouter un email",
+            phones: "Téléphones",
+            add_phone: "Ajouter un téléphone",
+            remove: "Supprimer",
             label: "Libellé",
             address_line_1: "Ligne d'adresse 1",
             city: "Ville",
             postal_code: "Code postal",
-            country: "Pays"
+            country: "Pays",
+            email_address: "Adresse Email",
+            phone_number: "Numéro de Téléphone",
+            is_primary: "Principal",
+            male: "Homme",
+            female: "Femme",
+            other: "Autre",
+            prefer_not_to_say: "Ne souhaite pas préciser"
           }
         )
 
@@ -56,8 +80,20 @@ module ContactsService
             group label: "basic_info" do
               field :first_name, type: "INPUT_TEXT", label: "first_name", placeholder: "first_name_placeholder"
               field :last_name, type: "INPUT_TEXT", label: "last_name", placeholder: "last_name_placeholder"
-              field :email, type: "INPUT_TEXT", label: "email"
-              field :phone, type: "INPUT_TEXT", label: "phone"
+            end
+
+            group label: "contact_info" do
+              form_array :emails, label: "emails", add_label: "add_email", remove_label: "remove" do
+                field :address, type: "INPUT_TEXT", label: "email_address"
+                field :label, type: "INPUT_TEXT", label: "label"
+                field :is_primary, type: "INPUT_CHECKBOX", label: "is_primary"
+              end
+
+              form_array :phones, label: "phones", add_label: "add_phone", remove_label: "remove" do
+                field :number, type: "INPUT_TEXT", label: "phone_number"
+                field :label, type: "INPUT_TEXT", label: "label"
+                field :is_primary, type: "INPUT_CHECKBOX", label: "is_primary"
+              end
             end
 
             group label: "professional_info" do
@@ -75,18 +111,20 @@ module ContactsService
               field :date_of_birth, type: "INPUT_DATE", label: "date_of_birth"
             end
 
+            group label: "addresses" do
+              form_array :addresses, add_label: "add_address", remove_label: "remove" do
+                field :label, type: "INPUT_TEXT", label: "label"
+                field :address_line_1, type: "INPUT_TEXT", label: "address_line_1"
+                field :city, type: "INPUT_TEXT", label: "city"
+                field :postal_code, type: "INPUT_TEXT", label: "postal_code"
+                field :country, type: "INPUT_TEXT", label: "country"
+              end
+            end
+
             # Relationships
             relationship(:spouse, label: "spouse") do
               field :first_name, type: "INPUT_TEXT", label: "first_name"
               field :last_name, type: "INPUT_TEXT", label: "last_name"
-            end
-
-            relationship(:addresses, label: "addresses", add_label: "add_address", remove_label: "remove_address") do
-              field :label, type: "INPUT_TEXT", label: "label"
-              field :address_line_1, type: "INPUT_TEXT", label: "address_line_1"
-              field :city, type: "INPUT_TEXT", label: "city"
-              field :postal_code, type: "INPUT_TEXT", label: "postal_code"
-              field :country, type: "INPUT_TEXT", label: "country"
             end
 
             relationship_picker(:children, cardinality: :many, relation_schema: "contact") do |r|

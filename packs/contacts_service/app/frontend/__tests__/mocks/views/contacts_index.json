@@ -15,8 +15,6 @@
       "delete": "Delete",
       "delete_confirm": "Are you sure you want to delete this contact?",
       "created_at": "Created At",
-      "email": "Email",
-      "phone": "Phone",
       "contact_created": "Contact created successfully",
       "contact_create_failed": "Failed to create contact",
       "contact_updated": "Contact updated successfully",
@@ -45,8 +43,6 @@
       "delete": "Supprimer",
       "delete_confirm": "Etes-vous sur de vouloir supprimer ce contact?",
       "created_at": "Cree le",
-      "email": "Email",
-      "phone": "Telephone",
       "contact_created": "Contact cree avec succes",
       "contact_create_failed": "Echec de la creation du contact",
       "contact_updated": "Contact mis a jour avec succes",
@@ -87,16 +83,60 @@
                       "name": "last_name",
                       "label": "last_name",
                       "placeholder": "last_name_placeholder"
+                    }
+                  ]
+                },
+                {
+                  "type": "GROUP",
+                  "label": "contact_info",
+                  "elements": [
+                    {
+                      "type": "FORM_ARRAY",
+                      "name": "emails_attributes",
+                      "template": [
+                        {
+                          "type": "INPUT_TEXT",
+                          "name": "address",
+                          "label": "email_address"
+                        },
+                        {
+                          "type": "INPUT_TEXT",
+                          "name": "label",
+                          "label": "label"
+                        },
+                        {
+                          "type": "INPUT_CHECKBOX",
+                          "name": "is_primary",
+                          "label": "is_primary"
+                        }
+                      ],
+                      "addLabel": "add_email",
+                      "removeLabel": "remove",
+                      "label": "emails"
                     },
                     {
-                      "type": "INPUT_TEXT",
-                      "name": "email",
-                      "label": "email"
-                    },
-                    {
-                      "type": "INPUT_TEXT",
-                      "name": "phone",
-                      "label": "phone"
+                      "type": "FORM_ARRAY",
+                      "name": "phones_attributes",
+                      "template": [
+                        {
+                          "type": "INPUT_TEXT",
+                          "name": "number",
+                          "label": "phone_number"
+                        },
+                        {
+                          "type": "INPUT_TEXT",
+                          "name": "label",
+                          "label": "label"
+                        },
+                        {
+                          "type": "INPUT_CHECKBOX",
+                          "name": "is_primary",
+                          "label": "is_primary"
+                        }
+                      ],
+                      "addLabel": "add_phone",
+                      "removeLabel": "remove",
+                      "label": "phones"
                     }
                   ]
                 },
@@ -154,6 +194,45 @@
                 },
                 {
                   "type": "GROUP",
+                  "label": "addresses",
+                  "elements": [
+                    {
+                      "type": "FORM_ARRAY",
+                      "name": "addresses_attributes",
+                      "template": [
+                        {
+                          "type": "INPUT_TEXT",
+                          "name": "label",
+                          "label": "label"
+                        },
+                        {
+                          "type": "INPUT_TEXT",
+                          "name": "address_line_1",
+                          "label": "address_line_1"
+                        },
+                        {
+                          "type": "INPUT_TEXT",
+                          "name": "city",
+                          "label": "city"
+                        },
+                        {
+                          "type": "INPUT_TEXT",
+                          "name": "postal_code",
+                          "label": "postal_code"
+                        },
+                        {
+                          "type": "INPUT_TEXT",
+                          "name": "country",
+                          "label": "country"
+                        }
+                      ],
+                      "addLabel": "add_address",
+                      "removeLabel": "remove"
+                    }
+                  ]
+                },
+                {
+                  "type": "GROUP",
                   "name": "spouse_attributes",
                   "label": "spouse",
                   "elements": [
@@ -166,40 +245,6 @@
                       "type": "INPUT_TEXT",
                       "name": "spouse_attributes.last_name",
                       "label": "last_name"
-                    }
-                  ]
-                },
-                {
-                  "type": "FORM_ARRAY",
-                  "name": "addresses_attributes",
-                  "label": "addresses",
-                  "addLabel": "add_address",
-                  "removeLabel": "remove_address",
-                  "template": [
-                    {
-                      "type": "INPUT_TEXT",
-                      "name": "label",
-                      "label": "label"
-                    },
-                    {
-                      "type": "INPUT_TEXT",
-                      "name": "address_line_1",
-                      "label": "address_line_1"
-                    },
-                    {
-                      "type": "INPUT_TEXT",
-                      "name": "city",
-                      "label": "city"
-                    },
-                    {
-                      "type": "INPUT_TEXT",
-                      "name": "postal_code",
-                      "label": "postal_code"
-                    },
-                    {
-                      "type": "INPUT_TEXT",
-                      "name": "country",
-                      "label": "country"
                     }
                   ]
                 },
@@ -282,16 +327,60 @@
                       "name": "last_name",
                       "label": "last_name",
                       "placeholder": "last_name_placeholder"
+                    }
+                  ]
+                },
+                {
+                  "type": "GROUP",
+                  "label": "contact_info",
+                  "elements": [
+                    {
+                      "type": "FORM_ARRAY",
+                      "name": "emails_attributes",
+                      "template": [
+                        {
+                          "type": "INPUT_TEXT",
+                          "name": "address",
+                          "label": "email_address"
+                        },
+                        {
+                          "type": "INPUT_TEXT",
+                          "name": "label",
+                          "label": "label"
+                        },
+                        {
+                          "type": "INPUT_CHECKBOX",
+                          "name": "is_primary",
+                          "label": "is_primary"
+                        }
+                      ],
+                      "addLabel": "add_email",
+                      "removeLabel": "remove",
+                      "label": "emails"
                     },
                     {
-                      "type": "INPUT_TEXT",
-                      "name": "email",
-                      "label": "email"
-                    },
-                    {
-                      "type": "INPUT_TEXT",
-                      "name": "phone",
-                      "label": "phone"
+                      "type": "FORM_ARRAY",
+                      "name": "phones_attributes",
+                      "template": [
+                        {
+                          "type": "INPUT_TEXT",
+                          "name": "number",
+                          "label": "phone_number"
+                        },
+                        {
+                          "type": "INPUT_TEXT",
+                          "name": "label",
+                          "label": "label"
+                        },
+                        {
+                          "type": "INPUT_CHECKBOX",
+                          "name": "is_primary",
+                          "label": "is_primary"
+                        }
+                      ],
+                      "addLabel": "add_phone",
+                      "removeLabel": "remove",
+                      "label": "phones"
                     }
                   ]
                 },
@@ -349,6 +438,45 @@
                 },
                 {
                   "type": "GROUP",
+                  "label": "addresses",
+                  "elements": [
+                    {
+                      "type": "FORM_ARRAY",
+                      "name": "addresses_attributes",
+                      "template": [
+                        {
+                          "type": "INPUT_TEXT",
+                          "name": "label",
+                          "label": "label"
+                        },
+                        {
+                          "type": "INPUT_TEXT",
+                          "name": "address_line_1",
+                          "label": "address_line_1"
+                        },
+                        {
+                          "type": "INPUT_TEXT",
+                          "name": "city",
+                          "label": "city"
+                        },
+                        {
+                          "type": "INPUT_TEXT",
+                          "name": "postal_code",
+                          "label": "postal_code"
+                        },
+                        {
+                          "type": "INPUT_TEXT",
+                          "name": "country",
+                          "label": "country"
+                        }
+                      ],
+                      "addLabel": "add_address",
+                      "removeLabel": "remove"
+                    }
+                  ]
+                },
+                {
+                  "type": "GROUP",
                   "name": "spouse_attributes",
                   "label": "spouse",
                   "elements": [
@@ -361,40 +489,6 @@
                       "type": "INPUT_TEXT",
                       "name": "spouse_attributes.last_name",
                       "label": "last_name"
-                    }
-                  ]
-                },
-                {
-                  "type": "FORM_ARRAY",
-                  "name": "addresses_attributes",
-                  "label": "addresses",
-                  "addLabel": "add_address",
-                  "removeLabel": "remove_address",
-                  "template": [
-                    {
-                      "type": "INPUT_TEXT",
-                      "name": "label",
-                      "label": "label"
-                    },
-                    {
-                      "type": "INPUT_TEXT",
-                      "name": "address_line_1",
-                      "label": "address_line_1"
-                    },
-                    {
-                      "type": "INPUT_TEXT",
-                      "name": "city",
-                      "label": "city"
-                    },
-                    {
-                      "type": "INPUT_TEXT",
-                      "name": "postal_code",
-                      "label": "postal_code"
-                    },
-                    {
-                      "type": "INPUT_TEXT",
-                      "name": "country",
-                      "label": "country"
                     }
                   ]
                 },
@@ -470,13 +564,59 @@
                 },
                 {
                   "type": "DISPLAY_TEXT",
-                  "name": "middle_name",
-                  "label": "middle_name"
-                },
-                {
-                  "type": "DISPLAY_TEXT",
                   "name": "last_name",
                   "label": "last_name"
+                }
+              ],
+              "className": "space-y-4"
+            },
+            {
+              "type": "GROUP",
+              "label": "contact_info",
+              "elements": [
+                {
+                  "type": "DISPLAY_ARRAY",
+                  "name": "emails",
+                  "template": [
+                    {
+                      "type": "DISPLAY_TEXT",
+                      "name": "address",
+                      "label": "email_address"
+                    },
+                    {
+                      "type": "DISPLAY_TEXT",
+                      "name": "label",
+                      "label": "label"
+                    },
+                    {
+                      "type": "DISPLAY_BOOLEAN",
+                      "name": "is_primary",
+                      "label": "is_primary"
+                    }
+                  ],
+                  "label": "emails_section"
+                },
+                {
+                  "type": "DISPLAY_ARRAY",
+                  "name": "phones",
+                  "template": [
+                    {
+                      "type": "DISPLAY_TEXT",
+                      "name": "number",
+                      "label": "phone_number"
+                    },
+                    {
+                      "type": "DISPLAY_TEXT",
+                      "name": "label",
+                      "label": "label"
+                    },
+                    {
+                      "type": "DISPLAY_BOOLEAN",
+                      "name": "is_primary",
+                      "label": "is_primary"
+                    }
+                  ],
+                  "label": "phones_section"
                 }
               ],
               "className": "space-y-4"
@@ -529,16 +669,6 @@
                   "type": "DISPLAY_DATE",
                   "name": "date_of_birth",
                   "label": "date_of_birth"
-                },
-                {
-                  "type": "DISPLAY_TEXT",
-                  "name": "place_of_birth",
-                  "label": "place_of_birth"
-                },
-                {
-                  "type": "DISPLAY_TEXT",
-                  "name": "nationality",
-                  "label": "nationality"
                 }
               ],
               "className": "space-y-4"
@@ -559,6 +689,11 @@
               "type": "DISPLAY_ARRAY",
               "name": "addresses",
               "template": [
+                {
+                  "type": "DISPLAY_TEXT",
+                  "name": "label",
+                  "label": "label"
+                },
                 {
                   "type": "DISPLAY_TEXT",
                   "name": "address_line_1",
@@ -637,17 +772,6 @@
                   "type": "DISPLAY_TEXT",
                   "label": "last_name",
                   "sortable": true
-                },
-                {
-                  "name": "email",
-                  "type": "DISPLAY_TEXT",
-                  "label": "email",
-                  "sortable": true
-                },
-                {
-                  "name": "phone",
-                  "type": "DISPLAY_TEXT",
-                  "label": "phone"
                 },
                 {
                   "name": "company",
@@ -732,18 +856,6 @@
   ],
   "url": "/api/v1/workspaces/contacts",
   "api": {
-    "add_relationship": {
-      "method": "POST",
-      "path": ":id/relationships"
-    },
-    "create": {
-      "method": "POST",
-      "path": ""
-    },
-    "destroy": {
-      "method": "DELETE",
-      "path": ":id"
-    },
     "index": {
       "method": "GET",
       "path": ""
@@ -752,9 +864,21 @@
       "method": "GET",
       "path": ":id"
     },
+    "create": {
+      "method": "POST",
+      "path": ""
+    },
     "update": {
       "method": "PUT",
       "path": ":id"
+    },
+    "destroy": {
+      "method": "DELETE",
+      "path": ":id"
+    },
+    "add_relationship": {
+      "method": "POST",
+      "path": ":id/relationships"
     }
   }
 }

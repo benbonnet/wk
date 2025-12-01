@@ -264,7 +264,7 @@ module Ui
 
         @elements << {
           type: "FORM_ARRAY",
-          name: name.to_s,
+          name: "#{name}_attributes",
           template: nested,
           addLabel: add_label,
           removeLabel: remove_label,

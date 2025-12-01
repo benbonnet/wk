@@ -128,7 +128,7 @@ describe("Layout", () => {
       });
 
       const sidebar = screen.getByRole("navigation");
-      expect(within(sidebar).getByText("RIB Checks")).toBeInTheDocument();
+      expect(within(sidebar).getByText("Contacts")).toBeInTheDocument();
     });
 
     it("renders menu item links with correct URLs", async () => {
@@ -138,8 +138,8 @@ describe("Layout", () => {
         expect(screen.getByRole("navigation")).toBeInTheDocument();
       });
 
-      const link = screen.getByRole("link", { name: /RIB Checks/i });
-      expect(link).toHaveAttribute("href", "/app/rib-checks");
+      const link = screen.getByRole("link", { name: /Contacts/i });
+      expect(link).toHaveAttribute("href", "/contacts");
     });
 
     it("expands collapsible menu by default when isActive", async () => {
@@ -149,8 +149,8 @@ describe("Layout", () => {
         expect(screen.getByRole("navigation")).toBeInTheDocument();
       });
 
-      // RIB Checks should be visible (parent is isActive: true)
-      expect(screen.getByText("RIB Checks")).toBeVisible();
+      // Contacts should be visible (parent CRM is isActive: true)
+      expect(screen.getByText("Contacts")).toBeVisible();
     });
   });
 

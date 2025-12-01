@@ -53,7 +53,7 @@ RSpec.describe Core::HasSchemaValidation, type: :model do
           tool_slug: "create",
           workspace:,
           created_by: user,
-          data: { "first_name" => "John", "last_name" => "Doe", "email" => "john@example.com" }
+          data: { "first_name" => "John", "last_name" => "Doe", "company" => "Acme Corp" }
         )
 
         expect(item).to be_valid

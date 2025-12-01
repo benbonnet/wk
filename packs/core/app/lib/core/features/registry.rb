@@ -10,6 +10,10 @@ module Core
           @all ||= {}
         end
 
+        def clear!
+          @all = {}
+        end
+
         def register(namespace:, feature:, schema: nil, tools: [], views: [])
           all[namespace.to_sym] ||= {}
           all[namespace.to_sym][feature.to_sym] = {

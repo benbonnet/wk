@@ -5,30 +5,6 @@
     "schema": "contact",
     "tools": [
       {
-        "name": "AddRelationship",
-        "route": {
-          "method": "post",
-          "scope": "member",
-          "action": "relationships"
-        }
-      },
-      {
-        "name": "Create",
-        "route": {
-          "method": "post",
-          "scope": "collection",
-          "action": null
-        }
-      },
-      {
-        "name": "Destroy",
-        "route": {
-          "method": "delete",
-          "scope": "member",
-          "action": null
-        }
-      },
-      {
         "name": "Index",
         "route": {
           "method": "get",
@@ -45,11 +21,35 @@
         }
       },
       {
+        "name": "Create",
+        "route": {
+          "method": "post",
+          "scope": "collection",
+          "action": null
+        }
+      },
+      {
         "name": "Update",
         "route": {
           "method": "put",
           "scope": "member",
           "action": null
+        }
+      },
+      {
+        "name": "Destroy",
+        "route": {
+          "method": "delete",
+          "scope": "member",
+          "action": null
+        }
+      },
+      {
+        "name": "AddRelationship",
+        "route": {
+          "method": "post",
+          "scope": "member",
+          "action": "relationships"
         }
       }
     ]

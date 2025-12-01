@@ -5,7 +5,7 @@
     "schema": "activity",
     "tools": [
       {
-        "name": "Create",
+        "name": "Index",
         "route": {
           "method": "get",
           "scope": "collection",
@@ -13,7 +13,7 @@
         }
       },
       {
-        "name": "Index",
+        "name": "Create",
         "route": {
           "method": "get",
           "scope": "collection",

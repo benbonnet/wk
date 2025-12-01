@@ -23,8 +23,6 @@ module ContactsService
             delete: "Delete",
             delete_confirm: "Are you sure you want to delete this contact?",
             created_at: "Created At",
-            email: "Email",
-            phone: "Phone",
             contact_created: "Contact created successfully",
             contact_create_failed: "Failed to create contact",
             contact_updated: "Contact updated successfully",
@@ -53,8 +51,6 @@ module ContactsService
             delete: "Supprimer",
             delete_confirm: "Etes-vous sur de vouloir supprimer ce contact?",
             created_at: "Cree le",
-            email: "Email",
-            phone: "Telephone",
             contact_created: "Contact cree avec succes",
             contact_create_failed: "Echec de la creation du contact",
             contact_updated: "Contact mis a jour avec succes",
@@ -118,8 +114,6 @@ module ContactsService
               ) do |t|
                 t.column :first_name, type: "DISPLAY_TEXT", label: "first_name", sortable: true
                 t.column :last_name, type: "DISPLAY_TEXT", label: "last_name", sortable: true
-                t.column :email, type: "DISPLAY_TEXT", label: "email", sortable: true
-                t.column :phone, type: "DISPLAY_TEXT", label: "phone"
                 t.column :company, type: "DISPLAY_TEXT", label: "company"
                 t.column :job_title, type: "DISPLAY_TEXT", label: "job_title"
                 t.column :created_at, type: "DISPLAY_DATE", label: "created_at"

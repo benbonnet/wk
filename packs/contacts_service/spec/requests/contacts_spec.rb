@@ -246,6 +246,57 @@ RSpec.describe "Contacts API", type: :request do
     end
   end
 
+  path "/workspaces/contacts/{id}" do
+    describe "serializer includes relationships as *_attributes" do
+      let(:contact) do
+        create(:item,
+          workspace:,
+          schema_slug: "contact",
+          tool_slug: "create",
+          data: { "first_name" => "Jane", "last_name" => "Smith", "company" => "Acme" },
+          created_by: user
+        )
+      end
+      let(:address1) do
+        create(:item,
+          workspace:,
+          schema_slug: "address",
+          tool_slug: "nested_create",
+          data: { "address_line_1" => "123 Main St", "city" => "Paris" },
+          created_by: user
+        )
+      end
+      let(:address2) do
+        create(:item,
+          workspace:,
+          schema_slug: "address",
+          tool_slug: "nested_create",
+          data: { "address_line_1" => "456 Oak Ave", "city" => "Lyon" },
+          created_by: user
+        )
+      end
+
+      before do
+        # Create relationships
+        ItemRelationship.create!(source_item: contact, target_item: address1, relationship_type: "addresses")
+        ItemRelationship.create!(source_item: contact, target_item: address2, relationship_type: "addresses")
+      end
+
+      it "returns addresses_attributes in data" do
+        auth = "Bearer #{Auth::JwtService.encode({ user_id: user.id, workspace_id: workspace.id })}"
+        get "/api/v1/workspaces/contacts/#{contact.id}", headers: { "Authorization" => auth }
+
+        expect(response).to have_http_status(:ok)
+        body = response.parsed_body
+
+        expect(body["data"]["data"]).to have_key("addresses_attributes")
+        addresses = body["data"]["data"]["addresses_attributes"]
+        expect(addresses.size).to eq(2)
+        expect(addresses.map { |a| a["city"] }).to contain_exactly("Paris", "Lyon")
+      end
+    end
+  end
+
   path "/workspaces/contacts/{id}/relationships" do
     parameter name: :id, in: :path, type: :integer, required: true
 

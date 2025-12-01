@@ -232,7 +232,7 @@ describe("Phase 12: Full Page Integration (contacts_index)", () => {
       await waitFor(() => {
         expect(screen.getByText("John")).toBeInTheDocument();
         expect(screen.getByText("Doe")).toBeInTheDocument();
-        expect(screen.getByText("john@example.com")).toBeInTheDocument();
+        expect(screen.getByText("Acme Corp")).toBeInTheDocument();
         expect(screen.getByText("Jane")).toBeInTheDocument();
         expect(screen.getByText("Smith")).toBeInTheDocument();
       });
