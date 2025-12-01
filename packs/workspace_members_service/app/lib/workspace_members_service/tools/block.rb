@@ -7,9 +7,8 @@ module WorkspaceMembersService
       schema "workspace_member"
       description "Block or unblock a member"
 
-      param :id, type: :integer, desc: "Member ID", required: true
-
       params do
+        integer :id, required: true
         object :data do
           boolean :blocked, required: true
         end

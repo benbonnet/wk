@@ -7,9 +7,8 @@ module WorkspaceMembersService
       schema "workspace_member"
       description "Update member role"
 
-      param :id, type: :integer, desc: "Member ID", required: true
-
       params do
+        integer :id, required: true
         object :data do
           string :role, required: true
         end

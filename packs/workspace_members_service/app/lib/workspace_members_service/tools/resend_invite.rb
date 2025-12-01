@@ -7,7 +7,9 @@ module WorkspaceMembersService
       schema "workspace_member"
       description "Resend invitation email to pending member"
 
-      param :id, type: :integer, desc: "Member ID", required: true
+      params do
+        integer :id, required: true
+      end
 
       def execute(user_id:, workspace_id:, id:, **)
         workspace_user = WorkspaceUser.find_by!(id:, workspace_id:)
