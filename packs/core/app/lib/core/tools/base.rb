@@ -4,7 +4,6 @@ module Core
   module Tools
     class Base < RubyLLM::Tool
       include Routing
-      include RswagDsl
 
       class << self
         attr_reader :schema_slug, :serializer_name
