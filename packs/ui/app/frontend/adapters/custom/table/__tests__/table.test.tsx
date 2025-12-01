@@ -105,9 +105,8 @@ describe("Table", () => {
         },
         {
           translations: {
-            views: { status_label: "Current Status" },
-            schemas: {},
-            common: {},
+            global: {},
+            views: { en: { status_label: "Current Status" } },
           },
         }
       );
@@ -142,13 +141,14 @@ describe("Table", () => {
         },
         {
           translations: {
+            global: {},
             views: {
-              draft: "Draft",
-              pending: "Pending",
-              completed: "Completed",
+              en: {
+                draft: "Draft",
+                pending: "Pending",
+                completed: "Completed",
+              },
             },
-            schemas: {},
-            common: {},
           },
         }
       );
@@ -173,9 +173,8 @@ describe("Table", () => {
         },
         {
           translations: {
-            views: { draft: "Draft", pending: "Pending" },
-            schemas: {},
-            common: {},
+            global: {},
+            views: { en: { draft: "Draft", pending: "Pending" } },
           },
         }
       );
@@ -198,9 +197,8 @@ describe("Table", () => {
         },
         {
           translations: {
+            global: {},
             views: {},
-            schemas: {},
-            common: {},
           },
         }
       );
@@ -234,12 +232,13 @@ describe("Table", () => {
         },
         {
           translations: {
+            global: {},
             views: {
-              active_status: "Active",
-              inactive_status: "Inactive",
+              en: {
+                active_status: "Active",
+                inactive_status: "Inactive",
+              },
             },
-            schemas: {},
-            common: {},
           },
         }
       );
@@ -274,12 +273,13 @@ describe("Table", () => {
         },
         {
           translations: {
+            global: {},
             views: {
-              type_individual: "Individual Request",
-              type_common: "Common Request",
+              en: {
+                type_individual: "Individual Request",
+                type_common: "Common Request",
+              },
             },
-            schemas: {},
-            common: {},
           },
         }
       );

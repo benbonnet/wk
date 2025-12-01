@@ -167,12 +167,14 @@ describe("Phase 4: Primitive Adapters", () => {
         const services = createMockServices();
 
         renderSchemaInView(
-          { type: "LINK", label: "Delete", href: "/delete", confirm: "Are you sure?" },
+          { type: "LINK", label: "Delete", href: "/delete", confirm: { description: "Are you sure?" } },
           { services }
         );
 
         await user.click(screen.getByRole("button"));
-        expect(services.confirm).toHaveBeenCalledWith("Are you sure?");
+        expect(services.confirm).toHaveBeenCalledWith(expect.objectContaining({
+          description: "Are you sure?",
+        }));
       });
 
       it("does not navigate when confirm is cancelled", async () => {
@@ -182,7 +184,7 @@ describe("Phase 4: Primitive Adapters", () => {
         });
 
         renderSchemaInView(
-          { type: "LINK", label: "Delete", href: "/delete", confirm: "Are you sure?" },
+          { type: "LINK", label: "Delete", href: "/delete", confirm: { description: "Are you sure?" } },
           { services }
         );
 

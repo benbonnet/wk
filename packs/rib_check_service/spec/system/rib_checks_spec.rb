@@ -106,9 +106,22 @@ RSpec.describe "RIB Checks", type: :system do
   end
 
   describe "Create (new drawer)" do
+    before do
+      visit "/app/rib-checks"
+    end
+
     describe "opening drawer" do
-      it "opens drawer when clicking 'New Request'"
-      it "displays drawer title 'New Request'"
+      it "opens drawer when clicking 'New Request'" do
+        click_button "Nouvelle Demande"
+        expect(page).to have_css("[data-testid='drawer-new_drawer']")
+      end
+
+      it "displays drawer title 'Nouvelle Demande'" do
+        click_button "Nouvelle Demande"
+        within("[data-testid='drawer-new_drawer']") do
+          expect(page).to have_content("Nouvelle Demande")
+        end
+      end
     end
 
     describe "form structure" do
