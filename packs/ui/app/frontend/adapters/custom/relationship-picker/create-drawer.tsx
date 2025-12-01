@@ -54,7 +54,7 @@ export const RelationshipCreateDrawer: FC<RelationshipCreateDrawerProps> = ({
     mutationFn: async (formValues: Record<string, unknown>) => {
       const response = await services.fetch(basePath, {
         method: "POST",
-        data: { data: formValues },
+        data: formValues,
       });
       return response;
     },
@@ -63,9 +63,8 @@ export const RelationshipCreateDrawer: FC<RelationshipCreateDrawerProps> = ({
       queryClient.invalidateQueries({
         queryKey: ["relationship-picker", basePath],
       });
-      // Response structure: { data: { id, data: {...} }, meta }
-      const item = response.data;
-      onSuccess({ id: item.id, ...item.data });
+      // Response structure: { data: { id, first_name, ... } } - now flat
+      onSuccess(response.data);
     },
   });
 

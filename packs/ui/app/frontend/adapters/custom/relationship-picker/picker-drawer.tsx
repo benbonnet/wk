@@ -178,17 +178,14 @@ export const RelationshipPickerDrawer: FC<RelationshipPickerDrawerProps> = ({
     setCreateDrawerOpen(false);
   };
 
-  // Handle confirm - return selected items with flattened data
+  // Handle confirm - return selected items (data is now flat)
   const handleConfirm = () => {
     const selected: AttributePayload[] = [];
 
     // Add selected items from fetched data (skip if already in createdItems to avoid duplicates)
     for (const item of data) {
       if (selectedIds.has(item.id) && !createdItems.has(item.id)) {
-        selected.push({
-          id: item.id,
-          ...(item.data as Record<string, unknown>),
-        });
+        selected.push(item);
       }
     }
 
@@ -278,11 +275,7 @@ export const RelationshipPickerDrawer: FC<RelationshipPickerDrawerProps> = ({
                       </TableCell>
                       {columns.map((col) => (
                         <TableCell key={col.name}>
-                          {String(
-                            (item.data as Record<string, unknown>)?.[
-                              col.name
-                            ] ?? "-",
-                          )}
+                          {String(item[col.name] ?? "-")}
                         </TableCell>
                       ))}
                     </TableRow>

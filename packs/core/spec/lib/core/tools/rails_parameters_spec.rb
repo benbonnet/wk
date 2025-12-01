@@ -17,31 +17,26 @@ RSpec.describe Core::Tools::RailsParameters do
         end
       end
 
-      it "includes basic data fields" do
+      it "includes basic data fields at top level (flat structure for schema tools)" do
         structure = described_class.permit_structure(tool_class)
 
+        # Structure is now flat for schema-based tools
         expect(structure).to include(:id)
-        data_hash = structure.find { |item| item.is_a?(Hash) }
-        expect(data_hash).to have_key(:data)
-
-        data_fields = data_hash[:data]
-        expect(data_fields).to include(:first_name)
-        expect(data_fields).to include(:last_name)
-        expect(data_fields).to include(:company)
+        expect(structure).to include(:first_name)
+        expect(structure).to include(:last_name)
+        expect(structure).to include(:company)
       end
 
       it "includes addresses_attributes for has_many relationship" do
         structure = described_class.permit_structure(tool_class)
 
-        data_hash = structure.find { |item| item.is_a?(Hash) }
-        data_fields = data_hash[:data]
-        nested = data_fields.find { |item| item.is_a?(Hash) }
-
-        expect(nested).to have_key(:addresses_attributes)
-        expect(nested[:addresses_attributes]).to include(:id)
-        expect(nested[:addresses_attributes]).to include(:_destroy)
-        expect(nested[:addresses_attributes]).to include(:address_line_1)
-        expect(nested[:addresses_attributes]).to include(:city)
+        # Relationship attributes are at top level as hash entries
+        addresses_entry = structure.find { |item| item.is_a?(Hash) && item.key?(:addresses_attributes) }
+        expect(addresses_entry).to be_present
+        expect(addresses_entry[:addresses_attributes]).to include(:id)
+        expect(addresses_entry[:addresses_attributes]).to include(:_destroy)
+        expect(addresses_entry[:addresses_attributes]).to include(:address_line_1)
+        expect(addresses_entry[:addresses_attributes]).to include(:city)
       end
     end
 
@@ -61,29 +56,25 @@ RSpec.describe Core::Tools::RailsParameters do
       it "includes recipients_attributes for has_many relationship" do
         structure = described_class.permit_structure(tool_class)
 
-        data_hash = structure.find { |item| item.is_a?(Hash) }
-        data_fields = data_hash[:data]
-        nested = data_fields.find { |item| item.is_a?(Hash) }
-
-        expect(nested).to have_key(:recipients_attributes)
-        expect(nested[:recipients_attributes]).to include(:id)
-        expect(nested[:recipients_attributes]).to include(:_destroy)
+        # Relationship attributes are at top level as hash entries
+        recipients_entry = structure.find { |item| item.is_a?(Hash) && item.key?(:recipients_attributes) }
+        expect(recipients_entry).to be_present
+        expect(recipients_entry[:recipients_attributes]).to include(:id)
+        expect(recipients_entry[:recipients_attributes]).to include(:_destroy)
         # Recipients are contacts
-        expect(nested[:recipients_attributes]).to include(:first_name)
-        expect(nested[:recipients_attributes]).to include(:last_name)
-        expect(nested[:recipients_attributes]).to include(:company)
+        expect(recipients_entry[:recipients_attributes]).to include(:first_name)
+        expect(recipients_entry[:recipients_attributes]).to include(:last_name)
+        expect(recipients_entry[:recipients_attributes]).to include(:company)
       end
 
       it "includes documents_attributes for has_many relationship" do
         structure = described_class.permit_structure(tool_class)
 
-        data_hash = structure.find { |item| item.is_a?(Hash) }
-        data_fields = data_hash[:data]
-        nested = data_fields.find { |item| item.is_a?(Hash) }
-
-        expect(nested).to have_key(:documents_attributes)
-        expect(nested[:documents_attributes]).to include(:id)
-        expect(nested[:documents_attributes]).to include(:_destroy)
+        # Relationship attributes are at top level as hash entries
+        documents_entry = structure.find { |item| item.is_a?(Hash) && item.key?(:documents_attributes) }
+        expect(documents_entry).to be_present
+        expect(documents_entry[:documents_attributes]).to include(:id)
+        expect(documents_entry[:documents_attributes]).to include(:_destroy)
       end
     end
 

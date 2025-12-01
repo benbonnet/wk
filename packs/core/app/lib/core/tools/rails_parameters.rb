@@ -12,8 +12,9 @@ module Core
         schema["properties"].keys.map(&:to_sym)
       end
 
-      # Returns the nested structure for strong params permit
-      # e.g., [:id, data: [:first_name, :last_name, :email, recipients_attributes: [...]]]
+      # Returns the structure for strong params permit
+      # For tools with schema: flat structure [:id, :first_name, :last_name, emails_attributes: [...]]
+      # For other tools: nested structure [:id, data: [:first_name, ...]]
       def self.permit_structure(tool_class)
         schema = tool_class.new.params_schema
         return [] unless schema && schema["properties"]
@@ -21,7 +22,43 @@ module Core
         # Get schema class for relationship info
         schema_class = tool_class.respond_to?(:schema_class) ? tool_class.schema_class : nil
 
-        build_permit_structure(schema["properties"], schema_class)
+        # For tools with schema, flatten the data object
+        if schema_class
+          build_flat_permit_structure(schema["properties"], schema_class)
+        else
+          build_permit_structure(schema["properties"], schema_class)
+        end
+      end
+
+      # Build flat permit structure for schema-based tools
+      # Flattens data: {} fields to top-level
+      private_class_method def self.build_flat_permit_structure(properties, schema_class)
+        result = []
+
+        properties.each do |key, prop|
+          key_sym = key.to_sym
+
+          if key == "data" && prop["type"] == "object" && prop["properties"]
+            # Flatten data fields to top-level
+            prop["properties"].each_key do |data_key|
+              result << data_key.to_sym
+            end
+            # Add relationship attributes
+            if schema_class&.respond_to?(:relationships)
+              schema_class.relationships.each do |rel|
+                attr_key = :"#{rel[:name]}_attributes"
+                target_schema = Schema::Registry.find(rel[:target_schema])
+                json_schema = target_schema&.new&.to_json_schema
+                target_fields = json_schema&.dig(:schema, :properties)&.keys&.map(&:to_sym) || []
+                result << { attr_key => [:id, :_destroy] + target_fields }
+              end
+            end
+          elsif prop["type"] != "object"
+            result << key_sym
+          end
+        end
+
+        result
       end
 
       private_class_method def self.build_permit_structure(properties, schema_class = nil)

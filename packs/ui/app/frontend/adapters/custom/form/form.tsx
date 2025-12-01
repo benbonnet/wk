@@ -25,10 +25,8 @@ export function Form({
   const { executeApi } = useViewConfig();
   const { drawerData } = useDrawer();
 
-  // drawerData is { id, data: {...} } structure from table row
-  // Extract the nested data for form values
-  const recordData = drawerData?.data ?? drawerData;
-  const initialData = use_record && recordData ? recordData : defaultValues;
+  // drawerData is now flat: { id, first_name, last_name, ... }
+  const initialData = use_record && drawerData ? drawerData : defaultValues;
 
   // Build Yup validation schema from elements
   const validationSchema = useMemo(() => {
@@ -66,7 +64,7 @@ export function Form({
       await executeApi({
         action: formAction,
         url_parameters: record as Record<string, unknown>,
-        body: { data: values },
+        body: values,
         notification,
       });
 
@@ -100,12 +98,10 @@ interface FormInnerProps {
 function FormInner({ children, className, use_record, drawerData }: FormInnerProps) {
   const { resetForm } = useFormikContext();
 
-  // Reset form when drawer data changes
-  // drawerData is { id, data: {...} } - extract the nested data
+  // Reset form when drawer data changes - drawerData is now flat
   useEffect(() => {
     if (use_record && drawerData) {
-      const formValues = drawerData?.data ?? drawerData;
-      resetForm({ values: formValues });
+      resetForm({ values: drawerData });
     }
   }, [drawerData, use_record, resetForm]);
 

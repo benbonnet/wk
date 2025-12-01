@@ -58,14 +58,9 @@ RSpec.describe "RIB Requests API", type: :request do
       parameter name: :body, in: :body, schema: {
         type: :object,
         properties: {
-          data: {
-            type: :object,
-            properties: {
-              message_body: { type: :string },
-              request_type: { type: :string },
-              status: { type: :string }
-            }
-          }
+          message_body: { type: :string },
+          request_type: { type: :string },
+          status: { type: :string }
         }
       }
 
@@ -76,19 +71,19 @@ RSpec.describe "RIB Requests API", type: :request do
             meta: { type: :object, properties: { created: { type: :boolean } } }
           }
 
+        # Flat params - controller wraps into data
         let(:body) do
           {
-            data: {
-              message_body: "Please provide your RIB",
-              request_type: "individual",
-              status: "draft"
-            }
+            message_body: "Please provide your RIB",
+            request_type: "individual",
+            status: "draft"
           }
         end
 
         run_test! do |response|
           data = JSON.parse(response.body)
-          expect(data["data"]["data"]["message_body"]).to eq("Please provide your RIB")
+          # Response is now flat
+          expect(data["data"]["message_body"]).to eq("Please provide your RIB")
           expect(data["meta"]["created"]).to be true
         end
       end
@@ -123,7 +118,8 @@ RSpec.describe "RIB Requests API", type: :request do
         run_test! do |response|
           body = JSON.parse(response.body)
           expect(body["data"]["id"]).to eq(rib_request.id)
-          expect(body["data"]["data"]["status"]).to eq("draft")
+          # Response is now flat
+          expect(body["data"]["status"]).to eq("draft")
         end
       end
 
@@ -142,7 +138,8 @@ RSpec.describe "RIB Requests API", type: :request do
       parameter name: :body, in: :body, schema: {
         type: :object,
         properties: {
-          data: { type: :object }
+          status: { type: :string },
+          message_body: { type: :string }
         }
       }
 
@@ -163,19 +160,21 @@ RSpec.describe "RIB Requests API", type: :request do
           )
         end
         let(:id) { rib_request.id }
-        let(:body) { { data: { status: "pending", message_body: "Updated" } } }
+        # Flat params - controller wraps into data
+        let(:body) { { status: "pending", message_body: "Updated" } }
 
         run_test! do |response|
           data = JSON.parse(response.body)
-          expect(data["data"]["data"]["status"]).to eq("pending")
-          expect(data["data"]["data"]["message_body"]).to eq("Updated")
+          # Response is now flat
+          expect(data["data"]["status"]).to eq("pending")
+          expect(data["data"]["message_body"]).to eq("Updated")
           expect(data["meta"]["updated"]).to be true
         end
       end
 
       response "404", "rib request not found" do
         let(:id) { 99999 }
-        let(:body) { { data: { status: "pending" } } }
+        let(:body) { { status: "pending" } }
 
         run_test!
       end
@@ -267,8 +266,9 @@ RSpec.describe "RIB Requests API", type: :request do
         expect(response).to have_http_status(:ok)
         body = response.parsed_body
 
-        expect(body["data"]["data"]).to have_key("recipients_attributes")
-        recipients = body["data"]["data"]["recipients_attributes"]
+        # Response is now flat - recipients_attributes at top level
+        expect(body["data"]).to have_key("recipients_attributes")
+        recipients = body["data"]["recipients_attributes"]
         expect(recipients.size).to eq(2)
         expect(recipients.map { |r| r["first_name"] }).to contain_exactly("John", "Jane")
       end
@@ -280,8 +280,9 @@ RSpec.describe "RIB Requests API", type: :request do
         expect(response).to have_http_status(:ok)
         body = response.parsed_body
 
-        expect(body["data"]["data"]).to have_key("documents_attributes")
-        expect(body["data"]["data"]["documents_attributes"]).to eq([])
+        # Response is now flat - documents_attributes at top level
+        expect(body["data"]).to have_key("documents_attributes")
+        expect(body["data"]["documents_attributes"]).to eq([])
       end
     end
   end
@@ -314,7 +315,8 @@ RSpec.describe "RIB Requests API", type: :request do
 
         run_test! do |response|
           body = JSON.parse(response.body)
-          expect(body["data"]["data"]["status"]).to eq("cancelled")
+          # Response is now flat
+          expect(body["data"]["status"]).to eq("cancelled")
           expect(body["meta"]["cancelled"]).to be true
         end
       end

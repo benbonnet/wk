@@ -12,7 +12,7 @@ module RibCheckService
       def execute(user_id:, workspace_id:, id:, **_)
         item = find_item!(id)
 
-        { data: Core::Serializers::ItemSerializer.new(item).to_h }
+        { data: RibRequestSerializer.new(item).to_h }
       end
     end
   end

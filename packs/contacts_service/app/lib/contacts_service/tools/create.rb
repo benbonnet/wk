@@ -21,7 +21,7 @@ module ContactsService
           workspace_id:
         )
 
-        { data: Core::Serializers::ItemSerializer.new(item).to_h, meta: { created: true } }
+        { data: ContactSerializer.new(item).to_h, meta: { created: true } }
       end
     end
   end

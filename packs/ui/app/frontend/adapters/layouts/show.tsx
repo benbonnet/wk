@@ -34,12 +34,9 @@ export function Show({
   const t = useTranslate();
   const drawerData = useDrawerData();
 
-  // drawerData is { id, data: {...} } structure from table row
-  // Extract the nested data, or use the whole object if no nested data
-  const contextData = drawerData?.data ?? drawerData;
-
+  // drawerData is now flat: { id, first_name, last_name, ... }
   // Priority: drawerData (from context) > data prop > record prop
-  const showData = contextData ?? data ?? record ?? {};
+  const showData = drawerData ?? data ?? record ?? {};
 
   return (
     <ShowContext.Provider value={{ data: showData }}>

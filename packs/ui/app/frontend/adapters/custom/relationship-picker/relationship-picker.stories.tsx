@@ -22,12 +22,12 @@ const mockViewConfig = {
   executeApi: async () => ({ success: true }),
 };
 
-// Mock data for contacts
+// Mock data for contacts - now flat structure
 const mockContacts = [
-  { id: 1, data: { first_name: "John", last_name: "Doe", email: "john@example.com" } },
-  { id: 2, data: { first_name: "Jane", last_name: "Smith", email: "jane@example.com" } },
-  { id: 3, data: { first_name: "Bob", last_name: "Wilson", email: "bob@example.com" } },
-  { id: 4, data: { first_name: "Alice", last_name: "Brown", email: "alice@example.com" } },
+  { id: 1, first_name: "John", last_name: "Doe", email: "john@example.com" },
+  { id: 2, first_name: "Jane", last_name: "Smith", email: "jane@example.com" },
+  { id: 3, first_name: "Bob", last_name: "Wilson", email: "bob@example.com" },
+  { id: 4, first_name: "Alice", last_name: "Brown", email: "alice@example.com" },
 ];
 
 const contactColumns = [
@@ -152,9 +152,9 @@ const addressTemplate = [
 ];
 
 const mockAddresses = [
-  { id: 1, data: { street: "123 Main St", city: "New York", zip: "10001" } },
-  { id: 2, data: { street: "456 Oak Ave", city: "Los Angeles", zip: "90001" } },
-  { id: 3, data: { street: "789 Pine Rd", city: "Chicago", zip: "60601" } },
+  { id: 1, street: "123 Main St", city: "New York", zip: "10001" },
+  { id: 2, street: "456 Oak Ave", city: "Los Angeles", zip: "90001" },
+  { id: 3, street: "789 Pine Rd", city: "Chicago", zip: "60601" },
 ];
 
 const AddressPickerDemo = () => {

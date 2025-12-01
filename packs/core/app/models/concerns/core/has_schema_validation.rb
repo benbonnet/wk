@@ -37,9 +37,23 @@ module Core
           validate_schema: false
         )
 
-        validation_errors.each { |error| errors.add(:data, error) }
+        validation_errors.each do |error|
+          # Parse JSON Schema errors and extract field name
+          # Format 1: "The property '#/' did not contain a required property of 'first_name'"
+          # Format 2: "The property '#/first_name' of type string did not match..."
+          if (match = error.match(/required property of '([^']+)'/))
+            field = match[1].to_sym
+            errors.add(field, "is required")
+          elsif (match = error.match(/'#\/([^']+)'/)) && match[1].present?
+            field = match[1].to_sym
+            message = error.gsub(/'#\/[^']+'\s*/, "").strip
+            errors.add(field, message)
+          else
+            errors.add(:base, error)
+          end
+        end
       rescue JSON::Schema::ValidationError => e
-        errors.add(:data, "Schema validation error: #{e.message}")
+        errors.add(:base, "Schema validation error: #{e.message}")
       end
   end
 end

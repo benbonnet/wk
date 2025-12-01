@@ -21,12 +21,12 @@ beforeAll(() => {
   };
 });
 
-// Mock data for relationship picker API
+// Mock data for relationship picker API - now flat structure
 const mockRelatedContacts = {
   data: [
-    { id: 101, data: { first_name: "Alice", last_name: "Johnson" } },
-    { id: 102, data: { first_name: "Bob", last_name: "Williams" } },
-    { id: 103, data: { first_name: "Charlie", last_name: "Brown" } },
+    { id: 101, first_name: "Alice", last_name: "Johnson" },
+    { id: 102, first_name: "Bob", last_name: "Williams" },
+    { id: 103, first_name: "Charlie", last_name: "Brown" },
   ],
   pagination: { total_pages: 1, current_page: 1 },
 };
@@ -823,10 +823,10 @@ describe("Phase 13: RELATIONSHIP_PICKER Integration", () => {
             url.includes("/api/v1/workspaces/contacts") &&
             options?.method === "POST"
           ) {
-            const body = (options as { data?: { data?: unknown } }).data;
-            // Response structure: { data: { id, data }, meta }
+            const body = (options as { data?: Record<string, unknown> }).data;
+            // Response structure: { data: { id, first_name, ... }, meta } - now flat
             return Promise.resolve({
-              data: { id: 999, data: body?.data },
+              data: { id: 999, ...body },
               meta: { created: true },
             });
           }

@@ -19,7 +19,7 @@ module RibCheckService
                        .limit(per_page.to_i)
 
         {
-          data: Core::Serializers::ItemSerializer.new(records).to_h,
+          data: RibRequestSerializer.new(records).to_h,
           meta: {
             page: page.to_i,
             per_page: per_page.to_i,

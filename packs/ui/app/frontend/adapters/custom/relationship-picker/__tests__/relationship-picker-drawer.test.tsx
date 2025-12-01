@@ -54,7 +54,7 @@ describe("RelationshipPickerDrawer", () => {
     it("fetches data on open", async () => {
       mockServices.fetch.mockResolvedValue({
         data: [
-          { id: 1, data: { name: "John", email: "john@test.com" } },
+          { id: 1, name: "John", email: "john@test.com" },
         ],
       });
 
@@ -71,8 +71,8 @@ describe("RelationshipPickerDrawer", () => {
     it("displays fetched items in table", async () => {
       mockServices.fetch.mockResolvedValue({
         data: [
-          { id: 1, data: { name: "John", email: "john@test.com" } },
-          { id: 2, data: { name: "Jane", email: "jane@test.com" } },
+          { id: 1, name: "John", email: "john@test.com" },
+          { id: 2, name: "Jane", email: "jane@test.com" },
         ],
       });
 
@@ -104,7 +104,7 @@ describe("RelationshipPickerDrawer", () => {
   describe("selection behavior", () => {
     it("selects item on row click", async () => {
       mockServices.fetch.mockResolvedValue({
-        data: [{ id: 1, data: { name: "John", email: "john@test.com" } }],
+        data: [{ id: 1, name: "John", email: "john@test.com" }],
       });
 
       const queryClient = createQueryClient();
@@ -123,8 +123,8 @@ describe("RelationshipPickerDrawer", () => {
     it("allows multiple selections for has_many", async () => {
       mockServices.fetch.mockResolvedValue({
         data: [
-          { id: 1, data: { name: "John", email: "john@test.com" } },
-          { id: 2, data: { name: "Jane", email: "jane@test.com" } },
+          { id: 1, name: "John", email: "john@test.com" },
+          { id: 2, name: "Jane", email: "jane@test.com" },
         ],
       });
 
@@ -144,8 +144,8 @@ describe("RelationshipPickerDrawer", () => {
     it("allows only single selection for has_one", async () => {
       mockServices.fetch.mockResolvedValue({
         data: [
-          { id: 1, data: { name: "John", email: "john@test.com" } },
-          { id: 2, data: { name: "Jane", email: "jane@test.com" } },
+          { id: 1, name: "John", email: "john@test.com" },
+          { id: 2, name: "Jane", email: "jane@test.com" },
         ],
       });
 
@@ -169,7 +169,7 @@ describe("RelationshipPickerDrawer", () => {
     it("calls onConfirm with selected items", async () => {
       const onConfirm = vi.fn();
       mockServices.fetch.mockResolvedValue({
-        data: [{ id: 1, data: { name: "John", email: "john@test.com" } }],
+        data: [{ id: 1, name: "John", email: "john@test.com" }],
       });
 
       const queryClient = createQueryClient();

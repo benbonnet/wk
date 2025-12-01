@@ -11,7 +11,7 @@ module ContactsService
       def execute(id:, **_)
         item = find_item!(id)
 
-        { data: Core::Serializers::ItemSerializer.new(item).to_h }
+        { data: ContactSerializer.new(item).to_h }
       end
     end
   end

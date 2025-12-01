@@ -71,7 +71,8 @@ RSpec.describe Core::HasSchemaValidation, type: :model do
         )
 
         expect(item).not_to be_valid
-        expect(item.errors[:data]).to be_present
+        # Errors are now on flat field names, not :data
+        expect(item.errors[:first_name]).to be_present
       end
 
       it "fails for wrong type" do
@@ -84,7 +85,8 @@ RSpec.describe Core::HasSchemaValidation, type: :model do
         )
 
         expect(item).not_to be_valid
-        expect(item.errors[:data]).to be_present
+        # Errors are now on flat field names, not :data
+        expect(item.errors[:first_name]).to be_present
       end
     end
 

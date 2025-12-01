@@ -121,8 +121,7 @@ export function Table({
     columnsProp.forEach((col: UISchemaColumn) => {
       cols.push({
         id: col.name,
-        accessorFn: (row: DataTableRow) =>
-          (row.data as Record<string, unknown>)?.[col.name] ?? row[col.name],
+        accessorFn: (row: DataTableRow) => row[col.name],
         header: ({ column }) =>
           col.sortable !== false ? (
             <Button

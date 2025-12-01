@@ -247,7 +247,7 @@ describe("Phase 9: Form Adapter", () => {
           "/api/v1/contacts",
           expect.objectContaining({
             method: "POST",
-            data: { data: { email: "test@example.com" } },
+            data: { email: "test@example.com" },
           }),
         );
       });

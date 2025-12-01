@@ -58,7 +58,7 @@ module RibCheckService
         end
 
         {
-          data: Core::Serializers::ItemSerializer.new(Item.find(item_id)).to_h,
+          data: RibRequestSerializer.new(Item.find(item_id)).to_h,
           meta: { created: true, invites_count: invites.size }
         }
       end

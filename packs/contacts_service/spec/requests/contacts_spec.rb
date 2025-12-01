@@ -71,16 +71,11 @@ RSpec.describe "Contacts API", type: :request do
       parameter name: :body, in: :body, schema: {
         type: :object,
         properties: {
-          data: {
-            type: :object,
-            properties: {
-              first_name: { type: :string },
-              last_name: { type: :string },
-              email: { type: :string }
-            },
-            required: %w[first_name last_name]
-          }
-        }
+          first_name: { type: :string },
+          last_name: { type: :string },
+          email: { type: :string }
+        },
+        required: %w[first_name last_name]
       }
 
       response "200", "contact created" do
@@ -90,11 +85,13 @@ RSpec.describe "Contacts API", type: :request do
             meta: { type: :object, properties: { created: { type: :boolean } } }
           }
 
-        let(:body) { { data: { first_name: "John", last_name: "Doe", email: "john@example.com" } } }
+        # Flat params - controller wraps into data
+        let(:body) { { first_name: "John", last_name: "Doe", email: "john@example.com" } }
 
         run_test! do |response|
           body = JSON.parse(response.body)
-          expect(body["data"]["data"]["first_name"]).to eq("John")
+          # Response is now flat
+          expect(body["data"]["first_name"]).to eq("John")
           expect(body["meta"]["created"]).to be true
         end
       end
@@ -106,13 +103,14 @@ RSpec.describe "Contacts API", type: :request do
             details: { type: :object }
           }
 
-        # Send data with email but missing required first_name and last_name
-        let(:body) { { data: { email: "test@example.com" } } }
+        # Send flat data with email but missing required first_name and last_name
+        let(:body) { { email: "test@example.com" } }
 
         run_test! do |response|
           body = JSON.parse(response.body)
           expect(body["error"]).to eq("Validation failed")
-          expect(body["details"]).to have_key("data")
+          # Validation errors now on flat field names
+          expect(body["details"]).to have_key("first_name")
         end
       end
     end
@@ -146,7 +144,8 @@ RSpec.describe "Contacts API", type: :request do
         run_test! do |response|
           body = JSON.parse(response.body)
           expect(body["data"]["id"]).to eq(contact.id)
-          expect(body["data"]["data"]["first_name"]).to eq("Jane")
+          # Response is now flat
+          expect(body["data"]["first_name"]).to eq("Jane")
         end
       end
 
@@ -165,7 +164,8 @@ RSpec.describe "Contacts API", type: :request do
       parameter name: :body, in: :body, schema: {
         type: :object,
         properties: {
-          data: { type: :object }
+          first_name: { type: :string },
+          last_name: { type: :string }
         }
       }
 
@@ -186,18 +186,20 @@ RSpec.describe "Contacts API", type: :request do
           )
         end
         let(:id) { contact.id }
-        let(:body) { { data: { first_name: "Janet" } } }
+        # Flat params - controller wraps into data
+        let(:body) { { first_name: "Janet" } }
 
         run_test! do |response|
           body = JSON.parse(response.body)
-          expect(body["data"]["data"]["first_name"]).to eq("Janet")
+          # Response is now flat
+          expect(body["data"]["first_name"]).to eq("Janet")
           expect(body["meta"]["updated"]).to be true
         end
       end
 
       response "404", "contact not found" do
         let(:id) { 99999 }
-        let(:body) { { data: { first_name: "Janet" } } }
+        let(:body) { { first_name: "Janet" } }
 
         run_test!
       end
@@ -289,8 +291,9 @@ RSpec.describe "Contacts API", type: :request do
         expect(response).to have_http_status(:ok)
         body = response.parsed_body
 
-        expect(body["data"]["data"]).to have_key("addresses_attributes")
-        addresses = body["data"]["data"]["addresses_attributes"]
+        # Response is now flat - addresses_attributes at top level
+        expect(body["data"]).to have_key("addresses_attributes")
+        addresses = body["data"]["addresses_attributes"]
         expect(addresses.size).to eq(2)
         expect(addresses.map { |a| a["city"] }).to contain_exactly("Paris", "Lyon")
       end

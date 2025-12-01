@@ -107,14 +107,13 @@ describe("RelationshipPicker Integration", () => {
       // Setup mock: distinguish GET vs POST by checking options
       mockFetch.mockImplementation((url: string, options?: RequestInit) => {
         if (options?.method === "POST") {
+          // Response is now flat
           return Promise.resolve({
             data: {
               id: 42,
-              data: {
-                first_name: "Bob",
-                last_name: "Smith",
-                email: "bob@example.com",
-              },
+              first_name: "Bob",
+              last_name: "Smith",
+              email: "bob@example.com",
             },
           });
         }
@@ -174,18 +173,16 @@ describe("RelationshipPicker Integration", () => {
         within(createDrawer).getByRole("button", { name: /add/i }),
       );
 
-      // Verify POST payload
+      // Verify POST payload - now flat (no data wrapper)
       await waitFor(() => {
         expect(mockFetch).toHaveBeenCalledWith(
           "/api/v1/workspaces/contacts",
           expect.objectContaining({
             method: "POST",
             data: {
-              data: {
-                first_name: "Bob",
-                last_name: "Smith",
-                email: "bob@example.com",
-              },
+              first_name: "Bob",
+              last_name: "Smith",
+              email: "bob@example.com",
             },
           }),
         );
@@ -211,14 +208,13 @@ describe("RelationshipPicker Integration", () => {
 
       mockFetch.mockImplementation((url: string, options?: RequestInit) => {
         if (options?.method === "POST") {
+          // Response is now flat
           return Promise.resolve({
             data: {
               id: 42,
-              data: {
-                first_name: "Bob",
-                last_name: "Smith",
-                email: "bob@example.com",
-              },
+              first_name: "Bob",
+              last_name: "Smith",
+              email: "bob@example.com",
             },
           });
         }
@@ -289,28 +285,25 @@ describe("RelationshipPicker Integration", () => {
       mockFetch.mockImplementation((url: string, options?: RequestInit) => {
         if (options?.method === "POST") {
           postCalled = true;
+          // Response is now flat
           return Promise.resolve({
             data: {
               id: 42,
-              data: {
-                first_name: "Bob",
-                last_name: "Smith",
-                email: "bob@example.com",
-              },
+              first_name: "Bob",
+              last_name: "Smith",
+              email: "bob@example.com",
             },
           });
         }
-        // After POST, GET returns the newly created item
+        // After POST, GET returns the newly created item - also flat
         if (postCalled) {
           return Promise.resolve({
             data: [
               {
                 id: 42,
-                data: {
-                  first_name: "Bob",
-                  last_name: "Smith",
-                  email: "bob@example.com",
-                },
+                first_name: "Bob",
+                last_name: "Smith",
+                email: "bob@example.com",
               },
             ],
           });
@@ -394,19 +387,15 @@ describe("RelationshipPicker Integration", () => {
         data: [
           {
             id: 1,
-            data: {
-              first_name: "John",
-              last_name: "Doe",
-              email: "john@example.com",
-            },
+            first_name: "John",
+            last_name: "Doe",
+            email: "john@example.com",
           },
           {
             id: 2,
-            data: {
-              first_name: "Jane",
-              last_name: "Doe",
-              email: "jane@example.com",
-            },
+            first_name: "Jane",
+            last_name: "Doe",
+            email: "jane@example.com",
           },
         ],
       });
@@ -486,11 +475,9 @@ describe("RelationshipPicker Integration", () => {
         data: [
           {
             id: 1,
-            data: {
-              first_name: "John",
-              last_name: "Doe",
-              email: "john@example.com",
-            },
+            first_name: "John",
+            last_name: "Doe",
+            email: "john@example.com",
           },
         ],
       });

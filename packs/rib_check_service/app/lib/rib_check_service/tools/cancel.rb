@@ -42,7 +42,7 @@ module RibCheckService
         )
 
         {
-          data: Core::Serializers::ItemSerializer.new(item.reload).to_h,
+          data: RibRequestSerializer.new(item.reload).to_h,
           meta: { cancelled: true }
         }
       end

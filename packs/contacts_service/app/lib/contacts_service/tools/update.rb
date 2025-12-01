@@ -16,7 +16,7 @@ module ContactsService
         item = find_item!(id)
         item.update!(data: item.data.merge(data), updated_by_id: user_id)
 
-        { data: Core::Serializers::ItemSerializer.new(item).to_h, meta: { updated: true } }
+        { data: ContactSerializer.new(item).to_h, meta: { updated: true } }
       end
     end
   end

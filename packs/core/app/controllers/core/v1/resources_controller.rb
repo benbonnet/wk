@@ -82,9 +82,37 @@ module Core
         def tool_params
           permitted = Tools::RailsParameters.permit_structure(@tool_class)
           # Also permit routing params to silence warnings (they're used in before_actions)
-          params.permit(:namespace, :feature, :action_name, *permitted).to_h
+          flat_params = params.permit(:namespace, :feature, :action_name, *permitted).to_h
             .except("namespace", "feature", "action_name")
             .deep_symbolize_keys
+
+          # If tool expects :data param, wrap schema fields into it
+          schema_class = @tool_class.respond_to?(:schema_class) ? @tool_class.schema_class : nil
+          if schema_class
+            wrap_into_data(flat_params, schema_class)
+          else
+            flat_params
+          end
+        end
+
+        def wrap_into_data(flat_params, schema_class)
+          json_schema = schema_class.new.to_json_schema
+          schema_fields = json_schema.dig(:schema, :properties)&.keys&.map(&:to_sym) || []
+          relationship_keys = schema_class.relationships.map { |r| :"#{r[:name]}_attributes" }
+          all_data_keys = schema_fields + relationship_keys
+
+          data = {}
+          other = {}
+
+          flat_params.each do |key, value|
+            if all_data_keys.include?(key.to_sym)
+              data[key] = value
+            else
+              other[key] = value
+            end
+          end
+
+          other.merge(data:)
         end
     end
   end
